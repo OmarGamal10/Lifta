@@ -2,6 +2,7 @@ const db = require("./db");
 const express = require("express");
 const morgan = require("morgan");
 const userRouter = require("./routes/userRoutes");
+const errorHandler = require("./controllers/errorController");
 
 const app = express();
 app.use(morgan("dev"));
@@ -21,5 +22,8 @@ app.get("/", async (req, res) => {
 });
 
 app.use("/lifta/users", userRouter);
+
+//error handling middleware
+app.use(errorHandler);
 
 module.exports = app;
