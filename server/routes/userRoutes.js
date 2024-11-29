@@ -16,6 +16,7 @@ router.get("/", async (req, res, next) => {
 
 router.post("/login", authController.login);
 router.post("/signup", authController.signup);
+router.get("/logout", authController.logout);
 // router.get("/hello", requireAuth.requireAuth, (req, res) => {
 //   res.send(`Welcome, ${req.user.username}!`)});
 module.exports = router;

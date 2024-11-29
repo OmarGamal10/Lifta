@@ -25,7 +25,7 @@ exports.login = async (req, res, next) => {
 
     if (!user) return next(new AppError("User not found", 404));
 
-    if (!(await validatePassword(user.rows[0]["password"], await hashPassword(password))))
+    if (!(await validatePassword(password, user.rows[0]["password"])))
       return next(new AppError("Incorrect password", 401));
 
     // if (password != user.rows[0].password)
@@ -59,7 +59,7 @@ exports.login = async (req, res, next) => {
 
 exports.signup = async (req, res, next) => {
   try {
-    const {email, first_name, last_name,password, gender, bio, phone_number} = req.body;
+    const {email, first_name, last_name, password, gender, bio, phone_number} = req.body;
 
     if (!validator.isEmail(email))
       return next(new AppError("Please enter a valid Email", 400));
@@ -77,8 +77,8 @@ exports.signup = async (req, res, next) => {
     //   "INSERT INTO lifta_schema.users (user_id, email, first_name, last_name, password, gender, bio, phone_number)VAlUES($1,$2, $3, $4, $5, $6, $7, $8)",
     //   [user_id, email, first_name, last_name, hashPassword(password), gender, bio, phone_number]
     // )
-
-    const values = [email, first_name, last_name,password, gender, bio, phone_number];
+    const passwordHashed = await hashPassword(password);
+    const values = [email, first_name, last_name, passwordHashed, gender, bio, phone_number];
     await DBcontroller.AddUser(values);
     
     
@@ -107,3 +107,9 @@ exports.signup = async (req, res, next) => {
   }
 }
 
+// Log-out => Reset Cookie
+
+exports.logout = (req, res) => {
+  res.cookie("jwt", "", { maxAge: 1});
+  res.redirect("/users");
+}
