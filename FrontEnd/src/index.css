@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer base {
+    body {
+        @apply bg-backGroundColor;
+        /* background-image: url('./assets/bg1.svg') 100% 0 no-repeat, url('./assets/bg2.svg') 0 50% no-repeat; */
+        /* background-repeat: no-repeat; */
+        /* background-position: 100% 0; */
+        /* background-size: 620px 760px; */
+        /* background-size: 580px 720px; */
+    }
+}
