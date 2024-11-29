@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./output.css"; // Adjust the path as needed
 
 function LandingPage() {
@@ -15,12 +16,11 @@ function LandingPage() {
             />
           </div>
           <div className="flex items-center gap-6">
-            <a
-              href=""
+            <Link to="log-in"
               className="w-32 h-5 p-4 flex justify-center items-center rounded-full bg-primary text-backGroundColor hover:font-medium"
             >
               Log in
-            </a>
+            </Link>
             <a
               href=""
               className="w-32 h-5 p-4 flex justify-center items-center rounded-full bg-primary text-backGroundColor hover:font-medium"
@@ -54,12 +54,11 @@ function LandingPage() {
           >
             Sign up
           </a>
-          <a
-            href=""
+          <Link to="log-in"
             className="w-48 h-8 p-4 flex justify-center items-center rounded-full border-seondary border-2 text-secondary hover:font-medium hover:border-primary hover:text-primary"
           >
             Log in
-          </a>
+          </Link>
         </div>
       </div>
       {/* ---- */}
