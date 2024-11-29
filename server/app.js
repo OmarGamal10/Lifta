@@ -12,8 +12,7 @@ app.use(cookie_parser());
 app.use(express.urlencoded({ extended: true }));
 console.log(db.query);
 
-// What Directory ??
-app.use(userRouter);
+app.use("/users",userRouter);
 
 // error handling middleware
 app.use(errorHandler);
@@ -29,10 +28,6 @@ app.use(errorHandler);
 //   });
 // });
 
-
-
-
-app.use(userRouter);
 
 //error handling middleware
 app.use(errorHandler);
