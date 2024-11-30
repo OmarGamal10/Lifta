@@ -2,21 +2,10 @@ import React, { useState } from "react";
 import "./output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
 
-function SignUpForm() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    phoneNo: "",
-    bio: "",
-    gender: "male",
-    birthdate: "",
-  });
-
-  const [errors, setErrors] = useState({});
-  const [showPassword, setPassState] = useState(false);
+function Form({ formData, setFormData, toNext }) {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showPassword, setPassState] = useState(false);
+  const [errors, setErrors] = useState({});
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -45,6 +34,7 @@ function SignUpForm() {
       setErrors(newErrors);
       return;
     }
+    toNext(2);
   };
 
   const handleGenderSelect = (gender) => {
@@ -53,6 +43,19 @@ function SignUpForm() {
       gender,
     }));
     setShowDropdown(false); // Close dropdown after selection
+  };
+  const handleCancle = (e) => {
+    e.preventDefault();
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      phoneNo: "",
+      bio: "",
+      gender: "male",
+      birthdate: "",
+    });
   };
   return (
     <div className="flex flex-row min-h-screen justify-center items-center bg-textColor p-16">
@@ -132,6 +135,7 @@ function SignUpForm() {
               className="bg-backGroundColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left"
               type={showPassword ? "text" : "password"}
               placeholder="Enter password"
+              value={formData.password}
               maxLength="50"
               onChange={handleChange}
             />
@@ -261,13 +265,17 @@ function SignUpForm() {
           </div>
 
           {/* Buttons */}
+
           <div className="flex justify-between">
-            <button className="bg-backGroundColor border px-[100px] rounded-lg border-secondary py-4 text-sm text-secondary hover:border-primary hover:text-primary">
+            <button
+              className="bg-backGroundColor border w-5/12 rounded-lg border-secondary py-4 text-sm text-secondary hover:border-primary hover:text-primary"
+              onClick={handleCancle}
+            >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-secondary border px-[100px] rounded-lg border-secondary py-4 text-sm text-backGroundColor hover:border-primary hover:text-primary"
+              className="bg-secondary border w-5/12 rounded-lg border-secondary py-4 text-sm text-backGroundColor hover:border-primary hover:text-primary"
               onClick={handleSubmit}
             >
               Next
@@ -279,4 +287,4 @@ function SignUpForm() {
   );
 }
 
-export default SignUpForm;
+export default Form;

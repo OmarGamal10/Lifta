@@ -684,6 +684,15 @@ video {
 .max-w-2xl {
   max-width: 42rem;
 }
+.max-w-xl {
+  max-width: 36rem;
+}
+.max-w-lg {
+  max-width: 32rem;
+}
+.max-w-md {
+  max-width: 28rem;
+}
 
 .-translate-x-1\/2 {
   --tw-translate-x: -50%;
