@@ -8,6 +8,7 @@ const sendError = (res, err) => {
     status: err.status,
     error: err,
     message: err.message,
+    stack: err.stack,
   });
 };
 

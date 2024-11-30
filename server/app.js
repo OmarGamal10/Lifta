@@ -3,6 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const userRouter = require("./routes/userRoutes");
 const errorHandler = require("./controllers/errorController");
+const AppError = require("./utils/AppError");
 
 const app = express();
 app.use(morgan("dev"));
@@ -23,7 +24,11 @@ app.get("/", async (req, res) => {
 
 app.use("/lifta/users", userRouter);
 
+app.use((req, res, next) => {
+  return next(new AppError(`There is no page for ${req.originalUrl} `, 404));
+});
 //error handling middleware
+
 app.use(errorHandler);
 
 module.exports = app;
