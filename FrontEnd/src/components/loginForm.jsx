@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
 import "./output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
 
@@ -105,12 +107,13 @@ function LoginForm() {
             </button>
             <span className="text-textColor">
               Don’t have an account?{" "}
-              <a
+              <Link
+                to="/sign-up"
+                replace
                 className=" text-textColor text-decoration-line: underline"
-                href="#shady"
               >
                 Sign up
-              </a>
+              </Link>
             </span>
           </div>
         </form>

@@ -16,17 +16,19 @@ function LandingPage() {
             />
           </div>
           <div className="flex items-center gap-6">
-            <Link to="log-in"
+            <Link
+              to="log-in"
               className="w-32 h-5 p-4 flex justify-center items-center rounded-full bg-primary text-backGroundColor hover:font-medium"
             >
               Log in
             </Link>
-            <a
-              href=""
+
+            <Link
+              to="sign-up"
               className="w-32 h-5 p-4 flex justify-center items-center rounded-full bg-primary text-backGroundColor hover:font-medium"
             >
               Sign up
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
@@ -41,20 +43,22 @@ function LandingPage() {
           </h1>
         </div>
         <div className="flex container mb-16">
-          <p class="text-textColor">
+          <p className="text-textColor">
             Your ultimate platform for fitness and nutrition, connecting you
             <br /> with expert coaches to achieve your health goals through
             <br /> personalized workouts and balanced meal plans
           </p>
         </div>
         <div className="flex items-center gap-6">
-          <a
+          <Link
+            to="sign-up"
             href=""
             className="w-48 h-8 p-4 flex justify-center items-center rounded-full bg-primary border-2  border-primary text-backGroundColor hover:font-medium"
           >
             Sign up
-          </a>
-          <Link to="log-in"
+          </Link>
+          <Link
+            to="log-in"
             className="w-48 h-8 p-4 flex justify-center items-center rounded-full border-seondary border-2 text-secondary hover:font-medium hover:border-primary hover:text-primary"
           >
             Log in
@@ -103,7 +107,7 @@ function LandingPage() {
         />
         <div className="text-left">
           <div className="container flex w-screen items-center justify-start mb-12">
-          <h2 className="text-3xl font-medium  flex flex-col md:text-4xl text-textColor">
+            <h2 className="text-3xl font-medium  flex flex-col md:text-4xl text-textColor">
               <span className="leading-tight">A Coach?</span>
               <span className="leading-tight">Empower Your Clients</span>
               <span className="leading-tight">and Build Success</span>
@@ -130,12 +134,12 @@ function LandingPage() {
         <div className="flex justify-between py-6 mx-auto items-center ">
           <span>&copy;2024 LIFTA</span>
           <h3 className="font-medium text-lg">LIFTA</h3>
-          <a
-            href=""
+          <Link
+            to="sign-up"
             className="w-32 h-5 p-4 flex justify-center items-center rounded-full bg-primary text-backGroundColor hover:font-medium"
           >
             Sign up
-          </a>
+          </Link>
         </div>
       </footer>
     </div>
