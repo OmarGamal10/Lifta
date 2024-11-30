@@ -7,10 +7,12 @@ import FormCoach from "./components/coach/formCoach";
 import CertForm from "./components/coach/certificateForm";
 import UserTypeForm from "./components/userTypeForm";
 import SignUpForm from "./components/signUpForm.jsx";
+import { PackageCard } from "./components/packageCard.jsx";
+
 function App() {
   return (
     <div>
-      <LandingPage />
+      <PackageCard />
     </div>
   );
 }
