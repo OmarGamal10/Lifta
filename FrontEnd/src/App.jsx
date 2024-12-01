@@ -7,10 +7,12 @@ import FormCoach from "./components/coach/formCoach";
 import CertForm from "./components/coach/certificateForm";
 import UserTypeForm from "./components/userTypeForm";
 import SignUpForm from "./components/signUpForm.jsx";
+import IngForm from "./components/coach/IngredientForm.jsx";
+
 function App() {
   return (
     <div>
-      <LandingPage />
+      <IngForm />
     </div>
   );
 }

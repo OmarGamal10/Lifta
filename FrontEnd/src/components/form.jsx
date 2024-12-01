@@ -257,6 +257,7 @@ function Form({ formData, setFormData, toNext }) {
               type="date"
               id="birthdate"
               name="birthdate"
+              value={formData.birthdate}
               className="bg-backGroundColor border pl-4 w-1/2 rounded-xl border-secondary py-4 text-sm text-textColor text-left"
               onChange={handleChange}
               autoComplete="off"
