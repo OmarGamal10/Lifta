@@ -7,11 +7,17 @@ import FormCoach from "./components/coach/formCoach";
 import CertForm from "./components/coach/certificateForm";
 import UserTypeForm from "./components/userTypeForm";
 import SignUpForm from "./components/signUpForm.jsx";
+import { PackageCard } from "./components/packageCard.jsx";
+import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
+import Tailwind from 'primereact/passthrough/tailwind';
+import { twMerge } from 'tailwind-merge';
+import 'primeicons/primeicons.css';
+
 function App() {
   return (
-    <div>
-      <LandingPage />
-    </div>
+    <PrimeReactProvider value={{ unstyled: true, pt: Tailwind , ptOptions: { mergeSections: true, mergeProps: true, classNameMergeFunction: twMerge } }}>
+      <LandingPage/>
+    </PrimeReactProvider>
   );
 }
 
