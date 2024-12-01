@@ -104,7 +104,7 @@ export function PackageCard(probs) {
   }
 
   return (
-    <div className="flex flex-col border-[2px] border-secondary rounded-2xl text-textColor w-[307px] h-[402px]">
+    <div className="flex flex-col border-[2px] border-secondary rounded-2xl text-textColor w-[307px] h-[402px] overflow-hidden">
       {/* header */}
       <div className="bg-secondary text-center p-2">
         <h3 className="text-2xl font-medium">{probs.name}</h3>
