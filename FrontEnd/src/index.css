@@ -13,3 +13,7 @@
         /* background-size: 580px 720px; */
     }
 }
+
+.btn-disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }

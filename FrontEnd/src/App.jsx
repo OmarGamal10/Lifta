@@ -9,10 +9,12 @@ import UserTypeForm from "./components/userTypeForm";
 import SignUpForm from "./components/signUpForm.jsx";
 import { PackageCard } from "./components/packageCard.jsx";
 
+const text="Personalized workout plans tailored to your fitness level and goals. Ideal for building strength, endurance, or weight loss with professional guidance."
+
 function App() {
   return (
     <div>
-      <PackageCard />
+      <PackageCard name={"starter package"} type={"Gym and Nutrition"} price={19} description={ text } duration={"3 Months"} isActive={true} />
     </div>
   );
 }
