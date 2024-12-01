@@ -8,14 +8,16 @@ import CertForm from "./components/coach/certificateForm";
 import UserTypeForm from "./components/userTypeForm";
 import SignUpForm from "./components/signUpForm.jsx";
 import { PackageCard } from "./components/packageCard.jsx";
-
-const text="Personalized workout plans tailored to your fitness level and goals. Ideal for building strength, endurance, or weight loss with professional guidance."
+import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
+import Tailwind from 'primereact/passthrough/tailwind';
+import { twMerge } from 'tailwind-merge';
+import 'primeicons/primeicons.css';
 
 function App() {
   return (
-    <div>
-      <PackageCard name={"starter package"} type={"Gym and Nutrition"} price={19} description={ text } duration={"3 Months"} isActive={true} />
-    </div>
+    <PrimeReactProvider value={{ unstyled: true, pt: Tailwind , ptOptions: { mergeSections: true, mergeProps: true, classNameMergeFunction: twMerge } }}>
+      <LandingPage/>
+    </PrimeReactProvider>
   );
 }
 

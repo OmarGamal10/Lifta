@@ -12,6 +12,8 @@
   "dependencies": {
     "@material-tailwind/react": "^2.1.10",
     "lucide-react": "^0.462.0",
+    "primeicons": "^7.0.0",
+    "primereact": "^10.8.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.3.0",
