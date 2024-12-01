@@ -101,7 +101,6 @@ exports.signup = async (req, res, next) => {
       ? values.push(food_allergies, weight, height, goal, workout_preferences)
       : values.push(
           experience_years,
-          rating,
           client_limit,
           title,
           photo,
