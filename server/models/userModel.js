@@ -19,10 +19,10 @@ exports.SelectTraineeOrTrainerById = async (id, type) => {
 
 exports.AddUser = async (values) => {
   const type = values[7];
-  const userValues = values.slice(0, 7);
+  const userValues = values.slice(0, 8);
   const rest = values.slice(8);
   const query =
-    "INSERT INTO lifta_schema.users (email, first_name, last_name, password, gender, bio, phone_number)VAlUES($1, $2, $3, $4, $5, $6, $7) RETURNING user_id";
+    "INSERT INTO lifta_schema.users (email, first_name, last_name, password, gender, bio, phone_number, type)VAlUES($1, $2, $3, $4, $5, $6, $7,$8) RETURNING user_id";
   const id = (await db.query(query, userValues)).rows[0].user_id;
   if (type === "Trainee") {
     addTrainee(rest, id);
@@ -33,6 +33,8 @@ exports.AddUser = async (values) => {
 
 const addTrainee = async (values, id) => {
   values.unshift(id);
+  //values[values.length - 1] = "Home";
+
   const query =
     "INSERT INTO lifta_schema.trainee (trainee_id, food_allergies,weight,height,goal, workout_preferences) VALUES ($1, $2, $3, $4, $5, $6)";
   await db.query(query, values);

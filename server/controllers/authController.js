@@ -59,6 +59,7 @@ const signup = async (req, res, next) => {
     phone_number,
     type,
   } = req.body;
+  //const gender = req.body.gender === "male" ? "M" : "F";
 
   let food_allergies,
     workout_preferences,
