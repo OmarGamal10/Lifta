@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer primereact;
+@import 'primeicons/primeicons.css';
 
 @layer base {
     body {
@@ -13,3 +15,9 @@
         /* background-size: 580px 720px; */
     }
 }
+
+.btn-disabled {
+    @apply opacity-50 ;
+  }
+
+  

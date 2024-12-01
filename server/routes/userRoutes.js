@@ -1,14 +1,21 @@
+const db = require("../db");
 const router = require("express").Router();
 const authController = require("../controllers/authController");
+const userModel = require("../models/userModel");
 
-router.get("/", (req, res, next) => {
-  return next(new AppError("This is a fkn err", 400));
+//for testing without opening pgAdmin (getting all users)
+router.get("/", async (req, res, next) => {
   res.status(200).json({
     status: "success",
-    message: "Welcome to the Lifta API",
+    data: {
+      users: await userModel.getAllUsers(),
+    },
   });
 });
 
+//auth routes
 router.post("/login", authController.login);
+router.post("/signup", authController.signup);
+router.get("/logout", authController.logout);
 
 module.exports = router;

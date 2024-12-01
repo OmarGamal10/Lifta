@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
 
 const hashPassword = async (password) => {
-  return await bcrypt.hash(password, 12);
+  const salt = await bcrypt.genSalt();
+  return await bcrypt.hash(password, salt);
 };
 
 const validatePassword = async (password, hashedPassword) => {

@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 
-function FormTrainee() {
-  const [formData, setFormData] = useState({
-    height: "",
-    weight: "",
-    workoutPreferences: "outdoors",
-  });
-
+function FormTrainee({ formData, setFormData, setCurForm }) {
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -214,8 +208,14 @@ function FormTrainee() {
 
           {/* Buttons */}
           <div className="flex justify-between">
-            <button className="bg-backGroundColor border px-[100px] rounded-lg border-secondary py-4 text-sm text-secondary hover:border-primary hover:text-primary">
-              Cancel
+            <button
+              className="bg-backGroundColor border px-[100px] rounded-lg border-secondary py-4 text-sm text-secondary hover:border-primary hover:text-primary  "
+              onClick={(e) => {
+                e.preventDefault();
+                setCurForm(1);
+              }}
+            >
+              Previous
             </button>
             <button
               type="submit"
