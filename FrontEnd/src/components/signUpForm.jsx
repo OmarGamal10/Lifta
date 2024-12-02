@@ -29,13 +29,13 @@ function SignUpForm() {
   });
 
   const [coachData, setCoachData] = useState({
-    yearsOfExperience: "",
-    clientsLimit: "",
+    experienceYears: "",
+    clientLimit: "",
   });
   const [certData, setCertData] = useState({
-    certTitle: "",
-    certIssueDate: "",
-    certDiscription: "",
+    title: "",
+    dateIssued: "",
+    description: "",
   });
 
   return (
@@ -65,6 +65,7 @@ function SignUpForm() {
           />
         ) : (
           <Form2Coach
+            userData={form1Data}
             formData={coachData}
             setFormData={setCoachData}
             setCurForm={setCurForm}

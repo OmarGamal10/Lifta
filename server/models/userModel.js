@@ -33,7 +33,6 @@ exports.AddUser = async (values) => {
 
 const addTrainee = async (values, id) => {
   values.unshift(id);
-  //values[values.length - 1] = "Home";
 
   const query =
     "INSERT INTO lifta_schema.trainee (trainee_id, food_allergies,weight,height,goal, workout_preferences) VALUES ($1, $2, $3, $4, $5, $6)";

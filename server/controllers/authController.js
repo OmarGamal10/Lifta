@@ -59,7 +59,6 @@ const signup = async (req, res, next) => {
     phone_number,
     type,
   } = req.body;
-  //const gender = req.body.gender === "male" ? "M" : "F";
 
   let food_allergies,
     workout_preferences,
@@ -67,7 +66,6 @@ const signup = async (req, res, next) => {
     height,
     goal,
     experience_years,
-    rating,
     client_limit,
     title,
     photo,
@@ -78,7 +76,6 @@ const signup = async (req, res, next) => {
   } else {
     ({
       experience_years,
-      rating,
       client_limit,
       title,
       photo,

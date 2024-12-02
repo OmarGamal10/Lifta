@@ -10,7 +10,7 @@ function UserTypeForm({ setType, setFormData }) {
     setType(e.target.name);
     setFormData((prevData) => ({
       ...prevData,
-      type: e.target.name,
+      type: e.target.name === "Coach" ? "Trainer" : "Trainee",
     }));
   };
 

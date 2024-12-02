@@ -46,6 +46,7 @@ const useHttp = (baseURL = "") => {
           status: err.response?.status,
           message: errorMessage,
         });
+        console.error(err.response?.data.message || err.message);
 
         throw err;
       } finally {
