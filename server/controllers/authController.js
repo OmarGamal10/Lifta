@@ -66,7 +66,6 @@ const signup = async (req, res, next) => {
     height,
     goal,
     experience_years,
-    rating,
     client_limit,
     title,
     photo,
@@ -77,7 +76,6 @@ const signup = async (req, res, next) => {
   } else {
     ({
       experience_years,
-      rating,
       client_limit,
       title,
       photo,
