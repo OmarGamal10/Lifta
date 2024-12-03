@@ -8,7 +8,7 @@ function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
 
-  const { post, loading, error, data } = useHttp("http://127.0.0.1:3000");
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
