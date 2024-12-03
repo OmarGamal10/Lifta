@@ -9,11 +9,12 @@ import UserTypeForm from "./components/userTypeForm";
 import SignUpForm from "./components/signUpForm.jsx";
 import IngForm from "./components/coach/IngredientForm.jsx";
 import PkgForm from "./components/coach/packageForm.jsx";
+import ExerciseForm from "./components/coach/exerciseForm.jsx";
 
 function App() {
   return (
     <div>
-      <PkgForm />
+      <ExerciseForm />
     </div>
   );
 }

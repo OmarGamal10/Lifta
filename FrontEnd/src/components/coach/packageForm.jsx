@@ -187,7 +187,7 @@ function PackageForm() {
             </div>
           </div>
         </div>
-        <div className=" mb-6">
+        <div className=" ">
           <h6 className="text-xs text-left text-backGroundColor mb-2">
             Description
           </h6>
@@ -204,7 +204,7 @@ function PackageForm() {
         </div>
         {errors.description && <ErrorMessage error={errors.description} />}
 
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-6">
           <button
             type="submit"
             className=" w-1/2 bg-secondary text-textColor text-sm px-3 rounded-xl  py-4 flex flex-row justify-center gap-2 align-middle border hover:border-secondary hover:bg-textColor hover:text-secondary"
