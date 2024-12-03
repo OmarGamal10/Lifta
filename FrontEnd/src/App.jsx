@@ -12,11 +12,12 @@ import { PrimeReactProvider, PrimeReactContext } from 'primereact/api';
 import Tailwind from 'primereact/passthrough/tailwind';
 import { twMerge } from 'tailwind-merge';
 import 'primeicons/primeicons.css';
+import { PackageDashboard } from "./components/packageDashboard.jsx";
 
 function App() {
   return (
     <PrimeReactProvider value={{ unstyled: true, pt: Tailwind , ptOptions: { mergeSections: true, mergeProps: true, classNameMergeFunction: twMerge } }}>
-      <LandingPage/>
+      <PackageDashboard/>
     </PrimeReactProvider>
   );
 }
