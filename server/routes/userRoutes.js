@@ -20,6 +20,10 @@ router.post("/login", authController.login);
 router.post("/signup", convertToSnakeCase, authController.signup);
 router.get("/logout", authController.logout);
 
+//coach packages
 router.use("/:coachId/packages", packageRouter);
 
 module.exports = router;
+
+// /users/:id/packages
+// /packages
