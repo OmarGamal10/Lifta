@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const cookie_parser = require("cookie-parser");
 const userRouter = require("./routes/userRoutes");
 const packageRouter = require("./routes/packageRoute");
+const subscriptionRouter = require("./routes/subscriptionRoute");
 const errorHandler = require("./controllers/errorController");
 const AppError = require("./utils/AppError");
 const cors = require("cors");
@@ -23,6 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/users", userRouter);
 
 app.use("/packages", packageRouter);
+
+app.use("/subscriptions", subscriptionRouter);
 
 // error handling middleware
 app.use(errorHandler);
