@@ -27,9 +27,35 @@ const getPackagesCoach = async (req, res, next) => {
   });
 };
 
+const createPackage = async (req, res, next) => {
+  const { name, description, price, trainer_id, duration, type } = req.body;
+  if (!name || !duration || !price || !trainer_id || !type) {
+    return next(new AppError("Please provide all required fields", 400));
+  }
+  if (isNaN(Number(duration)) || Number(duration) <= 0) {
+    return next(new AppError("Please provide a valid duration", 400));
+  }
+  const package = await packageModel.createPackage(
+    name,
+    price,
+    trainer_id,
+    duration,
+    type,
+    description,
+    (is_active = true)
+  );
+  res.status(201).json({
+    status: "success",
+    data: {
+      package,
+    },
+  });
+};
+
 module.exports = {
   getAllPackages: catchAsync(getAllPackages),
   getPackagesCoach: catchAsync(getPackagesCoach),
+  createPackage: catchAsync(createPackage),
 };
 
 // /packages
