@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
-import Form1 from "./form";
+import Form1 from "./mainForm";
 import Form2Trainee from "./trainee/formTrainee";
 import Form2Coach from "./coach/formCoach";
 import UserTypeForm from "./userTypeForm";
