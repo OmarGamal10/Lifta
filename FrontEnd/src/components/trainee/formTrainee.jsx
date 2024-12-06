@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
+import useHttp from "../../hooks/useHTTP";
 
-function FormTrainee({ formData, setFormData, setCurForm }) {
+function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     if ((name == "weight" || name == "height") && value.length > 3) return;
-    setFormData((prevData) => ({
+    setTraineeData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -21,19 +25,19 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
   };
 
   const handleWorkoutPreferencesSelect = (workoutPreferences) => {
-    setFormData((prevData) => ({
+    setTraineeData((prevData) => ({
       ...prevData,
       workoutPreferences,
     }));
     setShowDropdown(false); // Close dropdown after selection
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key] && (key === "weight" || key === "height")) {
+    Object.keys(traineeData).forEach((key) => {
+      if (!traineeData[key] && (key === "weight" || key === "height")) {
         newErrors[key] = `${key.replace(/([A-Z])/g, " $1")} is required.`;
       }
     });
@@ -43,7 +47,25 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
       return;
     }
 
-    console.log("Form submitted successfully:", formData);
+    try {
+      console.log(traineeData);
+      const response = await post(
+        "/users/signup",
+        {
+          ...formData,
+          ...traineeData,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+    //console.log("Form submitted successfully:", traineeData);
   };
 
   return (
@@ -65,7 +87,7 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
               type="number"
               placeholder="Enter your Weight"
               maxLength="3"
-              value={formData.weight}
+              value={traineeData.weight}
               onChange={handleChange}
               autoComplete="off" // Disable autocomplete
             />
@@ -83,7 +105,7 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
               placeholder="Enter your height"
               maxLength="3"
               onChange={handleChange}
-              value={formData.height}
+              value={traineeData.height}
               autoComplete="off"
             />
             {errors.height && <ErrorMessage error={errors.height} />}
@@ -93,16 +115,16 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
           <div className="bg-backGroundColor mb-10">
             <h6 className="text-xs text-left text-textColor mb-2">Goals</h6>
             <textarea
-              id="goals"
-              name="goals"
+              id="goal"
+              name="goal"
               className="bg-backGroundColor border px-4 w-full h-32 rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left resize-none"
               placeholder="Tell us about your goals..."
               maxLength="256"
               onChange={handleChange}
-              value={formData.goals}
+              value={traineeData.goal}
               autoComplete="off"
             ></textarea>
-            {errors.goals && <ErrorMessage error={errors.goals} />}
+            {errors.goal && <ErrorMessage error={errors.goal} />}
           </div>
 
           {/* Food Allergies */}
@@ -117,7 +139,7 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
               placeholder="Do you have any food allergies?"
               maxLength="256"
               onChange={handleChange}
-              value={formData.foodAllergies}
+              value={traineeData.foodAllergies}
               autoComplete="off"
             ></textarea>
             {errors.foodAllergies && (
@@ -125,7 +147,7 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
             )}
           </div>
 
-          {/* Chronic Diseases */}
+          {/* Chronic Diseases
           <div className="bg-backGroundColor mb-10">
             <h6 className="text-xs text-left text-textColor mb-2">
               Chronic Diseases
@@ -137,17 +159,19 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
               placeholder="Do you have any chronic diseases?"
               maxLength="256"
               onChange={handleChange}
-              value={formData.chronicDiseases}
+              value={traineeData.chronicDiseases}
               autoComplete="off"
             ></textarea>
             {errors.chronicDiseases && (
               <ErrorMessage error={errors.chronicDiseases} />
             )}
-          </div>
+          </div> */}
 
           {/* Workout Preferences Dropdown */}
           <div className="bg-backGroundColor  mb-10 flex flex-col">
-            <h6 className="text-xs text-left text-textColor mb-2">Gender</h6>
+            <h6 className="text-xs text-left text-textColor mb-2">
+              Workout preference
+            </h6>
 
             <button
               id="dropdownDefaultButton"
@@ -155,7 +179,7 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
               className="text-textColor  hover:bg-secondary focus:ring-2 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center flex flex-row justify-between "
               type="button"
             >
-              {formData.gender === "indoor" ? "Indoor" : "Outdoor"}
+              {traineeData.workoutPreferences === "Home" ? "Home" : "Gym"}
               <div>
                 <svg
                   className="w-2.5 h-2.5 ms-3"
@@ -183,19 +207,19 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
                   <li>
                     <button
                       type="button"
-                      onClick={() => handleWorkoutPreferencesSelect("outdoor")}
+                      onClick={() => handleWorkoutPreferencesSelect("Home")}
                       className="block w-full text-left px-4 py-2 hover:bg-secondary hover:text-backGroundColor"
                     >
-                      Outdoor
+                      Home
                     </button>
                   </li>
                   <li>
                     <button
                       type="button"
-                      onClick={() => handleWorkoutPreferencesSelect("indoor")}
+                      onClick={() => handleWorkoutPreferencesSelect("Gym")}
                       className="block w-full text-left px-4 py-2 hover:bg-secondary  hover:text-backGroundColor"
                     >
-                      Indoor
+                      Gym
                     </button>
                   </li>
                 </ul>
@@ -221,7 +245,7 @@ function FormTrainee({ formData, setFormData, setCurForm }) {
               type="submit"
               className="bg-secondary border px-[100px] rounded-lg border-secondary py-4 text-sm text-backGroundColor hover:border-primary hover:text-primary"
             >
-              Next
+              Sign up
             </button>
           </div>
         </form>
