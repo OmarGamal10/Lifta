@@ -11,7 +11,7 @@ function LandingPage() {
             <span>LIFTA</span>
             <img
               className="object-cover h-10 w-14"
-              src="src/assets/logo.png"
+              src="c"
               alt="logo"
             />
           </div>
