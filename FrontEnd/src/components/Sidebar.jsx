@@ -1,16 +1,24 @@
 import React, { useState } from "react";
+import { TbTreadmill } from "react-icons/tb";
 import { Link } from "react-router-dom";
+import { LiaDumbbellSolid } from "react-icons/lia";
+import { FiUser } from "react-icons/fi";
+import { GiMedicinePills } from "react-icons/gi";
+import { MdReviews } from "react-icons/md";
+import { FaWeightScale } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa";
+import { TbPackages } from "react-icons/tb";
 
 const SideBar = ({ onSidebarClick }) => {
   const [activeItem, setActiveItem] = useState("My Profile"); // Track active item
   const menuItems = [
-    { name: "Exercises", label: "Exercises", img: "src/assets/sidebarIcons/Treadmill.png" },
-    { name: "Workouts", label: "Workouts", img: "src/assets/sidebarIcons/dumbel.png" },
-    { name: "Ingredients", label: "Ingredients", img: "src/assets/sidebarIcons/Pills.png" },
-    { name: "Meals", label: "Meals", img: "src/assets/sidebarIcons/Weight Scale.png" },
-    { name: "Clients", label: "Clients", img: "src/assets/sidebarIcons/users.png" },
-    { name: "Packages", label: "Packages", img: "src/assets/sidebarIcons/packages.png" },
-    { name: "Reviews", label: "Reviews", img: "src/assets/sidebarIcons/review.png" },
+    { name: "Exercises", label: "Exercises"},
+    { name: "Workouts", label: "Workouts"},
+    { name: "Ingredients", label: "Ingredients"},
+    { name: "Meals", label: "Meals",},
+    { name: "Clients", label: "Clients"},
+    { name: "Packages", label: "Packages"},
+    { name: "Reviews", label: "Reviews"},
   ];
 
   // Handle click and update the active item
@@ -18,6 +26,31 @@ const SideBar = ({ onSidebarClick }) => {
     setActiveItem(name);
     onSidebarClick(name); // Call parent handler
   };
+
+    // Components to render based on the active section
+    const renderComponent = (name) => {
+        switch (name) {
+          case "My Profile":
+            return <FiUser  className="mr-2 text-2xl" />;
+          case "Exercises":
+            return <TbTreadmill className="mr-2 text-2xl" />;
+          case "Workouts":
+            return <LiaDumbbellSolid className="mr-2 text-2xl" />;
+          case "Ingredients":
+            return <GiMedicinePills className="mr-2 text-2xl" />;
+          case "Meals":
+            return <FaWeightScale className="mr-2 text-2xl" />;
+          case "Clients":
+            return <FaUsers className="mr-2 text-2xl" />;
+          case "Packages":
+            return <TbPackages className="mr-2 text-2xl" />;
+          case "Reviews":
+            return <MdReviews className="mr-2 text-2xl" />;
+          default:
+            return <TbTreadmill className="mr-2 text-2xl" />;
+        }
+      };
+    
 
   return (
     <div className="flex flex-col space-y-4">
@@ -32,11 +65,7 @@ const SideBar = ({ onSidebarClick }) => {
                 ${activeItem === "My Profile" ? "bg-primary text-backGroundColor" : "hover:bg-primary text-textColor hover:text-backGroundColor"} 
                 active:bg-primary hover:cursor-pointer transition-all px-3 py-2 rounded-l-md`}
             >
-              <img
-                src="src/assets/sidebarIcons/Icon.png"
-                alt="Icon"
-                className="w-6 h-6 mr-4 transition-all hover:filter hover:brightness-0 hover:invert"
-              />
+              {renderComponent("My Profile")}
               My Profile
             </li>
           </div>
@@ -58,11 +87,7 @@ const SideBar = ({ onSidebarClick }) => {
                   ${activeItem === item.name ? "bg-primary text-backGroundColor" : "hover:bg-primary text-textColor hover:text-backGroundColor"} 
                   active:bg-primary hover:cursor-pointer transition-all px-3 py-2 rounded-l-md`}
               >
-                <img
-                  src={item.img}
-                  alt="Icon"
-                  className="w-6 h-6 mr-4"
-                />
+                {renderComponent(item.name)}
                 {item.label}
               </li>
             ))}

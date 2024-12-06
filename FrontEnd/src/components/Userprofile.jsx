@@ -44,15 +44,15 @@ const UserProfile = () => {
       <NavBar />
       <ProfileSection />
       <div className="h-[0.5px] bg-textspan "></div>
-      <div className="flex h-[960px]">
+      <div className="flex h-[960px] w-full">
         {/* Pass callback to SideBar */}
         <SideBar onSidebarClick={handleSidebarClick} className="w-auto" />
-
+        <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
         {/* Vertical Divider */}
-        <div className="flex flex-1 ">
-          <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
+        <div className="w-full">
+          
           {/* Render Active Component */}
-          <div className="">
+          <div className="flex justify-center items-center">
             {renderComponent()}
           </div>
         </div>

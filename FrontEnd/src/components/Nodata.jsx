@@ -2,27 +2,26 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const NoDataDashboard = ({ header = "No Data Dashboard" }) => (
-  <div className="">
-  <h1 className=" p-6 text-3xl lg:text-4xl font-bold text-textColor">
-    {header}
-  </h1>
-  <div className="bg-backGroundColor border-l-textspan relative p-6 flex flex-col rounded-lg">
-  {/* Dynamic Header */}
+  <div className="flex gap-[40px] items-center flex-col size-full">
+    <h1 className=" p-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
+      {header}
+    </h1>
+    <div className="bg-backGroundColor border-l-textspan p-6 flex flex-col items-center rounded-lg w-full">
+      {/* Dynamic Header */}
 
-  {/* Centered Image */}
-  <img
-    src="src/assets/Nodata.png"
-    alt="No Data"
-    className="w-48 h-48 lg:w-64 lg:h-64 object-contain mb-6"
-  />
+      {/* Centered Image */}
+      <img
+        src="src/assets/Nodata.png"
+        alt="No Data"
+        className="size-[500px] object-contain mb-3"
+      />
 
-  {/* Caption under the Image */}
-  <p className="text-3xl text-center lg:text-4xl text-textspan font-semibold">
-    No data to Show
-  </p>
-</div>
-</div>
+      {/* Caption under the Image */}
+      <p className="text-3xl text-center lg:text-4xl text-textspan font-semibold">
+        No data to Show
+      </p>
+    </div>
+  </div>
 );
-
 
 export default NoDataDashboard;
