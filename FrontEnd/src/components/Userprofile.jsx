@@ -4,21 +4,57 @@ import ProfileSection from "./Profilesection";
 import SideBar from "./Sidebar";
 import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
+import { useState } from "react";
 
 const UserProfile = () => {
+  // State to track the selected section
+  const [activeSection, setActiveSection] = useState("My Profile");
+
+  // Function to handle button clicks from SideBar
+  const handleSidebarClick = (section) => {
+    setActiveSection(section);
+  };
+
+  // Components to render based on the active section
+  const renderComponent = () => {
+    switch (activeSection) {
+      case "My Profile":
+        return <NoDataDashboard header="Profile Section" />;
+      case "Exercises":
+        return <NoDataDashboard header="Exercises Section" />;
+      case "Workouts":
+        return <NoDataDashboard header="Workouts Section" />;
+      case "Ingredients":
+        return <NoDataDashboard header="Ingredients Section" />;
+      case "Meals":
+        return <NoDataDashboard header="Meals Section" />;
+      case "Clients":
+        return <NoDataDashboard header="Clients Section" />;
+      case "Packages":
+        return <NoDataDashboard header="Packages Section" />;
+      case "Reviews":
+        return <NoDataDashboard header="Reviews Section" />;
+      default:
+        return <NoDataDashboard header="No Data Dashboard" />;
+    }
+  };
+
   return (
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
       <NavBar />
       <ProfileSection />
       <div className="h-[0.5px] bg-textspan "></div>
       <div className="flex h-[960px]">
-        {/* Sidebar - Takes only the width needed for content */}
-        <SideBar className="w-auto" />
+        {/* Pass callback to SideBar */}
+        <SideBar onSidebarClick={handleSidebarClick} className="w-auto" />
 
-        {/* NoDataDashboard - Takes the remaining space */}
-        <div className="flex flex-1">
+        {/* Vertical Divider */}
+        <div className="flex flex-1 ">
           <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
-          <NoDataDashboard />
+          {/* Render Active Component */}
+          <div className="">
+            {renderComponent()}
+          </div>
         </div>
       </div>
       <Footer />
