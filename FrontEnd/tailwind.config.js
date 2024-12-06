@@ -7,10 +7,10 @@ export default {
         customBg: "url('./src/assets/bg1.svg'), url('./src/assets/bg2.svg')",
       },
       backgroundPosition: {
-        customPos: 'right top, left 45%', // Custom positions for the images
+        customPos: "right top, left 45%", // Custom positions for the images
       },
       backgroundSize: {
-        customSize: ' 580px 720px, 480px 1024px', // Custom sizes for the images
+        customSize: " 580px 720px, 480px 1024px", // Custom sizes for the images
       },
     },
     colors: {
@@ -22,5 +22,5 @@ export default {
       error: "#880808",
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")],
 };
