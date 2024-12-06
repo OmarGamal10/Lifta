@@ -24,7 +24,7 @@ export function PackageCard(probs) {
       return (
         <>
           <Button
-            label="Submit"
+            label="Edit"
             icon="pi pi-pen-to-square"
             rounded
             size="small"
@@ -121,7 +121,7 @@ export function PackageCard(probs) {
       {/* body */}
       <div className="px-6 py-4">
         <h3 className="text-2xl font-medium text-primary mb-4">
-          {probs.duration}
+          {probs.duration} {probs.duration > 1? "Months" : "Month"}
         </h3>
         <ScrollPanel style={{ width: "100%", height: (probs.view == 2)? "140px" : "80px"}} className="pl-3">
           <p className="font-thin text-sm">
