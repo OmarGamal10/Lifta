@@ -6,7 +6,7 @@ import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
 import { useState } from "react";
 
-const UserProfile = ({userId, userType}) => {
+const UserProfile = ({ userId, userType }) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
 
@@ -17,26 +17,11 @@ const UserProfile = ({userId, userType}) => {
 
   // Components to render based on the active section
   const renderComponent = () => {
-    switch (activeSection) {
-      case "My Profile":
-        return <NoDataDashboard header="Profile Section" />;
-      case "Exercises":
-        return <NoDataDashboard header="Exercises Section" />;
-      case "Workouts":
-        return <NoDataDashboard header="Workouts Section" />;
-      case "Ingredients":
-        return <NoDataDashboard header="Ingredients Section" />;
-      case "Meals":
-        return <NoDataDashboard header="Meals Section" />;
-      case "Clients":
-        return <NoDataDashboard header="Clients Section" />;
-      case "Packages":
-        return <NoDataDashboard header="Packages Section" />;
-      case "Reviews":
-        return <NoDataDashboard header="Reviews Section" />;
-      default:
+      if(activeSection) {
+        return <NoDataDashboard header= {`${activeSection}` + " Section"} />;
+      } else {
         return <NoDataDashboard header="No Data Dashboard" />;
-    }
+      }
   };
 
   return (
@@ -50,7 +35,6 @@ const UserProfile = ({userId, userType}) => {
         <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
         {/* Vertical Divider */}
         <div className="w-full">
-          
           {/* Render Active Component */}
           <div className="flex justify-center items-center">
             {renderComponent()}

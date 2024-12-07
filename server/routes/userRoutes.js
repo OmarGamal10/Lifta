@@ -19,7 +19,7 @@ router.get("/", async (req, res, next) => {
 router.post("/login", authController.login);
 router.post("/signup", convertToSnakeCase, authController.signup);
 router.get("/logout", authController.logout);
-
+router.get("/checkAuth", authController.checkAuth);
 //coach packages
 router.use("/:coachId/packages", packageRouter);
 

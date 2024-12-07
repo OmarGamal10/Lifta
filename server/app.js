@@ -30,32 +30,6 @@ app.use(cookie_parser());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.get("/api/checkAuth", (req, res) => {
-  // Retrieve the token from the cookies
-  const token = req.cookies.jwt;
-
-  // If no token is found, return an error response
-  if (!token) {
-    return res.status(401).json({ isAuthenticated: false, message: "No token provided" });
-  }
-
-  try {
-    // Verify the token
-    const decoded = jwt.verify(token, process.env.SECRETKEY);
-
-    // Extract userId and userType from the token payload
-    const { userId, userType } = decoded;
-
-    // Respond with user information
-    return res.status(200).json({
-      isAuthenticated: true
-    });
-  } catch (err) {
-    // Handle invalid or expired tokens
-    console.error("Token verification failed:", err.message);
-    return res.status(401).json({ isAuthenticated: false, message: "Invalid or expired token" });
-  }
-});
 
 
 app.use("/users", userRouter);

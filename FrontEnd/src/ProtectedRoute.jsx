@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await get("/api/checkAuth");
+        const response = await get("/users/checkAuth");
         // Assuming response.body has these values
         setIsAuthenticated(true);
       } catch (err) {

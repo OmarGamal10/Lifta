@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import { TbTreadmill } from "react-icons/tb";
+import { Link } from "react-router-dom";
 import { LiaDumbbellSolid } from "react-icons/lia";
 import { FiUser } from "react-icons/fi";
 import { GiMedicinePills } from "react-icons/gi";
 import { MdReviews } from "react-icons/md";
+import { FaWeightScale } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
-import { GrOverview } from "react-icons/gr";
+import { TbPackages } from "react-icons/tb";
 
 const SideBar = ({ onSidebarClick }) => {
   const [activeItem, setActiveItem] = useState("My Profile"); // Track active item
   const menuItems = [
-    { name: "Overview", label: "Overview"},
+    { name: "Exercises", label: "Exercises"},
     { name: "Workouts", label: "Workouts"},
-    { name: "Nutrition", label: "Nutrition"},
-    { name: "Memberships", label: "Memberships",},
-    { name: "Workout history", label: "Workout history"},
-    { name: "Nutrition History", label: "Nutrition History"},
+    { name: "Ingredients", label: "Ingredients"},
+    { name: "Meals", label: "Meals",},
+    { name: "Clients", label: "Clients"},
+    { name: "Packages", label: "Packages"},
     { name: "Reviews", label: "Reviews"},
   ];
 
@@ -30,18 +32,18 @@ const SideBar = ({ onSidebarClick }) => {
         switch (name) {
           case "My Profile":
             return <FiUser  className="mr-2 text-2xl" />;
-          case "Overview":
-            return <GrOverview className="mr-2 text-2xl"/>
+          case "Exercises":
+            return <TbTreadmill className="mr-2 text-2xl" />;
           case "Workouts":
             return <LiaDumbbellSolid className="mr-2 text-2xl" />;
-          case "Nutrition":
+          case "Ingredients":
             return <GiMedicinePills className="mr-2 text-2xl" />;
-          case "Memberships":
+          case "Meals":
+            return <FaWeightScale className="mr-2 text-2xl" />;
+          case "Clients":
             return <FaUsers className="mr-2 text-2xl" />;
-          case "Workout history":
-            return <LiaDumbbellSolid className="mr-2 text-2xl" />;
-          case "Nutrition History":
-            return <GiMedicinePills className="mr-2 text-2xl" />;
+          case "Packages":
+            return <TbPackages className="mr-2 text-2xl" />;
           case "Reviews":
             return <MdReviews className="mr-2 text-2xl" />;
           default:
