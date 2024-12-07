@@ -18,12 +18,13 @@ import IngForm from "./components/coach/IngredientForm.jsx";
 import PkgForm from "./components/coach/packageForm.jsx";
 import ExerciseForm from "./components/coach/exerciseForm.jsx";
 import { SubReqDashboard } from "./components/coach/subReqDashboard.jsx";
+import { PageNotFound } from "./components/pageNotFound.jsx";
 
 function App() {
   return (
     <div>
       <PrimeReactProvider value={{ unstyled: true, pt: Tailwind , ptOptions: { mergeSections: true, mergeProps: true, classNameMergeFunction: twMerge } }}>
-        <SubReqDashboard />
+        <LandingPage />
       </PrimeReactProvider>
     </div>
   );
