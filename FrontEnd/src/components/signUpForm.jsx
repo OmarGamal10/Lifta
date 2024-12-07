@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./output.css"; // Adjust the path as needed
-import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
 import Form1 from "./form";
 import Form2Trainee from "./trainee/formTrainee";
 import Form2Coach from "./coach/formCoach";
@@ -14,29 +13,29 @@ function SignUpForm() {
     lastName: "",
     email: "",
     password: "",
-    phoneNo: "",
+    phoneNumber: "",
     bio: "",
-    gender: "male",
+    gender: "M",
     birthdate: "",
+    type: "",
   });
 
   const [traineeData, setTraineeData] = useState({
     height: "",
     weight: "",
-    goals: "",
+    goal: "",
     foodAllergies: "",
-    chronicDiseases: "",
     workoutPreferences: "outdoors",
   });
 
   const [coachData, setCoachData] = useState({
-    yearsOfExperience: "",
-    clientsLimit: "",
+    experienceYears: "",
+    clientLimit: "",
   });
   const [certData, setCertData] = useState({
-    certTitle: "",
-    certIssueDate: "",
-    certDiscription: "",
+    title: "",
+    dateIssued: "",
+    description: "",
   });
 
   return (
@@ -45,7 +44,7 @@ function SignUpForm() {
         ""
       ) : (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <UserTypeForm setType={setUserType} type={userType} />
+          <UserTypeForm setType={setUserType} setFormData={setForm1Data} />
         </div>
       )}
       {curForm == 1 && (
@@ -57,14 +56,16 @@ function SignUpForm() {
       )}
 
       {curForm == 2 &&
-        (userType == "trainee" ? (
+        (userType == "Trainee" ? (
           <Form2Trainee
-            formData={traineeData}
-            setFormData={setTraineeData}
+            formData={form1Data}
+            traineeData={traineeData}
+            setTraineeData={setTraineeData}
             setCurForm={setCurForm}
           />
         ) : (
           <Form2Coach
+            userData={form1Data}
             formData={coachData}
             setFormData={setCoachData}
             setCurForm={setCurForm}
