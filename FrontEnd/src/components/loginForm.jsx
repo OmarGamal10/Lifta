@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import "./output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
+import useHttp from "../hooks/useHTTP";
 
 function LoginForm() {
   const [formData, setFormData] = useState({
@@ -12,6 +14,9 @@ function LoginForm() {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setPassState] = useState(false);
+
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -26,7 +31,7 @@ function LoginForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -39,6 +44,18 @@ function LoginForm() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
+    }
+
+    try {
+      console.log(formData);
+      const response = await post("/users/login", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response);
+    } catch (error) {
+      console.error(error);
     }
   };
   return (

@@ -1,8 +1,22 @@
-//  import { Link } from "react-router-dom";
-import "../output.css"; // Adjust the path as needed
+/* eslint-disable no-unused-vars */
+import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
+import useHttp from "../../hooks/useHTTP";
 
 export function SubscriptionRequestCard(probs) {
+  const { get, patch, error, data } = useHttp("http://localhost:3000");
+  const handleResponse = async (status) => {
+    try {
+      const response = await patch(`/subscriptions/${probs.subscriptionId}`, {
+        status,
+      });
+      probs.setTrigger(true);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex flex-col border-[2px] border-secondary rounded-2xl text-textColor w-[307px] overflow-hidden p-8">
       <div className="text-center">
@@ -11,9 +25,12 @@ export function SubscriptionRequestCard(probs) {
         </h3>
       </div>
       <div className="flex flex-col gap-2 mt-10">
-        <a href="" className="font-bold">{probs.traineeName}</a>
-        <span>sent a subscription request to <b>{probs.packageName}</b> package</span>
-        
+        <Link to="#" className="font-bold">
+          {probs.traineeName}
+        </Link>
+        <span>
+          sent a subscription request to <b>{probs.packageName}</b> package
+        </span>
       </div>
       <div className="flex justify-around mt-10 mb-1">
         <Button
@@ -35,8 +52,10 @@ export function SubscriptionRequestCard(probs) {
               className: "group-hover:text-backGroundColor text-accent",
             },
           }}
+          onClick={() => {
+            handleResponse(true);
+          }}
         />
-        {/* <Tooltip target=".logo" mouseTrack mouseTrackLeft={10} /> */}
         <Button
           icon="pi pi-times"
           outlined
@@ -55,6 +74,9 @@ export function SubscriptionRequestCard(probs) {
             icon: {
               className: "group-hover:text-backGroundColor text-accent",
             },
+          }}
+          onClick={() => {
+            handleResponse(false);
           }}
         />
       </div>

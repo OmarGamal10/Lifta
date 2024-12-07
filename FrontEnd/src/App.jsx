@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { React } from "react";
 import Form from "./components/form";
 import FormTrainee from "./components/trainee/formTrainee";
@@ -23,8 +24,18 @@ import { PageNotFound } from "./components/pageNotFound.jsx";
 function App() {
   return (
     <div>
-      <PrimeReactProvider value={{ unstyled: true, pt: Tailwind , ptOptions: { mergeSections: true, mergeProps: true, classNameMergeFunction: twMerge } }}>
-        <LandingPage />
+      <PrimeReactProvider
+        value={{
+          unstyled: true,
+          pt: Tailwind,
+          ptOptions: {
+            mergeSections: true,
+            mergeProps: true,
+            classNameMergeFunction: twMerge,
+          },
+        }}
+      >
+        <PackageDashboard />
       </PrimeReactProvider>
     </div>
   );
