@@ -102,7 +102,7 @@ export function PackageDashboard() {
 }
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))] gap-16 w-full">
+    <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-16 w-full">
       {renderCards()}
     </div>
   );

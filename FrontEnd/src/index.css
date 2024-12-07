@@ -20,4 +20,8 @@
     @apply opacity-50 ;
   }
 
-  
+  .p-tooltip {
+    background-color: #f5a623; /* Example background color */
+    color: white; /* Tooltip text color */
+    border-radius: 5px;
+  }
