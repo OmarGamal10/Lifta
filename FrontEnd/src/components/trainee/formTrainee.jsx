@@ -3,11 +3,12 @@ import { useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import useHttp from "../../hooks/useHTTP";
+import { useNavigate } from "react-router-dom";
 
 function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
-
+  const navigate = useNavigate();
   const { post, loading, error, data } = useHttp("http://localhost:3000");
 
   const handleChange = (e) => {
@@ -61,7 +62,7 @@ function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
           },
         }
       );
-      console.log(response);
+      navigate("/profile");
     } catch (err) {
       console.log(err);
     }

@@ -6,7 +6,7 @@ import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
 import { useState } from "react";
 
-const UserProfile = () => {
+const UserProfile = ({userId, userType}) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
 

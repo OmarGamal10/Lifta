@@ -22,7 +22,7 @@ import { PackageDashboard } from "./components/packageDashboard.jsx";
 function App() {
   return (
     <PrimeReactProvider value={{ unstyled: true, pt: Tailwind , ptOptions: { mergeSections: true, mergeProps: true, classNameMergeFunction: twMerge } }}>
-      <UserProfile/>
+      <LandingPage />
     </PrimeReactProvider>
 
   );
