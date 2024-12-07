@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import { BsUpload } from "react-icons/bs";
 import ErrorMessage from "../errorMsg";
@@ -9,7 +8,7 @@ function CertForm({ formData, setFormData, setViewCert }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+    console.log(formData);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -52,16 +51,16 @@ function CertForm({ formData, setFormData, setViewCert }) {
           <h6 className="text-xs text-left text-backGroundColor mb-2">Title</h6>
           <input
             id="title-input"
-            name="title"
+            name="certTitle"
             className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
             type="text"
             placeholder="Enter certificate title"
             maxLength="15"
             onChange={handleChange}
-            value={formData.title}
+            value={formData.certTitle}
             autoComplete="off"
           />
-          {errors.title && <ErrorMessage error={errors.title} />}
+          {errors.certTitle && <ErrorMessage error={errors.certTitle} />}
         </div>
 
         <div className=" mb-6">
@@ -70,12 +69,12 @@ function CertForm({ formData, setFormData, setViewCert }) {
           </h6>
           <textarea
             id="description"
-            name="description"
+            name="certDiscription"
             className="bg-textColor border px-4 w-full h-24 rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left resize-none"
             placeholder="Tell us about yourself"
             maxLength="250"
             onChange={handleChange}
-            value={formData.description}
+            value={formData.certDiscription}
             autoComplete="off"
           ></textarea>
         </div>
@@ -86,13 +85,15 @@ function CertForm({ formData, setFormData, setViewCert }) {
           <input
             type="date"
             id="issueDate"
-            name="dateIssued"
+            name="certIssueDate"
             className="bg-textColor border pl-4 w-1/2 rounded-xl border-secondary py-4 text-sm text-backGroundColor text-left"
             onChange={handleChange}
-            value={formData.dateIssued}
+            value={formData.certIssueDate}
             autoComplete="off"
           />
-          {errors.dateIssued && <ErrorMessage error={errors.dateIssued} />}
+          {errors.certIssueDate && (
+            <ErrorMessage error={errors.certIssueDate} />
+          )}
         </div>
         <div className="">
           <button className=" w-1/2 bg-primary text-sm px-3 rounded-xl  py-4 flex flex-row justify-center gap-2 align-middle hover:text-textColor">

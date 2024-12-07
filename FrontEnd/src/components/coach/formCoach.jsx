@@ -1,15 +1,12 @@
-/* eslint-disable react/prop-types */
-import { useState } from "react";
+import React, { useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import { CiImageOn } from "react-icons/ci";
 import { FaRegTrashAlt } from "react-icons/fa";
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import { FaPlus } from "react-icons/fa";
 import CertForm from "./certificateForm";
-import useHttp from "../../hooks/useHTTP";
 
 function FormCoach({
-  userData,
   formData,
   setFormData,
   setCurForm,
@@ -18,13 +15,11 @@ function FormCoach({
 }) {
   const [viewCertForm, setViewCert] = useState(false);
 
-  const { post, loading, error, data } = useHttp("http://localhost:3000");
-
   const [errors, setErrors] = useState({});
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (
-      (name == "experienceYears" || name == "clientLimit") &&
+      (name == "yearsOfExperience" || name == "clientsLimit") &&
       value.length > 2
     )
       return;
@@ -38,7 +33,7 @@ function FormCoach({
       [name]: "",
     }));
   };
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -51,24 +46,6 @@ function FormCoach({
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
-    }
-    try {
-      const response = await post(
-        "/users/signup",
-        {
-          ...userData,
-          ...formData,
-          ...certData,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response);
-    } catch (err) {
-      console.log(err);
     }
   };
   const handleAdd = (e) => {
@@ -85,6 +62,7 @@ function FormCoach({
       setErrors(newErrors);
       return;
     }
+    console.log("shady");
     setViewCert(true);
   };
   return (
@@ -110,34 +88,36 @@ function FormCoach({
             </h6>
             <input
               id="YOE-input"
-              name="experienceYears"
+              name="yearsOfExperience"
               className="bg-backGroundColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left"
               type="number"
               placeholder="Enter a number"
               onChange={handleChange}
-              value={formData.experienceYears}
+              value={formData.yearsOfExperience}
               autoComplete="off"
             />
-            {errors.experienceYears && (
-              <ErrorMessage error={errors.experienceYears} />
+            {errors.yearsOfExperience && (
+              <ErrorMessage error={errors.yearsOfExperience} />
             )}
           </div>
 
           <div className="bg-backGroundColor mb-10">
             <h6 className="text-xs text-left text-textColor mb-2">
-              client Limit
+              Clients Limit
             </h6>
             <input
-              id="clientLimit-input"
-              name="clientLimit"
+              id="clientsLimit-input"
+              name="clientsLimit"
               className="bg-backGroundColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left"
               type="number"
               placeholder="Enter a number"
               onChange={handleChange}
-              value={formData.clientLimit}
+              value={formData.clientsLimit}
               autoComplete="off"
             />
-            {errors.clientLimit && <ErrorMessage error={errors.clientLimit} />}
+            {errors.clientsLimit && (
+              <ErrorMessage error={errors.clientsLimit} />
+            )}
           </div>
 
           <div className="bg-backGroundColor mb-5">
@@ -146,11 +126,11 @@ function FormCoach({
               <div className="flex flex-row">
                 <CiImageOn color="gray" size={120} />
                 <div className="mt-6">
-                  <p name="title" className="text-textColor">
-                    {certData.title}
+                  <p name="CertTitle" className="text-textColor">
+                    {certData.certTitle}
                   </p>
-                  <p name="dateIssued" className="text-textColor">
-                    {certData.dateIssued}
+                  <p name="certIssueDate" className="text-textColor">
+                    {certData.certIssueDate}
                   </p>
                 </div>
               </div>

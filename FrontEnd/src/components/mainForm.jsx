@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-import { useState } from "react";
+import React, { useState } from "react";
 import "./output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
 
@@ -52,9 +51,9 @@ function Form({ formData, setFormData, toNext }) {
       lastName: "",
       email: "",
       password: "",
-      phoneNumber: "",
+      phoneNo: "",
       bio: "",
-      gender: "M",
+      gender: "male",
       birthdate: "",
     });
   };
@@ -164,16 +163,16 @@ function Form({ formData, setFormData, toNext }) {
             </h6>
             <input
               id="phone"
-              name="phoneNumber"
+              name="phoneNo"
               className="bg-backGroundColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left"
               type="tel"
               placeholder="Enter phone number"
               maxLength="11"
               onChange={handleChange}
-              value={formData.phoneNumber}
+              value={formData.phoneNo}
               autoComplete="off"
             />
-            {errors.phoneNumber && <ErrorMessage error={errors.phoneNumber} />}
+            {errors.phoneNo && <ErrorMessage error={errors.phoneNo} />}
           </div>
 
           {/* BIO */}
@@ -202,7 +201,7 @@ function Form({ formData, setFormData, toNext }) {
               className="text-textColor  hover:bg-secondary focus:ring-2 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center flex flex-row justify-between "
               type="button"
             >
-              {formData.gender === "M" ? "Male" : "Female"}
+              {formData.gender === "male" ? "Male" : "Female"}
               <div>
                 <svg
                   className="w-2.5 h-2.5 ms-3"
@@ -230,7 +229,7 @@ function Form({ formData, setFormData, toNext }) {
                   <li>
                     <button
                       type="button"
-                      onClick={() => handleGenderSelect("M")}
+                      onClick={() => handleGenderSelect("male")}
                       className="block w-full text-left px-4 py-2 hover:bg-secondary hover:text-backGroundColor"
                     >
                       Male
@@ -239,7 +238,7 @@ function Form({ formData, setFormData, toNext }) {
                   <li>
                     <button
                       type="button"
-                      onClick={() => handleGenderSelect("F")}
+                      onClick={() => handleGenderSelect("female")}
                       className="block w-full text-left px-4 py-2 hover:bg-secondary  hover:text-backGroundColor"
                     >
                       Female

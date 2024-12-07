@@ -1,17 +1,13 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable react/no-unescaped-entities */
+import React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import "./output.css"; // Adjust the path as needed
 
-function UserTypeForm({ setType, setFormData }) {
+function UserTypeForm({ type, setType }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setType(e.target.name);
-    setFormData((prevData) => ({
-      ...prevData,
-      type: e.target.name === "Coach" ? "Trainer" : "Trainee",
-    }));
   };
 
   return (
@@ -20,14 +16,14 @@ function UserTypeForm({ setType, setFormData }) {
       <div className="flex flex-col w-full ">
         <h2 className="text-xl text-left font-medium mb-5">Choose Your Path</h2>
         <button
-          name="Coach"
+          name="coach"
           className="text-textColor font-bold border bg-secondary py-3 rounded-xl mb-4 hover:bg-textColor hover:border-secondary hover:text-secondary"
           onClick={handleSubmit}
         >
           I'm a Coach
         </button>
         <button
-          name="Trainee"
+          name="trainee"
           className="text-textColor font-bold border bg-secondary py-3 rounded-xl mb-4 hover:bg-textColor hover:border-secondary hover:text-secondary"
           onClick={handleSubmit}
         >

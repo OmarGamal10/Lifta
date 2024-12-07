@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "../output.css";
 import ErrorMessage from "../errorMsg";
 
@@ -153,9 +153,9 @@ function PackageForm() {
                       checked={formData.type.includes("gym")}
                       onChange={handleChange}
                       className="appearance-none w-5 h-5 border-2 border-gray-400 rounded-md 
-                        checked:bg-secondary checked:border-secondary 
-                        focus:outline-none focus:ring-2 focus:ring-secondary 
-                        transition duration-200 ease-in-out"
+                         checked:bg-secondary checked:border-secondary 
+                         focus:outline-none focus:ring-2 focus:ring-secondary 
+                         transition duration-200 ease-in-out"
                     />
                     <span className="ml-3 text-sm text-backGroundColor">
                       Gym
@@ -171,9 +171,9 @@ function PackageForm() {
                       checked={formData.type.includes("nutrition")}
                       onChange={handleChange}
                       className="appearance-none w-5 h-5 border-2 border-gray-400 rounded-md 
-                        checked:bg-secondary checked:border-secondary 
-                        focus:outline-none focus:ring-2 focus:ring-secondary 
-                        transition duration-200 ease-in-out"
+                         checked:bg-secondary checked:border-secondary 
+                         focus:outline-none focus:ring-2 focus:ring-secondary 
+                         transition duration-200 ease-in-out"
                     />
                     <span className="ml-3 text-sm text-backGroundColor">
                       Nutrition

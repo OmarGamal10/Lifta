@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 

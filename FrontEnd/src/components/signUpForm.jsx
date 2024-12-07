@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
 import Form1 from "./mainForm";
@@ -14,29 +14,29 @@ function SignUpForm() {
     lastName: "",
     email: "",
     password: "",
-    phoneNumber: "",
+    phoneNo: "",
     bio: "",
-    gender: "M",
+    gender: "male",
     birthdate: "",
-    type: "",
   });
 
   const [traineeData, setTraineeData] = useState({
     height: "",
     weight: "",
-    goal: "",
+    goals: "",
     foodAllergies: "",
+    chronicDiseases: "",
     workoutPreferences: "outdoors",
   });
 
   const [coachData, setCoachData] = useState({
-    experienceYears: "",
-    clientLimit: "",
+    yearsOfExperience: "",
+    clientsLimit: "",
   });
   const [certData, setCertData] = useState({
-    title: "",
-    dateIssued: "",
-    description: "",
+    certTitle: "",
+    certIssueDate: "",
+    certDiscription: "",
   });
 
   return (
@@ -45,7 +45,7 @@ function SignUpForm() {
         ""
       ) : (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <UserTypeForm setType={setUserType} setFormData={setForm1Data} />
+          <UserTypeForm setType={setUserType} type={userType} />
         </div>
       )}
       {curForm == 1 && (
@@ -57,16 +57,14 @@ function SignUpForm() {
       )}
 
       {curForm == 2 &&
-        (userType == "Trainee" ? (
+        (userType == "trainee" ? (
           <Form2Trainee
-            formData={form1Data}
-            traineeData={traineeData}
-            setTraineeData={setTraineeData}
+            formData={traineeData}
+            setFormData={setTraineeData}
             setCurForm={setCurForm}
           />
         ) : (
           <Form2Coach
-            userData={form1Data}
             formData={coachData}
             setFormData={setCoachData}
             setCurForm={setCurForm}
