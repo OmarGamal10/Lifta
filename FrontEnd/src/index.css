@@ -17,11 +17,10 @@
 }
 
 .btn-disabled {
-    @apply opacity-50 ;
-  }
+    @apply opacity-50;
+}
 
-  .p-tooltip {
-    background-color: #f5a623; /* Example background color */
-    color: white; /* Tooltip text color */
-    border-radius: 5px;
-  }
+.p-inputtext {
+    /* background-color: black; Adjust the background color as needed */
+    @apply bg-backGroundColor;
+}

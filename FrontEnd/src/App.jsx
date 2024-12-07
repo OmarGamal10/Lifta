@@ -19,12 +19,14 @@ import PkgForm from "./components/coach/packageForm.jsx";
 import ExerciseForm from "./components/coach/exerciseForm.jsx";
 import { SubReqDashboard } from "./components/coach/subReqDashboard.jsx";
 import { PageNotFound } from "./components/pageNotFound.jsx";
+import { TraineesList } from "./components/admin/traineesList.jsx";
+import { CoachesList } from "./components/admin/coachesList.jsx";
 
 function App() {
   return (
     <div>
-      <PrimeReactProvider value={{ unstyled: true, pt: Tailwind , ptOptions: { mergeSections: true, mergeProps: true, classNameMergeFunction: twMerge } }}>
-        <LandingPage />
+      <PrimeReactProvider value={{  pt: Tailwind  }}>
+        <CoachesList />
       </PrimeReactProvider>
     </div>
   );
