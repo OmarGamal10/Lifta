@@ -20,6 +20,7 @@ router.post("/login", authController.login);
 router.post("/signup", convertToSnakeCase, authController.signup);
 router.get("/logout", authController.logout);
 router.get("/checkAuth", authController.checkAuth);
+router.get("/:userId", authController.getUserById);
 //coach packages
 router.use("/:coachId/packages", packageRouter);
 

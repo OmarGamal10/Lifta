@@ -18,6 +18,7 @@ const ProtectedRoute = ({ children }) => {
         const response = await get("/users/checkAuth");
         // Assuming response.body has these values
         setIsAuthenticated(true);
+        setUserId(response.userId)
       } catch (err) {
         console.error(err);
         setIsAuthenticated(false); // Set as unauthenticated on error
@@ -37,7 +38,7 @@ const ProtectedRoute = ({ children }) => {
   }
 
   // If authenticated, render children
-  return children;
+  return React.cloneElement(children, { userId });
 };
 
 export default ProtectedRoute;

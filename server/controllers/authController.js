@@ -7,6 +7,22 @@ const userModel = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken")
 
+const getUserById = async (req, res) => {
+  const userId = req.params.userId;
+
+  const user = await userModel.SelectUserById(userId);
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+  res.status(200).json({
+    userId: userId,
+    userName: user["first_name"] + " " + user["last_name"],
+    userType: user["type"],
+    userBio: user["bio"]
+  })
+}
+
+
 const checkAuth = async (req, res) => {
   // Retrieve the token from the cookies
   const token = req.cookies.jwt;
@@ -167,6 +183,7 @@ const logout = (req, res) => {
 };
 
 module.exports = {
+  getUserById,
   checkAuth,
   login: catchAsync(login),
   signup: catchAsync(signup),
