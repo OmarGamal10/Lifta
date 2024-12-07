@@ -4,6 +4,8 @@ import ErrorMessage from "../errorMsg";
 import exercises from "./testData";
 
 function CreateWorkout() {
+  const [workoutName, updateWorkoutName] = useState("");
+
   const [choosedExercises, updateChoosedExercises] = useState([]);
   const [curSelectedExercise, updateCurSelectedExercise] = useState(null);
   const [curPage, setCurPage] = useState(1);
@@ -53,10 +55,9 @@ function CreateWorkout() {
       setWorkoutError(
         "Please select at least one exercise before adding a workout."
       );
-      return;
     }
-    console.log("Workout exercises:", choosedExercises);
-    setWorkoutError("");
+    if (workoutName.length == 0) setWorkoutError("Please enter workout name");
+    return;
   };
 
   const toggleExerciseList = (e) => {
@@ -135,7 +136,7 @@ function CreateWorkout() {
       <div className="w-2/5 px-10 relative">
         <button
           onClick={toggleExerciseList}
-          className=" w-full bg-secondary text-textColor text-sm rounded-xl py-3 mb-4 flex justify-between items-center px-3"
+          className=" w-full bg-secondary text-textColor text-sm rounded-xl py-3 mb-2 flex justify-between items-center px-3"
         >
           <span>Chosen Exercises ({choosedExercises.length})</span>
           <span>{isExerciseListOpen ? "▲" : "▼"}</span>
@@ -203,6 +204,29 @@ function CreateWorkout() {
       <div className="fixed bottom-4 left-4 z-50">
         {workoutError && <ErrorMessage error={workoutError} />}
       </div>
+
+      <div
+        className={`absolute bottom-[70px]  right-[500px] flex justify-center`}
+      >
+        <div className="w-1/2">
+          <h6 className="text-xs text-left text-backGroundColor mb-2">
+            Workout Name
+          </h6>
+          <input
+            name="workoutName"
+            className="bg-textColor border pl-4 rounded-xl border-secondary py-3 text-sm text-backGroundColor placeholder-gray-500 text-left"
+            type="text"
+            placeholder="Enter name"
+            maxLength="25"
+            onChange={(e) => {
+              updateWorkoutName(e.target.value);
+              setWorkoutError("");
+            }}
+            value={workoutName}
+            autoComplete="off"
+          />
+        </div>
+      </div>
     </div>
   );
 }
@@ -257,7 +281,7 @@ function AddExerciseToWorkout({
 
   return (
     <div className="w-full flex-col justify-center text-center">
-      <div className="flex justify-center mb-5">
+      <div className="flex justify-center mb-2">
         <Exercise
           name={selected.name}
           targetMuscle={selected.targetMuscle}
@@ -269,7 +293,7 @@ function AddExerciseToWorkout({
       <form action="">
         <div className="flex flex-row justify-center gap-x-20">
           <div className="w-1/4">
-            <h6 className="text-xs text-left text-backGroundColor mb-2">
+            <h6 className="text-xs text-left text-backGroundColor mb-1">
               Sets
             </h6>
             <input
@@ -287,7 +311,7 @@ function AddExerciseToWorkout({
           </div>
 
           <div className="w-1/4">
-            <h6 className="text-xs text-left text-backGroundColor mb-2">
+            <h6 className="text-xs text-left text-backGroundColor mb-1">
               Reps
             </h6>
             <input
@@ -304,7 +328,7 @@ function AddExerciseToWorkout({
             {errors.reps && <ErrorMessage error={errors.reps} />}
           </div>
         </div>
-        <div className="flex flex-row mt-10 justify-center gap-x-48">
+        <div className="flex flex-row mt-5 justify-center gap-x-48">
           <button
             className=" w-1/4 bg-secondary text-textColor text-sm px-3 rounded-xl  py-4 flex flex-row justify-center gap-2 align-middle border hover:border-secondary hover:bg-textColor hover:text-secondary"
             onClick={(e) => {

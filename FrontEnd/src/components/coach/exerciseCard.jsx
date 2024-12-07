@@ -2,7 +2,7 @@ import { React } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 
-function Exersize({ name, description, targetMuscle, gif, usage }) {
+function Exersize({ name, description, targetMuscle, gif, usage = false }) {
   return (
     <div
       className="border-2 flex flex-col  text-center hover:border-primary hover:cursor-pointer bg-backGroundColor border-secondary w-full min-w-64 max-w-64 rounded-2xl p-5"

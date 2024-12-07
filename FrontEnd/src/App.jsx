@@ -14,11 +14,12 @@ import ExerciseForm from "./components/coach/exerciseForm.jsx";
 import Ingredient from "./components/coach/ingredientCard.jsx";
 import Exercise from "./components/coach/exerciseCard.jsx";
 import CreateWorkout from "./components/coach/createWorkout.jsx";
+import CreateMeal from "./components/coach/createMeal.jsx";
 
 function App() {
   return (
     <div>
-      <CreateWorkout />
+      <CreateMeal />
     </div>
   );
 }
