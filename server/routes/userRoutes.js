@@ -15,6 +15,24 @@ router.get("/", async (req, res, next) => {
   });
 });
 
+router.get("/coaches", async (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    data: {
+      coaches: await userModel.getAllCoaches(),
+    },
+  });
+});
+
+router.get("/trainees", async (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    data: {
+      trainees: await userModel.getAllTrainees(),
+    },
+  });
+});
+
 //auth routes
 router.post("/login", authController.login);
 router.post("/signup", convertToSnakeCase, authController.signup);

@@ -21,6 +21,8 @@ app.use(cookie_parser());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/users", userRouter);
+app.use("/coaches", userRouter);
+app.use("/trainees", userRouter);
 
 app.use("/packages", packageRouter);
 
