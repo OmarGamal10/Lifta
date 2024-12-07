@@ -62,8 +62,8 @@ const SideBar = ({ onSidebarClick }) => {
             <li
               onClick={() => handleItemClick("My Profile")}
               className={`flex items-center font-semibold text-lg 
-                ${activeItem === "My Profile" ? "bg-primary text-backGroundColor" : "hover:bg-primary text-textColor hover:text-backGroundColor"} 
-                active:bg-primary hover:cursor-pointer transition-all px-3 py-2 rounded-l-md`}
+                ${activeItem === "My Profile" ? "bg-primary text-backGroundColor scale-110" : "hover:bg-primary text-textColor hover:text-backGroundColor"} 
+                active:bg-primary hover:cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:shadow-lg mx-3 pl-3 py-2 rounded-l-md`}
             >
               {renderComponent("My Profile")}
               My Profile
@@ -84,8 +84,8 @@ const SideBar = ({ onSidebarClick }) => {
                 key={item.name}
                 onClick={() => handleItemClick(item.name)} // Update active item on click
                 className={`flex items-center font-semibold text-lg 
-                  ${activeItem === item.name ? "bg-primary text-backGroundColor" : "hover:bg-primary text-textColor hover:text-backGroundColor"} 
-                  active:bg-primary hover:cursor-pointer transition-all px-3 py-2 rounded-l-md`}
+                  ${activeItem === item.name ? "bg-primary text-backGroundColor scale-110" : "hover:bg-primary text-textColor hover:text-backGroundColor"} 
+                  active:bg-primary hover:cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:shadow-lg mx-3 pl-3 py-2 rounded-l-md`}
               >
                 {renderComponent(item.name)}
                 {item.label}
