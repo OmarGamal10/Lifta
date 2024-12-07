@@ -4,6 +4,8 @@ const morgan = require("morgan");
 const cookie_parser = require("cookie-parser");
 const userRouter = require("./routes/userRoutes");
 const packageRouter = require("./routes/packageRoute");
+const ingredientRouter = require("./routes/ingredientRoute");
+
 const subscriptionRouter = require("./routes/subscriptionRoute");
 const errorHandler = require("./controllers/errorController");
 const AppError = require("./utils/AppError");
@@ -26,6 +28,7 @@ app.use("/users", userRouter);
 app.use("/packages", packageRouter);
 
 app.use("/subscriptions", subscriptionRouter);
+app.use("/ingredients", ingredientRouter);
 
 // error handling middleware
 app.use(errorHandler);
