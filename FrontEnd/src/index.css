@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer primereact;
+@import 'primeicons/primeicons.css';
 
 @layer base {
     body {
@@ -13,3 +15,13 @@
         /* background-size: 580px 720px; */
     }
 }
+
+.btn-disabled {
+    @apply opacity-50 ;
+  }
+
+  .p-tooltip {
+    background-color: #f5a623; /* Example background color */
+    color: white; /* Tooltip text color */
+    border-radius: 5px;
+  }
