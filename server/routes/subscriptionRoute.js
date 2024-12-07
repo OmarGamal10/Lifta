@@ -5,6 +5,10 @@ const convertCamelCase = require("../middlewares/camelToSnakeMiddleware");
 // a new subscription won't have a start date or an end date, and will have status pending until it's approved
 
 router.get("/", subscriptionController.getAllSubscriptions);
+router.get(
+  "/trainer/pending/:id",
+  subscriptionController.getPendingSubscriptionsByCoachId
+);
 router.post(
   "/",
   convertCamelCase,
