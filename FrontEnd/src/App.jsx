@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { React } from "react";
 import Form from "./components/form";
 import FormTrainee from "./components/trainee/formTrainee";
@@ -34,7 +35,7 @@ function App() {
           },
         }}
       >
-        <ExerciseForm />
+        <PackageDashboard />
       </PrimeReactProvider>
     </div>
   );

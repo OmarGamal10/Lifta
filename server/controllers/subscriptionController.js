@@ -28,11 +28,11 @@ const createInitialSubscription = async (req, res, next) => {
 };
 
 const subscriptionResponse = async (req, res, next) => {
-  const { response } = req.body,
+  const { status } = req.body,
     { id: subscription_id } = req.params;
   let subscription;
-  console.log(response);
-  if (response) {
+  console.log(status);
+  if (status) {
     const start_date = new Date();
     const duration =
       await subscriptionModel.getDurationBySubscriptionId(subscription_id);
@@ -41,14 +41,14 @@ const subscriptionResponse = async (req, res, next) => {
     ).toISOString();
     subscription = await subscriptionModel.subscriptionResponse(
       subscription_id,
-      response,
+      status,
       start_date,
       end_date
     );
   } else {
     subscription = await subscriptionModel.subscriptionResponse(
       subscription_id,
-      response,
+      status,
       null,
       null
     );
@@ -61,8 +61,23 @@ const subscriptionResponse = async (req, res, next) => {
   });
 };
 
+const getPendingSubscriptionsByCoachId = async (req, res, next) => {
+  const { id: coach_id } = req.params;
+  const subscriptions =
+    await subscriptionModel.getPendingSubscriptionsByCoachId(coach_id);
+  res.status(200).json({
+    status: "success",
+    data: {
+      subscriptions,
+    },
+  });
+};
+
 module.exports = {
   getAllSubscriptions: catchAsync(getAllSubscriptions),
   createInitialSubscription: catchAsync(createInitialSubscription),
   subscriptionResponse: catchAsync(subscriptionResponse),
+  getPendingSubscriptionsByCoachId: catchAsync(
+    getPendingSubscriptionsByCoachId
+  ),
 };

@@ -39,3 +39,12 @@ exports.subscriptionResponse = async (
     await db.query(query, [status, start_date, end_date, subscription_id])
   ).rows[0];
 };
+
+exports.getPendingSubscriptionsByCoachId = async (coachId) => {
+  const query = ` SELECT package.name, users.first_name, users.last_name, subscription.subscription_id
+                  FROM lifta_schema.subscription 
+                  JOIN lifta_schema.package ON subscription.package_id = package.package_id 
+                  JOIN lifta_schema.users ON subscription.trainee_id = users.user_id
+                  WHERE package.trainer_id = $1 AND subscription.status = 'Pending';`;
+  return (await db.query(query, [coachId])).rows;
+};
