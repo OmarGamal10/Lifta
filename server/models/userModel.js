@@ -5,6 +5,11 @@ exports.getAllUsers = async () => {
   return (await db.query(query)).rows;
 };
 
+exports.SelectUserById = async (Id) => {
+  const query = "SELECT * FROM lifta_schema.users WHERE user_id = $1";
+  const values = [Id];
+  return (await db.query(query, values)).rows[0];
+};
 exports.SelectUserByEmail = async (email) => {
   const query = "SELECT * FROM lifta_schema.users WHERE email = $1";
   const values = [email];

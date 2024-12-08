@@ -25,7 +25,7 @@ function SignUpForm() {
     weight: "",
     goal: "",
     foodAllergies: "",
-    workoutPreferences: "outdoors",
+    workoutPreferences: "Gym",
   });
 
   const [coachData, setCoachData] = useState({
