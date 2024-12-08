@@ -2,7 +2,7 @@ const db = require("../db");
 const AppError = require("../utils/AppError");
 
 exports.getReviewsByCoachId = async (coachId) => {
-  const query = `SELECT * FROM lifta_schema.review WHERE trainer_id = $1`;
+  const query = `SELECT content,stars FROM lifta_schema.review WHERE trainer_id = $1`;
   return (await db.query(query, [coachId])).rows;
 };
 exports.getTotalCoachRate = async (coachId) => {

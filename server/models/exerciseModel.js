@@ -2,7 +2,7 @@ const db = require("../db");
 const AppError = require("../utils/AppError");
 
 exports.getExercisesByCoachId = async (coachId) => {
-  const query = `SELECT * FROM lifta_schema.exercise WHERE trainer_id = $1`;
+  const query = `SELECT name,description,muscle_group AS muscleGroup, gif_path AS gif FROM lifta_schema.exercise WHERE trainer_id = $1`;
   return (await db.query(query, [coachId])).rows;
 };
 
