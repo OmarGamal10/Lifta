@@ -10,6 +10,8 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 import UserProfile from "./components/userProfile.jsx";
 import ProfileSection from "./components/Profilesection.jsx";
 import LandingPage from "./components/landingPage.jsx";
+import Banned from "./pages/Banned.jsx";
+import NotFound from "./pages/Notfound.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +45,10 @@ const router = createBrowserRouter([
         <UserProfile />
       </ProtectedRoute>
     )
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
 

@@ -62,10 +62,10 @@ function LoginForm() {
   };
 
   return (
-    <div className="flex flex-row min-h-screen justify-center items-center bg-textColor p-16">
-      <div className="container border-2 border-solid bg-backGroundColor border-primary flex flex-col items-center justify-center p-12 max-w-2xl rounded-3xl relative">
+    <div className="flex flex-row min-h-screen justify-center items-center bg-backGroundColor p-16">
+      <div className="container border-2 border-solid bg-backGroundColor border-secondary flex flex-col items-center justify-center p-12 max-w-2xl rounded-3xl relative">
         <div className="flex flex-row items-center">
-          <h1 className="text-textColor text-3xl">LIFTA</h1>
+          <h1 className="text-textColor text-3xl font-bold">LIFTA</h1>
           <img className="w-24" src="src/assets/image.png" alt="" />
         </div>
         <form
@@ -118,7 +118,7 @@ function LoginForm() {
           <div className="flex flex-col justify-center items-center ">
             <button
               type="submit" // This will trigger the onSubmit event and call handleSubmit
-              className="bg-secondary border px-[100px] w-1/2 rounded-lg border-secondary py-4 text-md text-backGroundColor hover:border-primary hover:text-primary mb-4"
+              className="bg-secondary border px-[100px] w-1/2 rounded-lg border-secondary py-4 text-md text-backGroundColor transform transition-transform duration-300 hover:scale-110 hover:border-primary hover:text-primary mb-4"
             >
               Log in
             </button>
@@ -127,7 +127,7 @@ function LoginForm() {
               <Link
                 to="/sign-up"
                 replace
-                className=" text-textColor text-decoration-line: underline"
+                className=" text-accent text-decoration-line: underline hover:text-primary"
               >
                 Sign up
               </Link>
