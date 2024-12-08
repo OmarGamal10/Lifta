@@ -6,6 +6,7 @@ const userRouter = require("./routes/userRoutes");
 const packageRouter = require("./routes/packageRoute");
 const ingredientRouter = require("./routes/ingredientRoute");
 const exerciseRouter = require("./routes/exerciseRoute");
+const reviewRouter = require("./routes/reviewRoute");
 
 const subscriptionRouter = require("./routes/subscriptionRoute");
 const errorHandler = require("./controllers/errorController");
@@ -31,6 +32,7 @@ app.use("/packages", packageRouter);
 app.use("/subscriptions", subscriptionRouter);
 app.use("/ingredients", ingredientRouter);
 app.use("/exercises", exerciseRouter);
+app.use("/reviews", reviewRouter);
 
 // error handling middleware
 app.use(errorHandler);
