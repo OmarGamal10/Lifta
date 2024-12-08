@@ -23,8 +23,18 @@ import { PageNotFound } from "./components/pageNotFound.jsx";
 function App() {
   return (
     <div>
-      <PrimeReactProvider value={{ unstyled: true, pt: Tailwind , ptOptions: { mergeSections: true, mergeProps: true, classNameMergeFunction: twMerge } }}>
-        <LandingPage />
+      <PrimeReactProvider
+        value={{
+          unstyled: true,
+          pt: Tailwind,
+          ptOptions: {
+            mergeSections: true,
+            mergeProps: true,
+            classNameMergeFunction: twMerge,
+          },
+        }}
+      >
+        <ExerciseForm />
       </PrimeReactProvider>
     </div>
   );

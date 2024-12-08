@@ -5,6 +5,7 @@ const cookie_parser = require("cookie-parser");
 const userRouter = require("./routes/userRoutes");
 const packageRouter = require("./routes/packageRoute");
 const ingredientRouter = require("./routes/ingredientRoute");
+const exerciseRouter = require("./routes/exerciseRoute");
 
 const subscriptionRouter = require("./routes/subscriptionRoute");
 const errorHandler = require("./controllers/errorController");
@@ -29,6 +30,7 @@ app.use("/packages", packageRouter);
 
 app.use("/subscriptions", subscriptionRouter);
 app.use("/ingredients", ingredientRouter);
+app.use("/exercises", exerciseRouter);
 
 // error handling middleware
 app.use(errorHandler);

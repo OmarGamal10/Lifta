@@ -7,11 +7,11 @@ const getIngredientsCoach = async (req, res, next) => {
   if (!coachId || isNaN(coachId)) {
     return next(new AppError("Please provide a coach id", 400));
   }
-  const packages = await ingredientModel.getIngredientsByCoachId(coachId);
+  const ingredients = await ingredientModel.getIngredientsByCoachId(coachId);
   res.status(200).json({
     status: "success",
     data: {
-      packages,
+      ingredients,
     },
   });
 };

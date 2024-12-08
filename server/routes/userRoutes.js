@@ -5,6 +5,7 @@ const userModel = require("../models/userModel");
 const convertToSnakeCase = require("../middlewares/camelToSnakeMiddleware");
 const packageRouter = require("./packageRoute");
 const ingredientRouter = require("./ingredientRoute");
+const exerciseRouter = require("./exerciseRoute");
 
 //for testing without opening pgAdmin (getting all users)
 router.get("/", async (req, res, next) => {
@@ -23,6 +24,7 @@ router.get("/logout", authController.logout);
 
 //coach packages
 router.use("/:coachId/packages", packageRouter);
+router.use("/:coachId/exercises", exerciseRouter);
 router.use("/:coachId/ingredients", ingredientRouter);
 
 module.exports = router;
