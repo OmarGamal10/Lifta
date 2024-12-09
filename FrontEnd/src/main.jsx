@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App.jsx";
 import LoginForm from "./components/loginForm.jsx";
 import SignUpForm from "./components/signUpForm.jsx";
-import { PageNotFound } from "./components/pageNotFound.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -20,10 +19,6 @@ const router = createBrowserRouter([
   {
     path: "sign-up",
     element: <SignUpForm />,
-  },
-  {
-    path: "*",
-    element: <PageNotFound />,
   },
 ]);
 
