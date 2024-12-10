@@ -73,6 +73,28 @@ const getPendingSubscriptionsByCoachId = async (req, res, next) => {
   });
 };
 
+const getTraineeHasGymSubscription = async (req, res, next) => {
+  const { id:trainee_id } = req.params;
+  const hasGymSubscription = await subscriptionModel.getTraineeHasGymSubscription(trainee_id);
+  res.status(200).json({
+    status: "success",
+    data: {
+      hasGymSubscription,
+    },
+  });
+};
+
+const getTraineeHasNutritionSubscription = async (req, res, next) => {
+  const { id:trainee_id } = req.params;
+  const hasNutritionSubscription = await subscriptionModel.getTraineeHasNutritionSubscription(trainee_id);
+  res.status(200).json({
+    status: "success",
+    data: {
+      hasNutritionSubscription,
+    },
+  });
+};
+
 module.exports = {
   getAllSubscriptions: catchAsync(getAllSubscriptions),
   createInitialSubscription: catchAsync(createInitialSubscription),
@@ -80,4 +102,6 @@ module.exports = {
   getPendingSubscriptionsByCoachId: catchAsync(
     getPendingSubscriptionsByCoachId
   ),
+  getTraineeHasGymSubscription: catchAsync(getTraineeHasGymSubscription),
+  getTraineeHasNutritionSubscription: catchAsync(getTraineeHasNutritionSubscription),
 };

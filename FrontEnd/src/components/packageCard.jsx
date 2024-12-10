@@ -119,8 +119,8 @@ export function PackageCard(probs) {
           <button
             disabled = {!subscribeEnabled}
             className={
-              "border-accent border-[1px] py-2 px-6 rounded-full hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50" +
-              (subscribeEnabled ? " " : " btn-disabled cursor-not-allowed")
+              "border-accent border-[1px] py-2 px-6 rounded-full" +
+              (subscribeEnabled ? " hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50" : " btn-disabled cursor-not-allowed ")
             }
             onClick={handleSubscribe}
           >

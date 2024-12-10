@@ -2,14 +2,14 @@ import "./output.css"; // Adjust the path as needed
 import { PackageCard } from "./packageCard";
 import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
-import { ConstructionIcon } from "lucide-react";
+import { ConstructionIcon, SendHorizontal } from "lucide-react";
 
 export function PackageDashboard() {
   const { get: httpGet, loading, error } = useHttp("http://localhost:3000");
 
   const [packages, setPackages] = useState([]);
-  // const [hasGymSub, setHasGymSub] = useState([]);
-  // const [hasNutSub, setHasNutSub] = useState([]);
+  const [hasGymSub, setHasGymSub] = useState([]);
+  const [hasNutSub, setHasNutSub] = useState([]);
   
 
   useEffect(() => {
@@ -20,6 +20,32 @@ export function PackageDashboard() {
         });
         console.log(response);
         setPackages(response.data.packages);
+      } catch (err) {
+        console.log(err);
+      }
+      try {
+        const response = await httpGet("/subscriptions/hasNutritionSubscription/58", {
+          headers: { "Cache-Control": "no-cache" },
+        });
+        if (response.data.hasGymSubscription.length == 1) {
+          setHasGymSub(true);
+        }
+        else {
+          setHasGymSub(false);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+      try {
+        const response = await httpGet("/subscriptions/hasNutritionSubscription/58", {
+          headers: { "Cache-Control": "no-cache" },
+        });
+        if (response.data.hasNutritionSubscription.length == 1) {
+          setHasNutSub(true);
+        }
+        else {
+          setHasNutSub(false);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -51,10 +77,10 @@ export function PackageDashboard() {
             description={pack.description}
             price={pack.price}
             duration={pack.duration}
-            view={0}  //hardcoded
+            view={1}  //hardcoded
             type={pack.type}
-            hasGymSub={true}  //hardcoded
-            hasNutSub={false} //hardcoded
+            hasGymSub={hasGymSub}
+            hasNutSub={hasNutSub}
             isActive = {true} //hardcoded
             className="h-full" // Ensures cards have equal height
           />

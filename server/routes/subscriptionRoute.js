@@ -20,4 +20,7 @@ router.patch(
   subscriptionController.subscriptionResponse
 );
 
+router.get("/hasGymSubscription/:id", subscriptionController.getTraineeHasGymSubscription);
+router.get("/hasNutritionSubscription/:id", subscriptionController.getTraineeHasNutritionSubscription);
+
 module.exports = router;

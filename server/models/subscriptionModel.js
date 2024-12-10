@@ -48,3 +48,19 @@ exports.getPendingSubscriptionsByCoachId = async (coachId) => {
                   WHERE package.trainer_id = $1 AND subscription.status = 'Pending';`;
   return (await db.query(query, [coachId])).rows;
 };
+
+exports.getTraineeHasGymSubscription = async (traineeId) => {
+  const query = `SELECT 1
+                 FROM lifta_schema.subscription
+                 JOIN lifta_schema.package ON subscription.package_id = package.package_id
+                 WHERE subscription.trainee_id = $1 AND type = 'Gym' AND (status = 'Pending' OR status = 'Active');`;
+  return (await db.query(query, [traineeId])).rows;
+};
+
+exports.getTraineeHasNutritionSubscription = async (traineeId) => {
+  const query = `SELECT 1
+                 FROM lifta_schema.subscription
+                 JOIN lifta_schema.package ON subscription.package_id = package.package_id
+                 WHERE subscription.trainee_id = $1 AND type = 'Nutrition' AND (status = 'Pending' OR status = 'Active');`;
+  return (await db.query(query, [traineeId])).rows;
+};
