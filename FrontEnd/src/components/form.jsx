@@ -59,8 +59,8 @@ function Form({ formData, setFormData, toNext }) {
     });
   };
   return (
-    <div className="flex flex-row min-h-screen justify-center items-center bg-textColor p-16">
-      <div className="container border-2 border-solid bg-backGroundColor border-primary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
+    <div className="flex flex-row min-h-screen justify-center items-center bg-backGroundColor p-16">
+      <div className="container border-2 border-solid bg-backGroundColor border-secondary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
         <div className="absolute top-[-65px] left-1/2 transform -translate-x-1/2">
           <input
             type="image"
