@@ -1,17 +1,29 @@
 /* eslint-disable no-unused-vars */
 //  import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./output.css"; // Adjust the path as needed
 import { ScrollPanel } from "primereact/scrollpanel";
 import { Button } from "primereact/button";
 import useHttp from "../hooks/useHTTP";
 
 export function PackageCard(probs) {
-  const [deactivated, setDeactivated] = useState(true); // 'false' means it's initially 'off'
+  const [deactivated, setDeactivated] = useState(false); // 'false' means it's initially 'on'
   const { post, loading, error, data } = useHttp("http://localhost:3000");
+
+  const [subscribeEnabled, setSubscribeEnabled] = useState(true);
   //0 for coach view
   //1 for trainee browsing coach
   //2 for trainee packages dashboard
+
+  useEffect(() => {
+    if (probs.type == "Gym" && probs.hasGymSub || probs.type == "Nutrition" && probs.hasNutSub) {
+      setSubscribeEnabled(false);
+    }
+    else {
+      setSubscribeEnabled(true);
+    }
+    setDeactivated(probs.isActive);
+  }, []);
 
   function handleToggle() {
     if (deactivated) {
@@ -25,7 +37,7 @@ export function PackageCard(probs) {
     try {
       const response = await post("/subscriptions", {
         packageId: probs.packageId,
-        traineeId: 84, // Replace with actual trainee ID from cookie
+        traineeId: 13, // Replace with actual trainee ID from cookie
       });
       console.log(response);
     } catch (err) {
@@ -105,9 +117,10 @@ export function PackageCard(probs) {
       return (
         <div className="flex justify-center mt-auto pb-6">
           <button
+            disabled = {!subscribeEnabled}
             className={
               "border-accent border-[1px] py-2 px-6 rounded-full hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50" +
-              (probs.isActive ? " " : " btn-disabled")
+              (subscribeEnabled ? " " : " btn-disabled cursor-not-allowed")
             }
             onClick={handleSubscribe}
           >

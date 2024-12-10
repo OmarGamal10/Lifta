@@ -26,7 +26,7 @@ function App() {
   return (
     <div>
       <PrimeReactProvider value={{  pt: Tailwind  }}>
-        <CoachesList />
+        <PackageDashboard />
       </PrimeReactProvider>
     </div>
   );

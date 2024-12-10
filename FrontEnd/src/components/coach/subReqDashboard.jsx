@@ -11,7 +11,9 @@ export function SubReqDashboard() {
 
   const fetchRequests = async () => {
     try {
-      const response = await get("/subscriptions/trainer/pending/70"); //70 is the coach id from cookie lmfrod httzbt ba3d man-reach el page de mel profile
+      const response = await get("/subscriptions/trainer/pending/70", {
+        headers: { "Cache-Control": "no-cache" },
+      }); //70 is the coach id from cookie lmfrod httzbt ba3d man-reach el page de mel profile
       if (response && response.data) {
         setRequests(response.data.subscriptions);
       }
@@ -51,7 +53,7 @@ export function SubReqDashboard() {
             ))}
           </div>
         ) : (
-          <div className="text-center text-gray-500 py-16">
+          <div className="text-center text-textColor py-16">
             <p className="text-2xl mb-4">No subscription requests yet</p>
             <p className="text-gray-400">
               New requests will appear here when they arrive
