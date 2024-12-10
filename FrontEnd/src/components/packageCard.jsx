@@ -1,15 +1,29 @@
+/* eslint-disable no-unused-vars */
 //  import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./output.css"; // Adjust the path as needed
 import { ScrollPanel } from "primereact/scrollpanel";
 import { Button } from "primereact/button";
+import useHttp from "../hooks/useHTTP";
 
 export function PackageCard(probs) {
-  const [deactivated, setDeactivated] = useState(false); // 'false' means it's initially 'off'
+  const [deactivated, setDeactivated] = useState(false); // 'false' means it's initially 'on'
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
 
+  const [subscribeEnabled, setSubscribeEnabled] = useState(true);
   //0 for coach view
   //1 for trainee browsing coach
   //2 for trainee packages dashboard
+
+  useEffect(() => {
+    if (probs.type == "Gym" && probs.hasGymSub || probs.type == "Nutrition" && probs.hasNutSub) {
+      setSubscribeEnabled(false);
+    }
+    else {
+      setSubscribeEnabled(true);
+    }
+    setDeactivated(probs.isActive);
+  }, []);
 
   function handleToggle() {
     if (deactivated) {
@@ -19,12 +33,24 @@ export function PackageCard(probs) {
     }
   }
 
+  async function handleSubscribe() {
+    try {
+      const response = await post("/subscriptions", {
+        packageId: probs.packageId,
+        traineeId: 58, // Replace with actual trainee ID from cookie
+      });
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   function renderEditBtn() {
     if (probs.view == 0) {
       return (
         <>
           <Button
-            label="Submit"
+            label="Edit"
             icon="pi pi-pen-to-square"
             rounded
             size="small"
@@ -91,10 +117,12 @@ export function PackageCard(probs) {
       return (
         <div className="flex justify-center mt-auto pb-6">
           <button
+            disabled = {!subscribeEnabled}
             className={
-              "border-accent border-[1px] py-2 px-6 rounded-full hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50" +
-              (probs.isActive ? " " : " btn-disabled")
+              "border-accent border-[1px] py-2 px-6 rounded-full" +
+              (subscribeEnabled ? " hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50" : " btn-disabled cursor-not-allowed ")
             }
+            onClick={handleSubscribe}
           >
             Subscribe Now
           </button>
@@ -121,12 +149,13 @@ export function PackageCard(probs) {
       {/* body */}
       <div className="px-6 py-4">
         <h3 className="text-2xl font-medium text-primary mb-4">
-          {probs.duration}
+          {probs.duration} {probs.duration > 1 ? "Months" : "Month"}
         </h3>
-        <ScrollPanel style={{ width: "100%", height: (probs.view == 2)? "140px" : "80px"}} className="pl-3">
-          <p className="font-thin text-sm">
-            {probs.description}
-          </p>
+        <ScrollPanel
+          style={{ width: "100%", height: probs.view == 2 ? "140px" : "80px" }}
+          className="pl-3"
+        >
+          <p className="font-thin text-sm">{probs.description}</p>
         </ScrollPanel>
       </div>
       {renderFooter()}

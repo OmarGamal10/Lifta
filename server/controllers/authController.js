@@ -56,6 +56,7 @@ const checkAuth = async (req, res) => {
 // Log-In
 const login = async (req, res, next) => {
   const { email, password } = req.body;
+
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
 
@@ -74,7 +75,6 @@ const login = async (req, res, next) => {
   const payload = {
     user_id: user.user_id,
     email: user.email,
-    phone_number: user.phone_number,
     type: user.type,
   };
 

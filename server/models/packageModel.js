@@ -1,4 +1,5 @@
 const db = require("../db");
+const AppError = require("../utils/AppError");
 
 exports.getAllPackages = async () => {
   const query = "SELECT * FROM lifta_schema.package;";
@@ -11,7 +12,13 @@ exports.getPackagesByCoachId = async (coachId) => {
 };
 
 exports.createPackage = async (...values) => {
-  const query =
-    "INSERT INTO lifta_schema.package (name, price, trainer_id, duration, type, description, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;";
-  return (await db.query(query, values)).rows[0];
+  try {
+    const query =
+      "INSERT INTO lifta_schema.package (name, price, trainer_id, duration, type, description, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;";
+    return (await db.query(query, values)).rows[0];
+  } catch (err) {
+    if (err.code === "23505") {
+      throw new AppError("You already have a package with this name", 400);
+    }
+  }
 };

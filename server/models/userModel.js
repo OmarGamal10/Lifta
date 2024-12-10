@@ -5,11 +5,22 @@ exports.getAllUsers = async () => {
   return (await db.query(query)).rows;
 };
 
+exports.getAllTrainees = async () => {
+  const query = "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainee ON user_id = trainee_id";
+  return (await db.query(query)).rows;
+}
+
+exports.getAllCoaches = async () => {
+  const query = "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainer ON user_id = trainer_id";
+  return (await db.query(query)).rows;
+}
+
 exports.SelectUserById = async (Id) => {
   const query = "SELECT * FROM lifta_schema.users WHERE user_id = $1";
   const values = [Id];
   return (await db.query(query, values)).rows[0];
 };
+
 exports.SelectUserByEmail = async (email) => {
   const query = "SELECT * FROM lifta_schema.users WHERE email = $1";
   const values = [email];

@@ -17,7 +17,10 @@
 }
 
 .btn-disabled {
-    @apply opacity-50 ;
-  }
+    @apply opacity-50 cursor-not-allowed;
+}
 
-  
+.p-inputtext {
+    /* background-color: black; Adjust the background color as needed */
+    @apply bg-backGroundColor;
+}
