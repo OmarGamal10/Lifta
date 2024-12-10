@@ -89,7 +89,7 @@ function FormCoach({
     setViewCert(true);
   };
   return (
-    <div className="flex flex-row min-h-screen justify-center items-center bg-textColor p-16">
+    <div className="flex flex-row min-h-screen justify-center items-center bg-backGroundColor p-16">
       {viewCertForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <CertForm
@@ -99,7 +99,7 @@ function FormCoach({
           />
         </div>
       )}
-      <div className="container border-2 border-solid bg-backGroundColor border-primary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
+      <div className="container border-2 border-solid bg-backGroundColor border-secondary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
         <form
           className="bg-backGroundColor py-16 px-10 w-full"
           // onSubmit={handleSubmit}

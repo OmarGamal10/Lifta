@@ -1,13 +1,15 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import useHttp from "../../hooks/useHTTP";
+import { useNavigate } from "react-router-dom";
 
 function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
-
+  const navigate = useNavigate();
   const { post, loading, error, data } = useHttp("http://localhost:3000");
 
   const handleChange = (e) => {
@@ -61,7 +63,7 @@ function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
           },
         }
       );
-      console.log(response);
+      navigate("/profile");
     } catch (err) {
       console.log(err);
     }
@@ -69,8 +71,8 @@ function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
   };
 
   return (
-    <div className="flex flex-row min-h-screen justify-center items-center bg-textColor p-16">
-      <div className="container border-2 border-solid bg-backGroundColor border-primary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
+    <div className="flex flex-row min-h-screen justify-center items-center bg-backGroundColor p-16">
+      <div className="container border-2 border-solid bg-backGroundColor border-secondary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
         <div className="absolute top-[-65px] left-1/2 transform -translate-x-1/2"></div>
         <form
           className="bg-backGroundColor py-16 px-10 w-full"

@@ -5,10 +5,58 @@ const { hashPassword, validatePassword } = require("../utils/hashPassword");
 const createToken = require("../utils/createToken");
 const userModel = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
+const jwt = require("jsonwebtoken")
+
+const getUserById = async (req, res) => {
+  const userId = req.params.userId;
+
+  const user = await userModel.SelectUserById(userId);
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+  res.status(200).json({
+    userId: userId,
+    userName: user["first_name"] + " " + user["last_name"],
+    userType: user["type"],
+    userBio: user["bio"]
+  })
+}
+
+
+const checkAuth = async (req, res) => {
+  // Retrieve the token from the cookies
+  const token = req.cookies.jwt;
+
+  // If no token is found, return an error response
+  if (!token) {
+    return res.status(401).json({ isAuthenticated: false, userId:"", userType:"", message: "No token provided" });
+  }
+
+  try {
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.SECRETKEY);
+
+    // Extract userId and userType from the token payload
+    const { user_id, type } = decoded;
+
+    // Respond with user information
+    return res.status(200).json({
+      isAuthenticated: true,
+      userId: user_id,
+      userType: type,
+    });
+  } catch (err) {
+    // Handle invalid or expired tokens
+    console.error("Token verification failed:", err.message);
+    return res.status(401).json({ isAuthenticated: false, userId:"", userType:"", message: "Invalid or expired token" });
+  }
+}
+
 
 // Log-In
 const login = async (req, res, next) => {
   const { email, password } = req.body;
+
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
 
@@ -27,7 +75,6 @@ const login = async (req, res, next) => {
   const payload = {
     user_id: user.user_id,
     email: user.email,
-    phone_number: user.phone_number,
     type: user.type,
   };
 
@@ -136,6 +183,8 @@ const logout = (req, res) => {
 };
 
 module.exports = {
+  getUserById,
+  checkAuth,
   login: catchAsync(login),
   signup: catchAsync(signup),
   logout,
