@@ -24,9 +24,10 @@ export function PackageDashboard() {
         console.log(err);
       }
       try {
-        const response = await httpGet("/subscriptions/hasNutritionSubscription/58", {
+        const response = await httpGet("/subscriptions/hasGymSubscription/58", {
           headers: { "Cache-Control": "no-cache" },
         });
+        console.log(response.data);
         if (response.data.hasGymSubscription.length == 1) {
           setHasGymSub(true);
         }
@@ -40,6 +41,7 @@ export function PackageDashboard() {
         const response = await httpGet("/subscriptions/hasNutritionSubscription/58", {
           headers: { "Cache-Control": "no-cache" },
         });
+        console.log(response.data)
         if (response.data.hasNutritionSubscription.length == 1) {
           setHasNutSub(true);
         }

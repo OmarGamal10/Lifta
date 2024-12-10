@@ -13,17 +13,8 @@ exports.getDurationBySubscriptionId = async (subscription_id) => {
 };
 
 exports.createSubscription = async (trainee_id, package_id, status) => {
-  //check if the trainee already has a subscription active or pending
-  const checkQuery = `SELECT * FROM lifta_schema.subscription WHERE trainee_id = $1 AND (status = 'Active' OR status = 'Pending');`;
-  const subscription = (await db.query(checkQuery, [trainee_id])).rows[0];
-  if (subscription) {
-    throw new AppError(
-      `You already have ${subscription.status == "Active" ? "an active" : "a pending"} subscription`,
-      409
-    );
-  }
-  const query = `INSERT INTO lifta_schema.subscription (trainee_id, package_id,is_active ,status) VALUES ($1, $2, $3, $4) RETURNING *;`;
-  return (await db.query(query, [trainee_id, package_id, false, status]))
+  const query = `INSERT INTO lifta_schema.subscription (trainee_id, package_id ,status) VALUES ($1, $2, $3) RETURNING *;`;
+  return (await db.query(query, [trainee_id, package_id, status]))
     .rows[0];
 };
 

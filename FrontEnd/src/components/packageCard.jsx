@@ -37,7 +37,7 @@ export function PackageCard(probs) {
     try {
       const response = await post("/subscriptions", {
         packageId: probs.packageId,
-        traineeId: 13, // Replace with actual trainee ID from cookie
+        traineeId: 58, // Replace with actual trainee ID from cookie
       });
       console.log(response);
     } catch (err) {
