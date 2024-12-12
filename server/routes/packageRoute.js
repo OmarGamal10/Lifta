@@ -19,4 +19,6 @@ router.post(
   packageController.createPackage
 );
 
+router.delete("/", convertCamelToSnake, packageController.deletePackage);
+
 module.exports = router;

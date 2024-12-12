@@ -1,7 +1,7 @@
 const db = require("./db");
 const express = require("express");
 const morgan = require("morgan");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const cookie_parser = require("cookie-parser");
 const userRouter = require("./routes/userRoutes");
 const packageRouter = require("./routes/packageRoute");
@@ -35,9 +35,6 @@ app.use(express.json());
 app.use(cookie_parser());
 app.use(express.urlencoded({ extended: true }));
 
-
-
-
 app.use("/users", userRouter);
 app.use("/coaches", userRouter);
 app.use("/trainees", userRouter);
@@ -53,7 +50,6 @@ app.use("/certificates", certificateRouter);
 // error handling middleware
 app.use(errorHandler);
 
-
 app.use((req, res, next) => {
   return next(new AppError(`There is no page for ${req.originalUrl} `, 404));
 });
@@ -62,6 +58,3 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 module.exports = app;
-
-
-
