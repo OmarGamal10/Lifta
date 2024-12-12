@@ -7,11 +7,16 @@ import SignUpForm from "./components/signUpForm.jsx";
 import ProtectedLoggedRoute from "./ProtectedLoggedRoute.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-import UserProfile from "./components/userProfile.jsx";
+import UserProfile from "./components/Userprofile.jsx";
 import ProfileSection from "./components/Profilesection.jsx";
 import LandingPage from "./components/landingPage.jsx";
 import Banned from "./pages/Banned.jsx";
 import NotFound from "./pages/Notfound.jsx";
+import { TraineeExerciseCard } from "./components/trainee/traineeExerciseCard.jsx";
+import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import Tailwind from "primereact/passthrough/tailwind";
+import "primeicons/primeicons.css";
+
 
 const router = createBrowserRouter([
   {
@@ -44,6 +49,14 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <UserProfile />
       </ProtectedRoute>
+    )
+  },
+  {
+    path: "test",
+    element: (
+      <PrimeReactProvider value={{  pt: Tailwind  }}>
+        <TraineeExerciseCard name={"Shoulder Press"} description={"blah blah blah"} sets={4} reps={12} muscle={"front shoulder"} />
+      </PrimeReactProvider>
     )
   },
   {
