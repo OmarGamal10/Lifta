@@ -16,6 +16,7 @@ import { TraineeExerciseCard } from "./components/trainee/traineeExerciseCard.js
 import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
 import Tailwind from "primereact/passthrough/tailwind";
 import "primeicons/primeicons.css";
+import { TraineeCurrentWrokout } from "./components/trainee/traineCurrentWorkout.jsx";
 
 
 const router = createBrowserRouter([
@@ -55,7 +56,7 @@ const router = createBrowserRouter([
     path: "test",
     element: (
       <PrimeReactProvider value={{  pt: Tailwind  }}>
-        <TraineeExerciseCard name={"Shoulder Press"} description={"blah blah blah"} sets={4} reps={12} muscle={"front shoulder"} />
+        <TraineeCurrentWrokout />
       </PrimeReactProvider>
     )
   },

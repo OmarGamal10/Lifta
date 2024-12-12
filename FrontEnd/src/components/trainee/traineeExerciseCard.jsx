@@ -33,10 +33,12 @@ export function TraineeExerciseCard(probs) {
             }`}
           >
             <div className="flex justify-between w-full items-center">
-              <span>{probs.name}</span>
-              <span className="text-sm text-accent border border-accent rounded-full p-1 px-4">
-                {probs.muscle}
-              </span>
+              <div className="flex gap-4">
+                <span>{probs.name}</span>
+                <span className="text-xs text-accent border border-accent rounded-lg flex items-center px-2">
+                  {probs.muscle}
+                </span>
+              </div>
               <span
                 className={`${
                   open === 1 ? "pi pi-angle-up" : "pi pi-angle-down"
@@ -52,7 +54,7 @@ export function TraineeExerciseCard(probs) {
               <strong>Repetitions and sets: </strong>
               {probs.reps} &times; {probs.sets}
             </div>
-            <button className="px-4 py-2 border border-accent rounded-full w-24 flex gap-2 items-center justify-around hover:bg-accent hover:text-backGroundColor">
+            <button className="px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around hover:bg-accent hover:text-backGroundColor">
               <span>GIF</span>
               <span
                 className="pi pi-external-link text-sm"
