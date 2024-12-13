@@ -8,6 +8,7 @@ import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
+import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -50,6 +51,9 @@ const UserProfile = ({ userId }) => {
   }
   // Components to render based on the active section
   const renderComponent = () => {
+    if (activeSection == "Workouts") {
+      return <TraineeCurrentWrokout/>
+    }
       if(activeSection) {
         return <NoDataDashboard header= {`${activeSection}` + " Section"} />;
       } else {

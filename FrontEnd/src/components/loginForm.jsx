@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useHttp from "../hooks/useHTTP";
-import "./output.css"; // Adjust the path as needed
+import "../style/output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
 
 function LoginForm() {
@@ -109,7 +109,9 @@ function LoginForm() {
               onClick={() => setPassState(!showPassword)}
             >
               <i
-                className={`fa-solid ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
+                className={`fa-solid ${
+                  showPassword ? "fa-eye" : "fa-eye-slash"
+                }`}
               ></i>
             </button>
             {errors.password && <ErrorMessage error={errors.password} />}
