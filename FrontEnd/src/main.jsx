@@ -18,6 +18,7 @@ import Tailwind from "primereact/passthrough/tailwind";
 import "primeicons/primeicons.css";
 import { TraineeCurrentWrokout } from "./components/trainee/traineCurrentWorkout.jsx";
 import { TraineeMealCard } from "./components/trainee/traineeMealCard.jsx";
+import { TraineeCurrentMeals } from "./components/trainee/traineeCurrentMeals.jsx";
 
 
 const router = createBrowserRouter([
@@ -57,7 +58,7 @@ const router = createBrowserRouter([
     path: "test",
     element: (
       <PrimeReactProvider value={{  pt: Tailwind  }}>
-        <TraineeMealCard name={"Pizza"} calories={520} fats={24} protein={ 12} carbs={52} />
+        <TraineeCurrentMeals/>
       </PrimeReactProvider>
     )
   },

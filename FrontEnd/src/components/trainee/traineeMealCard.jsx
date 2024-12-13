@@ -16,14 +16,17 @@ import { Card, Typography } from "@material-tailwind/react";
 
 const ingredients = [
   {
+    id: 1,
     name: "Flour",
     quantity: 2,
   },
   {
+    id: 2,
     name: "tomato",
     quantity: 5,
   },
   {
+    id: 3,
     name: "Cheese",
     quantity: 10,
   },
@@ -37,6 +40,7 @@ export function TraineeMealCard(probs) {
 
   function handleMarkAsDone() {
     setIsDone(true);
+    probs.incrementDoneCount();
   }
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
@@ -90,13 +94,13 @@ export function TraineeMealCard(probs) {
                     </tr>
                   </thead>
                   <tbody>
-                    {ingredients.map(({ name, quantity }, index) => {
+                    {ingredients.map(({id, name, quantity }, index) => {
                       const isLast = index === ingredients.length - 1;
                       const classes = isLast
                         ? "p-4"
                         : "p-4 border-b border-accent";
                       return (
-                        <tr key={name}>
+                        <tr key={id}>
                           <td className={classes}>
                             <Typography variant="small" className="font-normal">
                               {name}
