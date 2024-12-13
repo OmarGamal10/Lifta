@@ -9,6 +9,7 @@ import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
+import Clients from "./coach/Clients";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -51,8 +52,8 @@ const UserProfile = ({ userId }) => {
   }
   // Components to render based on the active section
   const renderComponent = () => {
-      if(activeSection == "My Profile") {
-        return <MyProfile />;
+      if(activeSection == "Clients") {
+        return <Clients userId={userId} />;
       } else {
         return <NoDataDashboard header="No Data Dashboard" />;
       }

@@ -8,6 +8,7 @@ const ingredientRouter = require("./ingredientRoute");
 const exerciseRouter = require("./exerciseRoute");
 const reviewRouter = require("./reviewRoute");
 const certificateRouter = require("./certificateRoute");
+const clientsRouter = require("./clientsRoute");
 
 //for testing without opening pgAdmin (getting all users)
 router.get("/", async (req, res, next) => {
@@ -43,6 +44,8 @@ router.post("/signup", convertToSnakeCase, authController.signup);
 router.get("/logout", authController.logout);
 router.get("/checkAuth", authController.checkAuth);
 router.get("/:userId", authController.getUserById);
+
+// router.use("/:coachId/Clients", clientsRouter);
 //coach packages
 router.use("/:coachId/packages", packageRouter);
 router.use("/:coachId/exercises", exerciseRouter);

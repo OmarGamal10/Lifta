@@ -10,7 +10,7 @@ const MyProfile = () => {
           alt="Profile"
           className="w-24 h-24 rounded-full mb-4"
         />
-        <span className="text-2xl text-textspan mt-1">Update your profile details below</span>
+        <span className="text-sm text-textspan mt-1">Update your personal details below</span>
       </div>
 
       {/* Form Section */}
