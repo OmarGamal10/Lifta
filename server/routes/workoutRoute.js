@@ -18,6 +18,8 @@ router.post(
   workoutController.createWorkout
 );
 
+router.delete("/", convertCamelToSnake, workoutController.deleteWorkout);
+
 router.use("/:workoutId/exercises", exerciseRouter);
 
 module.exports = router;

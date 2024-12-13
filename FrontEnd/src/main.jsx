@@ -12,31 +12,41 @@ import ProfileSection from "./components/Profilesection.jsx";
 import LandingPage from "./components/landingPage.jsx";
 import Banned from "./pages/Banned.jsx";
 import NotFound from "./pages/Notfound.jsx";
+import IngredientForm from "./components/coach/IngredientForm.jsx";
+import IngredientCard from "./components/coach/ingredientCard.jsx";
+import WorkoutCard from "./components/coach/workoutCard.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedLoggedRoute>
-      <LandingPage />
+        <div>
+          <WorkoutCard
+            name={"shady"}
+            note={
+              "ddd  dd  dddd  dd ddddd   dddd dd  ddd ddddd d  ddddddd   ddddd dddddd   ddd  dddd ddd  dd  dddd  dd ddddd   dddd dd  ddd ddddd d  ddddddd   ddddd dddddd   ddd  dddd"
+            }
+          />
+        </div>
       </ProtectedLoggedRoute>
-    )
+    ),
   },
   {
     path: "log-in",
     element: (
       <ProtectedLoggedRoute>
-      <LoginForm />
+        <LoginForm />
       </ProtectedLoggedRoute>
-    )
+    ),
   },
   {
     path: "sign-up",
-    element:(
+    element: (
       <ProtectedLoggedRoute>
-      <SignUpForm />
+        <SignUpForm />
       </ProtectedLoggedRoute>
-    ) 
+    ),
   },
   {
     path: "profile",
@@ -44,7 +54,7 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <UserProfile />
       </ProtectedRoute>
-    )
+    ),
   },
   {
     path: "*",

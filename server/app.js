@@ -20,18 +20,18 @@ const cors = require("cors");
 const { configDotenv } = require("dotenv");
 
 const app = express();
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (origin && /^http:\/\/localhost:\d+$/.test(origin)) {
-        callback(null, true); // Allow requests from localhost with any port
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: (origin, callback) => {
+//       if (origin && /^http:\/\/localhost:\d+$/.test(origin)) {
+//         callback(null, true); // Allow requests from localhost with any port
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
 
 app.use(morgan("dev"));
 app.use(express.json());

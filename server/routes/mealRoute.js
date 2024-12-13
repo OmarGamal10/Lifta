@@ -21,6 +21,8 @@ router.post(
   mealController.createMeal
 );
 
+router.delete("/", convertCamelToSnake, mealController.deleteMeal);
+
 router.use("/:mealId/ingredients", ingredientRouter);
 
 module.exports = router;

@@ -6,14 +6,16 @@ exports.getAllUsers = async () => {
 };
 
 exports.getAllTrainees = async () => {
-  const query = "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainee ON user_id = trainee_id";
+  const query =
+    "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainee ON user_id = trainee_id";
   return (await db.query(query)).rows;
-}
+};
 
 exports.getAllCoaches = async () => {
-  const query = "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainer ON user_id = trainer_id";
+  const query =
+    "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainer ON user_id = trainer_id";
   return (await db.query(query)).rows;
-}
+};
 
 exports.SelectUserById = async (Id) => {
   const query = "SELECT * FROM lifta_schema.users WHERE user_id = $1";
@@ -62,7 +64,7 @@ const addTrainer = async (values, id) => {
   const query =
     "INSERT INTO lifta_schema.trainer (trainer_id, experience_years,client_limit) VALUES ($1, $2, $3)";
   const query2 =
-    "INSERT INTO lifta_schema.certification (trainer_id, title,photo,description,date_issued) VALUES ($1, $2, $3, $4, $5)";
+    "INSERT INTO lifta_schema.certificate (trainer_id, title,photo,description,date_issued) VALUES ($1, $2, $3, $4, $5)";
   await db.query(query, trainerValues);
   await db.query(query2, certification);
 };
