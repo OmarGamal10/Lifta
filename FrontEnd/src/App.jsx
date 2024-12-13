@@ -3,7 +3,7 @@ import { React } from "react";
 import IngForm from "./components/coach/IngredientForm.jsx";
 import PkgForm from "./components/coach/packageForm.jsx";
 import ExerciseForm from "./components/coach/exerciseForm.jsx";
-import UserProfile from "./components/userProfile.jsx"
+import UserProfile from "./components/userProfile.jsx";
 import Form from "./components/form";
 import FormTrainee from "./components/trainee/formTrainee";
 import LoginForm from "./components/loginForm";
@@ -29,7 +29,7 @@ import { CoachesList } from "./components/admin/coachesList.jsx";
 function App() {
   return (
     <div>
-      <PrimeReactProvider value={{  pt: Tailwind  }}>
+      <PrimeReactProvider value={{ pt: Tailwind }}>
         <PackageDashboard />
       </PrimeReactProvider>
     </div>
