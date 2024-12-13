@@ -32,8 +32,22 @@ const getMealsNutritionist = async (req, res, next) => {
     },
   });
 };
+const getMealNutritionInfo = async (req, res, next) => {
+  const { mealId } = req.params;
+  if (!mealId || isNaN(mealId)) {
+    return next(new AppError("Please provide a meal id", 400));
+  }
+  const nutritionFacts = await mealModel.getMealNutritionFacts(mealId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      nutritionFacts,
+    },
+  });
+};
 
 module.exports = {
   createMeal: catchAsync(createMeal),
   getMealsNutritionist: catchAsync(getMealsNutritionist),
+  getMealNutritionInfo: catchAsync(getMealNutritionInfo),
 };

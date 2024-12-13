@@ -10,6 +10,9 @@ const sanitizeEmptyFields = require("../middlewares/sanitizeEmptyFields");
 router.get("/", (req, res, next) => {
   return mealController.getMealsNutritionist(req, res, next);
 });
+router.get("/:mealId/facts", (req, res, next) => {
+  return mealController.getMealNutritionInfo(req, res, next);
+});
 
 router.post(
   "/",

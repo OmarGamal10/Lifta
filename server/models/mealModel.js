@@ -43,3 +43,13 @@ exports.getMealsByNutritionistId = async (nutritionistId) => {
   const query = `SELECT *  FROM lifta_schema.meal WHERE nutritionist_id = $1`;
   return (await db.query(query, [nutritionistId])).rows;
 };
+
+exports.getMealNutritionFacts = async (mealId) => {
+  const query = `SELECT  SUM(i.carb*mi.quantity/100) AS carb ,
+SUM(i.protein*mi.quantity/100) AS protein ,
+SUM(i.fat*mi.quantity/100) AS fat,
+SUM(i.calories_serving*mi.quantity/100) AS calories
+FROM lifta_schema.meal_ingredient mi JOIN
+lifta_schema.ingredient i ON i.ingredient_id = mi.ingredient_id WHERE mi.meal_id=$1`;
+  return (await db.query(query, [mealId])).rows;
+};
