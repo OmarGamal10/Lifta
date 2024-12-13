@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer primereact;
+@import 'primeicons/primeicons.css';
 
 @layer base {
     body {
@@ -12,4 +14,13 @@
         /* background-size: 620px 760px; */
         /* background-size: 580px 720px; */
     }
+}
+
+.btn-disabled {
+    @apply opacity-50 cursor-not-allowed;
+}
+
+.p-inputtext {
+    /* background-color: black; Adjust the background color as needed */
+    @apply bg-backGroundColor;
 }

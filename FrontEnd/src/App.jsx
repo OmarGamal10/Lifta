@@ -1,6 +1,10 @@
 /* eslint-disable no-unused-vars */
 import { React } from "react";
-import Form from "./components/mainForm.jsx";
+import IngForm from "./components/coach/IngredientForm.jsx";
+import PkgForm from "./components/coach/packageForm.jsx";
+import ExerciseForm from "./components/coach/exerciseForm.jsx";
+import UserProfile from "./components/userProfile.jsx";
+import Form from "./components/form";
 import FormTrainee from "./components/trainee/formTrainee";
 import LoginForm from "./components/loginForm";
 import LandingPage from "./components/landingPage";
@@ -8,18 +12,26 @@ import FormCoach from "./components/coach/formCoach";
 import CertForm from "./components/coach/certificateForm";
 import UserTypeForm from "./components/userTypeForm";
 import SignUpForm from "./components/signUpForm.jsx";
+import { PackageCard } from "./components/packageCard.jsx";
+import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import Tailwind from "primereact/passthrough/tailwind";
+import { twMerge } from "tailwind-merge";
+import "primeicons/primeicons.css";
+import { PackageDashboard } from "./components/packageDashboard.jsx";
+import { SubscriptionRequestCard } from "./components/coach/subscriptionRequestCard.jsx";
 import IngForm from "./components/coach/IngredientForm.jsx";
 import PkgForm from "./components/coach/packageForm.jsx";
 import ExerciseForm from "./components/coach/exerciseForm.jsx";
-import Ingredient from "./components/coach/ingredientCard.jsx";
-import Exercise from "./components/coach/exerciseCard.jsx";
-import CreateWorkout from "./components/coach/createWorkout.jsx";
-import CreateMeal from "./components/coach/createMeal.jsx";
+import { SubReqDashboard } from "./components/coach/subReqDashboard.jsx";
+import { TraineesList } from "./components/admin/traineesList.jsx";
+import { CoachesList } from "./components/admin/coachesList.jsx";
 
 function App() {
   return (
     <div>
-      <CreateMeal />
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <PackageDashboard />
+      </PrimeReactProvider>
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import "./output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
 
@@ -51,15 +52,15 @@ function Form({ formData, setFormData, toNext }) {
       lastName: "",
       email: "",
       password: "",
-      phoneNo: "",
+      phoneNumber: "",
       bio: "",
-      gender: "male",
+      gender: "M",
       birthdate: "",
     });
   };
   return (
-    <div className="flex flex-row min-h-screen justify-center items-center bg-textColor p-16">
-      <div className="container border-2 border-solid bg-backGroundColor border-primary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
+    <div className="flex flex-row min-h-screen justify-center items-center bg-backGroundColor p-16">
+      <div className="container border-2 border-solid bg-backGroundColor border-secondary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
         <div className="absolute top-[-65px] left-1/2 transform -translate-x-1/2">
           <input
             type="image"
@@ -163,16 +164,16 @@ function Form({ formData, setFormData, toNext }) {
             </h6>
             <input
               id="phone"
-              name="phoneNo"
+              name="phoneNumber"
               className="bg-backGroundColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left"
               type="tel"
               placeholder="Enter phone number"
               maxLength="11"
               onChange={handleChange}
-              value={formData.phoneNo}
+              value={formData.phoneNumber}
               autoComplete="off"
             />
-            {errors.phoneNo && <ErrorMessage error={errors.phoneNo} />}
+            {errors.phoneNumber && <ErrorMessage error={errors.phoneNumber} />}
           </div>
 
           {/* BIO */}
@@ -201,7 +202,7 @@ function Form({ formData, setFormData, toNext }) {
               className="text-textColor  hover:bg-secondary focus:ring-2 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm px-5 py-2.5 text-center flex flex-row justify-between "
               type="button"
             >
-              {formData.gender === "male" ? "Male" : "Female"}
+              {formData.gender === "M" ? "Male" : "Female"}
               <div>
                 <svg
                   className="w-2.5 h-2.5 ms-3"
@@ -229,7 +230,7 @@ function Form({ formData, setFormData, toNext }) {
                   <li>
                     <button
                       type="button"
-                      onClick={() => handleGenderSelect("male")}
+                      onClick={() => handleGenderSelect("M")}
                       className="block w-full text-left px-4 py-2 hover:bg-secondary hover:text-backGroundColor"
                     >
                       Male
@@ -238,7 +239,7 @@ function Form({ formData, setFormData, toNext }) {
                   <li>
                     <button
                       type="button"
-                      onClick={() => handleGenderSelect("female")}
+                      onClick={() => handleGenderSelect("F")}
                       className="block w-full text-left px-4 py-2 hover:bg-secondary  hover:text-backGroundColor"
                     >
                       Female

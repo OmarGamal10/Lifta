@@ -906,3 +906,24 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+
+/* Custom scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px; /* Adjust width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0D13; /* Track color */
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 20px; /* Round the thumb */
+  display: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #757575; /* Thumb color when hovering */
+  display: block;
+
+}

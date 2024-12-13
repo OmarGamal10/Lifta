@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import { CiImageOn } from "react-icons/ci";
 import { FaRegTrashAlt } from "react-icons/fa";
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import { FaPlus } from "react-icons/fa";
 import CertForm from "./certificateForm";
+import useHttp from "../../hooks/useHTTP";
 
 function FormCoach({
+  userData,
   formData,
   setFormData,
   setCurForm,
@@ -15,11 +18,13 @@ function FormCoach({
 }) {
   const [viewCertForm, setViewCert] = useState(false);
 
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
+
   const [errors, setErrors] = useState({});
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (
-      (name == "yearsOfExperience" || name == "clientsLimit") &&
+      (name == "experienceYears" || name == "clientLimit") &&
       value.length > 2
     )
       return;
@@ -33,7 +38,7 @@ function FormCoach({
       [name]: "",
     }));
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -46,6 +51,24 @@ function FormCoach({
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
+    }
+    try {
+      const response = await post(
+        "/users/signup",
+        {
+          ...userData,
+          ...formData,
+          ...certData,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+    } catch (err) {
+      console.log(err);
     }
   };
   const handleAdd = (e) => {
@@ -62,11 +85,10 @@ function FormCoach({
       setErrors(newErrors);
       return;
     }
-    console.log("shady");
     setViewCert(true);
   };
   return (
-    <div className="flex flex-row min-h-screen justify-center items-center bg-textColor p-16">
+    <div className="flex flex-row min-h-screen justify-center items-center bg-backGroundColor p-16">
       {viewCertForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <CertForm
@@ -76,7 +98,7 @@ function FormCoach({
           />
         </div>
       )}
-      <div className="container border-2 border-solid bg-backGroundColor border-primary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
+      <div className="container border-2 border-solid bg-backGroundColor border-secondary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
         <form
           className="bg-backGroundColor py-16 px-10 w-full"
           // onSubmit={handleSubmit}
@@ -88,36 +110,34 @@ function FormCoach({
             </h6>
             <input
               id="YOE-input"
-              name="yearsOfExperience"
+              name="experienceYears"
               className="bg-backGroundColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left"
               type="number"
               placeholder="Enter a number"
               onChange={handleChange}
-              value={formData.yearsOfExperience}
+              value={formData.experienceYears}
               autoComplete="off"
             />
-            {errors.yearsOfExperience && (
-              <ErrorMessage error={errors.yearsOfExperience} />
+            {errors.experienceYears && (
+              <ErrorMessage error={errors.experienceYears} />
             )}
           </div>
 
           <div className="bg-backGroundColor mb-10">
             <h6 className="text-xs text-left text-textColor mb-2">
-              Clients Limit
+              client Limit
             </h6>
             <input
-              id="clientsLimit-input"
-              name="clientsLimit"
+              id="clientLimit-input"
+              name="clientLimit"
               className="bg-backGroundColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left"
               type="number"
               placeholder="Enter a number"
               onChange={handleChange}
-              value={formData.clientsLimit}
+              value={formData.clientLimit}
               autoComplete="off"
             />
-            {errors.clientsLimit && (
-              <ErrorMessage error={errors.clientsLimit} />
-            )}
+            {errors.clientLimit && <ErrorMessage error={errors.clientLimit} />}
           </div>
 
           <div className="bg-backGroundColor mb-5">
@@ -126,11 +146,11 @@ function FormCoach({
               <div className="flex flex-row">
                 <CiImageOn color="gray" size={120} />
                 <div className="mt-6">
-                  <p name="CertTitle" className="text-textColor">
-                    {certData.certTitle}
+                  <p name="title" className="text-textColor">
+                    {certData.title}
                   </p>
-                  <p name="certIssueDate" className="text-textColor">
-                    {certData.certIssueDate}
+                  <p name="dateIssued" className="text-textColor">
+                    {certData.dateIssued}
                   </p>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import "../output.css";
 import { BsUpload } from "react-icons/bs";
 import ErrorMessage from "../errorMsg";
