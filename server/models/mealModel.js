@@ -54,6 +54,11 @@ lifta_schema.ingredient i ON i.ingredient_id = mi.ingredient_id WHERE mi.meal_id
   return (await db.query(query, [mealId])).rows;
 };
 
+exports.removeIngredientFromMeal = async (meal_id, ingredient_id) => {
+  const query = `DELETE FROM lifta_schema.meal_ingredient WHERE meal_id =$1 AND ingredient_id=$2`;
+  return (await db.query(query, [meal_id, ingredient_id])).rows;
+};
+
 exports.deleteMeal = async (mealId) => {
   const query = "DELETE FROM lifta_schema.meal WHERE meal_id = $1 ";
   return (await db.query(query, [mealId])).rows;

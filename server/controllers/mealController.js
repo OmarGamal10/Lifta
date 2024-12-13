@@ -46,6 +46,16 @@ const getMealNutritionInfo = async (req, res, next) => {
   });
 };
 
+const removeIngredientFromMeal = async (req, res, next) => {
+  const { ingredient_id } = req.body;
+  const { mealId: meal_id } = req.params;
+  await mealModel.removeIngredientFromMeal(meal_id, ingredient_id);
+  res.status(200).json({
+    status: "success",
+    message: "Ingredient removed successfully",
+  });
+};
+
 const deleteMeal = async (req, res, next) => {
   const { meal_id } = req.body;
   await mealModel.deleteMeal(meal_id);
@@ -60,4 +70,5 @@ module.exports = {
   getMealsNutritionist: catchAsync(getMealsNutritionist),
   getMealNutritionInfo: catchAsync(getMealNutritionInfo),
   deleteMeal: catchAsync(deleteMeal),
+  removeIngredientFromMeal: catchAsync(removeIngredientFromMeal),
 };

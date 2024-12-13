@@ -4,6 +4,7 @@ const router = express.Router({ mergeParams: true }); // Enable mergeParams
 const ingredientController = require("../controllers/ingredientController");
 const convertCamelToSnake = require("../middlewares/camelToSnakeMiddleware");
 const sanitizeEmptyFields = require("../middlewares/sanitizeEmptyFields");
+const mealController = require("../controllers/mealController");
 router.get("/", (req, res, next) => {
   if (req.params.coachId)
     return ingredientController.getIngredientsCoach(req, res, next);
@@ -18,6 +19,10 @@ router.post(
   ingredientController.createIngredient
 );
 
-router.delete("/", convertCamelToSnake, ingredientController.deleteIngredient);
+router.delete("/", convertCamelToSnake, (req, res, next) => {
+  if (req.params.mealId)
+    return mealController.removeIngredientFromMeal(req, res, next);
+  else ingredientController.deleteIngredient;
+});
 
 module.exports = router;

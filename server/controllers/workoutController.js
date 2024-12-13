@@ -42,8 +42,19 @@ const deleteWorkout = async (req, res, next) => {
   });
 };
 
+const removeExerciseFromWorkout = async (req, res, next) => {
+  const { exercise_id } = req.body;
+  const { workoutId: workout_id } = req.params;
+  await workoutModel.removeExerciseFromWorkout(workout_id, exercise_id);
+  res.status(200).json({
+    status: "success",
+    message: "Exercise removed successfully",
+  });
+};
+
 module.exports = {
   createWorkout: catchAsync(createWorkout),
   getWorkoutsCoach: catchAsync(getWorkoutsCoach),
   deleteWorkout: catchAsync(deleteWorkout),
+  removeExerciseFromWorkout: catchAsync(removeExerciseFromWorkout),
 };
