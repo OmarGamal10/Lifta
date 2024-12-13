@@ -4,6 +4,7 @@ import ProfileSection from "./Profilesection";
 import SideBar from "./Sidebar";
 import CoachSideBar from "./coach/Sidebar";
 import TraineeSideBar from "./trainee/Sidebar";
+import MyProfile from "./MyProfile";
 import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
@@ -50,8 +51,8 @@ const UserProfile = ({ userId }) => {
   }
   // Components to render based on the active section
   const renderComponent = () => {
-      if(activeSection) {
-        return <NoDataDashboard header= {`${activeSection}` + " Section"} />;
+      if(activeSection == "My Profile") {
+        return <MyProfile />;
       } else {
         return <NoDataDashboard header="No Data Dashboard" />;
       }
