@@ -1,23 +1,23 @@
 const db = require("../db");
 const express = require("express");
 const router = express.Router({ mergeParams: true }); // Enable mergeParams
-const exerciseController = require("../controllers/exerciseController");
+const workoutController = require("../controllers/workoutController");
+const exerciseRouter = require("./exerciseRoute");
+
 const convertCamelToSnake = require("../middlewares/camelToSnakeMiddleware");
 const sanitizeEmptyFields = require("../middlewares/sanitizeEmptyFields");
+
 router.get("/", (req, res, next) => {
-  if (req.params.coachId)
-    return exerciseController.getExercisesCoach(req, res, next);
-  else if (req.params.workoutId)
-    return exerciseController.getExercisesWorkout(req, res, next);
+  return workoutController.getWorkoutsCoach(req, res, next);
 });
 
 router.post(
   "/",
   convertCamelToSnake,
   sanitizeEmptyFields,
-  exerciseController.createExercise
+  workoutController.createWorkout
 );
 
-router.delete("/", convertCamelToSnake, exerciseController.deleteExercise);
+router.use("/:workoutId/exercises", exerciseRouter);
 
 module.exports = router;

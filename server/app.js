@@ -8,6 +8,8 @@ const packageRouter = require("./routes/packageRoute");
 const ingredientRouter = require("./routes/ingredientRoute");
 const exerciseRouter = require("./routes/exerciseRoute");
 const reviewRouter = require("./routes/reviewRoute");
+const workoutRouter = require("./routes/workoutRoute");
+
 const certificateRouter = require("./routes/certificateRoute");
 
 const subscriptionRouter = require("./routes/subscriptionRoute");
@@ -46,6 +48,7 @@ app.use("/ingredients", ingredientRouter);
 app.use("/exercises", exerciseRouter);
 app.use("/reviews", reviewRouter);
 app.use("/certificates", certificateRouter);
+app.use("/workouts", workoutRouter);
 
 // error handling middleware
 app.use(errorHandler);
