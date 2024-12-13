@@ -15,6 +15,19 @@ const getIngredientsCoach = async (req, res, next) => {
     },
   });
 };
+const getIngredientsMeal = async (req, res, next) => {
+  const { mealId } = req.params;
+  if (!mealId || isNaN(mealId)) {
+    return next(new AppError("Please provide a meal  id", 400));
+  }
+  const ingredients = await ingredientModel.getExercisesByMealId(mealId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      ingredients,
+    },
+  });
+};
 
 const createIngredient = async (req, res, next) => {
   const { name, protein, carb, trainer_id, fat, calories } = req.body;
@@ -60,4 +73,5 @@ module.exports = {
   getIngredientsCoach: catchAsync(getIngredientsCoach),
   createIngredient: catchAsync(createIngredient),
   deleteIngredient: catchAsync(deleteIngredient),
+  getIngredientsMeal: catchAsync(getIngredientsMeal),
 };
