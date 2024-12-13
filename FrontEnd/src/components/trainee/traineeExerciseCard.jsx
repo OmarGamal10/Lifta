@@ -26,7 +26,7 @@ export function TraineeExerciseCard(probs) {
         >
           <AccordionHeader
             onClick={() => handleOpen(1)}
-            className={`border-b-0 px-4 rounded-lg ${
+            className={`border-b-0 px-4 rounded-lg overflow-hidden ${
               open === 1
                 ? "bg-secondary bg-opacity-50 focus:ring-accent focus:ring-2"
                 : "hover:bg-[#5F3C68] hover:bg-opacity-50"

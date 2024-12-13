@@ -14,9 +14,7 @@ export function TraineeCurrentWrokout(probs) {
 
     function handleMarkAsDone() {
       setIsDone(true);
-    }
-  console.log(isDone);
-  
+    }  
   
   const objs = [
     {
