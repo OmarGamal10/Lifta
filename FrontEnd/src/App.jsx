@@ -4,7 +4,7 @@ import IngForm from "./components/coach/IngredientForm.jsx";
 import PkgForm from "./components/coach/packageForm.jsx";
 import ExerciseForm from "./components/coach/exerciseForm.jsx";
 import UserProfile from "./components/userProfile.jsx";
-import Form from "./components/form";
+import Form from "./components/mainForm";
 import FormTrainee from "./components/trainee/formTrainee";
 import LoginForm from "./components/loginForm";
 import LandingPage from "./components/landingPage";
