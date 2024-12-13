@@ -18,3 +18,8 @@ exports.createExercise = async (...values) => {
     throw err;
   }
 };
+
+exports.deleteExercise = async (exerciseId) => {
+  const query = "DELETE FROM lifta_schema.exercise WHERE exercise_id = $1 ";
+  return (await db.query(query, [exerciseId])).rows;
+};

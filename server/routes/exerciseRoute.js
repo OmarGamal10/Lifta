@@ -15,4 +15,8 @@ router.post(
   exerciseController.createExercise
 );
 
+
+router.delete("/", convertCamelToSnake, exerciseController.deleteExercise);
+
+
 module.exports = router;
