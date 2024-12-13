@@ -18,3 +18,8 @@ exports.createIngredient = async (...values) => {
     throw err;
   }
 };
+
+exports.deleteIngredient = async (ingredientId) => {
+  const query = "DELETE FROM lifta_schema.ingredient WHERE ingredient_id = $1 ";
+  return (await db.query(query, [ingredientId])).rows;
+};

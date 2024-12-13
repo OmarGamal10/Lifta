@@ -47,7 +47,17 @@ const createIngredient = async (req, res, next) => {
   });
 };
 
+const deleteIngredient = async (req, res, next) => {
+  const { ingredient_id } = req.body;
+  await ingredientModel.deleteIngredient(ingredient_id);
+  res.status(200).json({
+    status: "success",
+    message: "Ingredient deleted successfully",
+  });
+};
+
 module.exports = {
   getIngredientsCoach: catchAsync(getIngredientsCoach),
   createIngredient: catchAsync(createIngredient),
+  deleteIngredient: catchAsync(deleteIngredient),
 };

@@ -15,4 +15,6 @@ router.post(
   ingredientController.createIngredient
 );
 
+router.delete("/", convertCamelToSnake, ingredientController.deleteIngredient);
+
 module.exports = router;
