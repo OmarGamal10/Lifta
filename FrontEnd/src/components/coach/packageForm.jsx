@@ -1,8 +1,13 @@
 import { useState } from "react";
 import "../output.css";
 import ErrorMessage from "../errorMsg";
-
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
+import useHttp from "../../hooks/useHTTP";
 function PackageForm() {
+  const navigate = useNavigate();
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -49,7 +54,7 @@ function PackageForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -68,8 +73,29 @@ function PackageForm() {
       return;
     }
 
-    // Additional submit logic can go here
-    console.log("Form submitted", formData);
+    const token = getTokenFromCookies();
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken ? decodedToken.user_id : null;
+    console.log(userId);
+
+    try {
+      const response = await post(
+        "/packages",
+        {
+          ...formData,
+          trainer_id: userId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      // navigate("/profile");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
