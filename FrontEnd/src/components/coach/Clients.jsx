@@ -54,7 +54,7 @@ const Clients = ({ userId }) => {
     return (
       <div className="bg-backGroundColor text-textColor p-6 flex gap-16 items-center flex-col size-full">
         <h2 className="p-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
-          Clients
+          Clients Section
         </h2>
         <div className="flex flex-wrap gap-6">
           {currentClients.map((client) => (
@@ -68,8 +68,8 @@ const Clients = ({ userId }) => {
                 alt={client.name}
                 className="w-28 h-28 rounded-full mx-auto mb-6"
               />
-              <h3 className="text-2xl font-semibold mb-2">{client.name}</h3>
-              <p className="text-textspan mb-6">{client.packageName}</p>
+              <h3 className="text-2xl font-semibold mb-2">{client.first_name + " " + client.last_name}</h3>
+              <p className="text-textspan  mb-6">{client.name}</p>
 
               <div className="flex space-x-4">
                 <button

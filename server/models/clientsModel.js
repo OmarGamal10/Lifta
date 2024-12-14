@@ -2,7 +2,6 @@ const db = require("../db")
 const AppError = require("../utils/AppError");
 
 exports.getAllClients = async (coachId) => {
-    console.log("hello")
     const query = `SELECT t.trainee_id, u.first_name, u.last_name, p.name 
     FROM lifta_schema.trainee t 
     JOIN lifta_schema.users u 
