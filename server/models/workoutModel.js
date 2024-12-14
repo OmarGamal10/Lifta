@@ -47,6 +47,25 @@ exports.getWorkoutsByCoachId = async (coachId) => {
   return (await db.query(query, [coachId])).rows;
 };
 
+exports.assignWorkoutToTrainee = async (trainee_id, workout_id, day) => {
+  try {
+    const query = `INSERT INTO lifta_schema.workouts_schedule (workout_id,trainee_id,day) VALUES ($1,$2,$3) RETURNING * `;
+    return (await db.query(query, [workout_id, trainee_id, day])).rows;
+  } catch (err) {
+    if (err.code === "23505") {
+      throw new AppError("Trainee already have a workout on this day", 400);
+    }
+    throw err;
+  }
+};
+
+exports.getWorkoutsByTraineeId = async (trainee_id) => {
+  const query = `SELECT w.workout_id ,w.name,w._note AS note ,ws.day from lifta_schema.workout w 
+                JOIN lifta_schema.workouts_schedule ws ON w.workout_id=ws.workout_id 
+                WHERE ws.trainee_id=$1 `;
+  return (await db.query(query, [trainee_id])).rows;
+};
+
 exports.removeExerciseFromWorkout = async (workoutId, exerciseId) => {
   const query = `DELETE FROM lifta_schema.workout_exercise WHERE workout_id =$1 AND  exercise_id=$2`;
   return (await db.query(query, [workoutId, exerciseId])).rows;

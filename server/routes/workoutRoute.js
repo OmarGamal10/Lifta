@@ -10,6 +10,8 @@ const sanitizeEmptyFields = require("../middlewares/sanitizeEmptyFields");
 router.get("/", (req, res, next) => {
   return workoutController.getWorkoutsCoach(req, res, next);
 });
+router.get("/trainee/:traineeId", workoutController.getWorkoutsTrainee);
+router.post("/trainee", workoutController.assignWorkoutTrainee);
 
 router.post(
   "/",
