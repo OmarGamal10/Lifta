@@ -10,66 +10,54 @@ import "primeicons/primeicons.css";
 import { TraineeMealCard } from "./traineeMealCard";
 import { Knob } from "primereact/knob";
 
-export function TraineeCurrentMeals() {
+export function TraineeCurrentMeals(probs) {
   const [knobValue, setKnobValue] = useState(0);
-  //   const [doneCount, setDoneCount] = useState(0);
 
-  const objs = [
-    {
-      id: 1,
-      name: "Pizza",
-      type: "Breakfast",
-      calories: 320,
-      fats: 12,
-      protein: 6,
-      carbs: 50,
-    },
-    {
-      id: 2,
-      name: "Pasta",
-      type: "Lunch",
-      calories: 320,
-      fats: 12,
-      protein: 6,
-      carbs: 50,
-    },
-    {
-      id: 3,
-      name: "Blah",
-      type: "Dinner",
-      calories: 320,
-      fats: 12,
-      protein: 6,
-      carbs: 50,
-    },
-    {
-      id: 4,
-      name: "Blahblah",
-      type: "Snack",
-      calories: 320,
-      fats: 12,
-      protein: 6,
-      carbs: 50,
-    },
-  ];
+  const { get: httpGet, loading, error } = useHttp("http://localhost:3000");
+
+  const [meals, setMeals] = useState([]);
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await httpGet(`/users/${probs.userId}/currentMeals`, {
+          headers: { "Cache-Control": "no-cache" },
+        });
+        setMeals(response.data.meals);
+      } catch (err) {
+        console.log(err);
+      }
+      
+    };    
+
+    fetchData();
+  }, []);
 
   function incrementDoneCount() {
-    setKnobValue(knobValue + (1 / objs.length) * 100);
+    let newValue = knobValue + Math.ceil((1 / meals.length) * 100);
+    if (newValue > 100) {
+      newValue = 100;
+    }
+    setKnobValue(newValue);
   }
 
   return (
     <div className="text-textColor p-8 flex flex-col gap-6">
-      {objs.map((meal) => (
-        <div key={meal.id}>
+      {meals.map((meal) => (
+        <div key={[meal.meal_id, meal.type].join('-')}>
           <h2 className="text-2xl font-medium mb-4">{meal.type}</h2>
           <TraineeMealCard
-            key={meal.id}
+            key={[meal.meal_id, meal.type].join('-')}
+            mealId={meal.meal_id}
             name={meal.name}
             calories={meal.calories}
-            fats={meal.fats}
-            carbs={meal.carbs}
+            fats={meal.fat}
+            carbs={meal.carb}
             protein={meal.protein}
             incrementDoneCount={incrementDoneCount}
+            userId={probs.userId}
+            picture = {meal.picture}
           />
         </div>
       ))}

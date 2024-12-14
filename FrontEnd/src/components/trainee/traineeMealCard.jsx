@@ -14,29 +14,31 @@ import {
 } from "@material-tailwind/react";
 import { Card, Typography } from "@material-tailwind/react";
 
-const ingredients = [
-  {
-    id: 1,
-    name: "Flour",
-    quantity: 2,
-  },
-  {
-    id: 2,
-    name: "tomato",
-    quantity: 5,
-  },
-  {
-    id: 3,
-    name: "Cheese",
-    quantity: 10,
-  },
-];
-
 const tableHead = ["Ingredient", "Quantity"];
 
 export function TraineeMealCard(probs) {
   const [open, setOpen] = React.useState(0);
   const [isDone, setIsDone] = useState(false);
+
+  const { get: httpGet, loading, error } = useHttp("http://localhost:3000");
+
+  const [ingredients, setIngredients] = useState([]);
+
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await httpGet(`/users/${probs.userId}/currentMeals/${probs.mealId}/ingredients`, {
+            headers: { "Cache-Control": "no-cache" },
+          });
+          setIngredients(response.data.ingredients);
+        } catch (err) {
+          console.log(err);
+        }
+        
+      };    
+  
+      fetchData();
+    }, []);
 
   function handleMarkAsDone() {
     setIsDone(true);
@@ -74,7 +76,7 @@ export function TraineeMealCard(probs) {
             </div>
           </AccordionHeader>
           <AccordionBody className="pt-0 text-base font-normal px-4 flex flex-col gap-6">
-            {/* Image to be added */}
+            {/* <img src={`${probs.picture}`} alt="" /> */}
             <div>
               <h3 className="text-lg font-medium">Ingredients</h3>
               <Card className="h-fit w-[50%] px-4">
@@ -94,13 +96,13 @@ export function TraineeMealCard(probs) {
                     </tr>
                   </thead>
                   <tbody>
-                    {ingredients.map(({id, name, quantity }, index) => {
+                    {ingredients.map(({ ingredient_id, name, quantity }, index) => {
                       const isLast = index === ingredients.length - 1;
                       const classes = isLast
                         ? "p-4"
                         : "p-4 border-b border-accent";
                       return (
-                        <tr key={id}>
+                        <tr key={ingredient_id}>
                           <td className={classes}>
                             <Typography variant="small" className="font-normal">
                               {name}

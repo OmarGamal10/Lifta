@@ -53,3 +53,18 @@ FROM lifta_schema.meal_ingredient mi JOIN
 lifta_schema.ingredient i ON i.ingredient_id = mi.ingredient_id WHERE mi.meal_id=$1`;
   return (await db.query(query, [mealId])).rows;
 };
+
+exports.getCurrentMealsByTraineeId = async (traineeId) => {
+  const query = `SELECT m.meal_id, m.name, m.picture, md.type, SUM(i.carb*mi.quantity/100) AS carb ,
+SUM(i.protein*mi.quantity/100) AS protein ,
+SUM(i.fat*mi.quantity/100) AS fat,
+SUM(i.calories_serving*mi.quantity/100) AS calories
+FROM lifta_schema.meal_ingredient mi
+JOIN lifta_schema.meal m ON m.meal_id = mi.meal_id
+JOIN lifta_schema.ingredient i ON i.ingredient_id = mi.ingredient_id 
+JOIN lifta_schema.meals_diet md ON mi.meal_id = md.meal_id
+WHERE md.trainee_id = $1 and md.day = (select(TRIM(TO_CHAR(current_date,'Day'))::varchar))
+group by m.meal_id, md.type
+`;
+  return (await db.query(query, [traineeId])).rows;
+};

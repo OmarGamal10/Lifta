@@ -52,7 +52,6 @@ app.use("/reviews", reviewRouter);
 app.use("/certificates", certificateRouter);
 app.use("/workouts", workoutRouter);
 app.use("/meals", mealRouter);
-// app.use("/currentWorkout", traineeCurrentWorkoutRouter);
 
 // error handling middleware
 app.use(errorHandler);

@@ -11,6 +11,7 @@ const certificateRouter = require("./certificateRoute");
 const workoutRouter = require("./workoutRoute");
 const mealRouter = require("./mealRoute");
 const traineeCurrentWorkoutRouter = require("./traineeCurrentWorkoutRoute");
+const traineeCurrentMealsRouter = require("./traineeCurrentMealsRoute");
 
 //for testing without opening pgAdmin (getting all users)
 router.get("/", async (req, res, next) => {
@@ -56,6 +57,7 @@ router.use("/:coachId/workouts", workoutRouter);
 router.use("/:nutritionistId/meals", mealRouter);
 
 router.use("/:traineeId/currentWorkout", traineeCurrentWorkoutRouter);
+router.use("/:traineeId/currentMeals", traineeCurrentMealsRouter);
 
 module.exports = router;
 
