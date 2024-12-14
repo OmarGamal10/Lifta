@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from "react";
 import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
+import Loader from "../Loader"; // Import your Loader component
 
 const Clients = ({ userId }) => {
   const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(true); // State to track loading
 
   const { get } = useHttp("http://localhost:3000");
+
   useEffect(() => {
     const LoadClients = async () => {
+      setLoading(true); // Show loader when API call starts
       try {
         const response = await get(`/users/${userId}/clients`);
         setClients(response.data.clients);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false); // Hide loader after API call finishes
       }
     };
 
     LoadClients();
-  }, []); // Run once when the component mounts
+  }, [userId]); // Ensure useEffect depends on userId
 
   const [currentPage, setCurrentPage] = useState(1);
   const clientsPerPage = 4;
@@ -50,7 +56,7 @@ const Clients = ({ userId }) => {
   };
 
   const renderClients = () => {
-    if(clients.length == 0) return <NoDataDashboard header="Clients Section" />;
+    if (clients.length === 0) return <NoDataDashboard header="Clients Section" />;
     return (
       <div className="bg-backGroundColor text-textColor p-6 flex gap-16 items-center flex-col size-full">
         <h2 className="p-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
@@ -68,13 +74,15 @@ const Clients = ({ userId }) => {
                 alt={client.name}
                 className="w-28 h-28 rounded-full mx-auto mb-6"
               />
-              <h3 className="text-2xl font-semibold mb-2">{client.first_name + " " + client.last_name}</h3>
-              <p className="text-textspan  mb-6">{client.name}</p>
+              <h3 className="text-2xl font-semibold mb-2">
+                {client.first_name + " " + client.last_name}
+              </h3>
+              <p className="text-textspan mb-6">{client.name}</p>
 
               <div className="flex space-x-4">
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevents the parent div's onClick from firing
+                    e.stopPropagation(); // Prevent parent div's onClick from firing
                     handleRemove(client.trainee_id);
                   }}
                   className="bg-backGroundColor text-textColor py-3 px-6 rounded hover:bg-primary hover:text-backGroundColor transition-transform duration-300 hover:scale-110"
@@ -83,7 +91,7 @@ const Clients = ({ userId }) => {
                 </button>
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevents the parent div's onClick from firing
+                    e.stopPropagation(); // Prevent parent div's onClick from firing
                     handleAssign(client.trainee_id);
                   }}
                   className="bg-backGroundColor text-textColor py-3 px-6 rounded hover:bg-primary hover:text-backGroundColor transition-transform duration-300 hover:scale-110"
@@ -118,10 +126,9 @@ const Clients = ({ userId }) => {
 
   return (
     <div className="w-full">
-    {renderClients()}
+      {loading ? <Loader /> : renderClients()} {/* Show Loader while loading */}
     </div>
   );
-    
 };
 
 export default Clients;

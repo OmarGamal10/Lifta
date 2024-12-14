@@ -50,13 +50,14 @@ const UserProfile = ({ userId }) => {
     }
 
   }
+  const components =  {
+    Clients: <Clients userId={userId} />,
+    Default: <NoDataDashboard header={activeSection + " Section"} />,
+  }
+
   // Components to render based on the active section
   const renderComponent = () => {
-      if(activeSection == "Clients") {
-        return <Clients userId={userId} />;
-      } else {
-        return <NoDataDashboard header="No Data Dashboard" />;
-      }
+      return components[activeSection] || components.Default;
   };
 
   return (
