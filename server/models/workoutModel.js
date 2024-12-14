@@ -69,3 +69,10 @@ exports.addDoneWorkout = async (trainee_id, workout_id) => {
     throw err;
   }
 };
+
+exports.getCurrentWorkoutStatus = async (trainee_id) => {
+  const query = `SELECT "isDone" FROM lifta_schema.workout_log
+    WHERE trainee_id = $1 AND date = current_date;`;
+
+  return await db.query(query, [trainee_id]);
+};

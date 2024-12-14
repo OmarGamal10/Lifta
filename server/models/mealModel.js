@@ -82,3 +82,10 @@ exports.addDoneMeal = async (trainee_id, meal_id, type) => {
     throw err;
   }
 };
+
+exports.getCurrentMealStatusByType = async (trainee_id, type) => {
+  const query = `SELECT "isDone" FROM lifta_schema.meal_log
+    WHERE trainee_id = $1 AND type = $2 AND date = current_date;`;
+
+  return await db.query(query, [trainee_id, type]);
+};

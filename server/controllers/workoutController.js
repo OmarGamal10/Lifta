@@ -57,9 +57,24 @@ const addDoneWorkout = async (req, res, next) => {
   });
 };
 
+const getCurrentWorkoutStatus = async (req, res, next) => {
+  const { traineeId } = req.params;
+  if (!traineeId || isNaN(traineeId)) {
+    return next(new AppError("Please provide a trainee id", 400));
+  }
+  const isDone = await workoutModel.getCurrentWorkoutStatus(traineeId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      isDone,
+    },
+  });
+};
+
 module.exports = {
   createWorkout: catchAsync(createWorkout),
   getWorkoutsCoach: catchAsync(getWorkoutsCoach),
   getCurrentWorkoutByTraineeId: catchAsync(getCurrentWorkoutByTraineeId),
   addDoneWorkout: catchAsync(addDoneWorkout),
+  getCurrentWorkoutStatus: catchAsync(getCurrentWorkoutStatus),
 };

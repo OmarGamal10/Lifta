@@ -70,10 +70,27 @@ const addDoneMeal = async (req, res, next) => {
   });
 };
 
+const getCurrentMealStatusByType = async (req, res, next) => {
+  const { traineeId, type } = req.params;
+
+  if (!traineeId || isNaN(traineeId)) {
+    return next(new AppError("Please provide a trainee id", 400));
+  }
+
+  const isDone = await mealModel.getCurrentMealStatusByType(traineeId, type);
+  res.status(200).json({
+    status: "success",
+    data: {
+      isDone,
+    },
+  });
+};
+
 module.exports = {
   createMeal: catchAsync(createMeal),
   getMealsNutritionist: catchAsync(getMealsNutritionist),
   getMealNutritionInfo: catchAsync(getMealNutritionInfo),
   getCurrentMealsByTraineeId: catchAsync(getCurrentMealsByTraineeId),
   addDoneMeal: catchAsync(addDoneMeal),
+  getCurrentMealStatusByType: catchAsync(getCurrentMealStatusByType),
 };

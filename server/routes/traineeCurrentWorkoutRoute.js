@@ -16,4 +16,8 @@ router.post(
   workoutController.addDoneWorkout
 );
 
+router.get("/status", (req, res, next) => {
+  return workoutController.getCurrentWorkoutStatus(req, res, next);
+});
+
 module.exports = router;

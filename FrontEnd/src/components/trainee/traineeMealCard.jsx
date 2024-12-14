@@ -25,20 +25,40 @@ export function TraineeMealCard(probs) {
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await httpGet(`/users/${probs.userId}/currentMeals/${probs.mealId}/ingredients`, {
+    const fetchData = async () => {
+      try {
+        const response = await httpGet(
+          `/users/${probs.userId}/currentMeals/${probs.mealId}/ingredients`,
+          {
             headers: { "Cache-Control": "no-cache" },
-          });
-          setIngredients(response.data.ingredients);
-        } catch (err) {
-          console.log(err);
+          }
+        );
+        setIngredients(response.data.ingredients);
+      } catch (err) {
+        console.log(err);
+      }
+
+      try {
+        const response = await httpGet(
+          `/users/${probs.userId}/currentMeals/${probs.mealId}/status/${probs.type}`,
+          {
+            headers: { "Cache-Control": "no-cache" },
+          }
+        );
+        if (
+          response.data.isDone.rows.length > 0 &&
+          response.data.isDone.rows[0].isDone == true
+        ) {
+          setIsDone(true);
+          probs.incrementDoneCount();
         }
-        
-      };    
-  
-      fetchData();
-    }, []);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   async function handleMarkAsDone() {
     setIsDone(true);
@@ -47,7 +67,7 @@ export function TraineeMealCard(probs) {
       const response = await post(`/users/${probs.userId}/currentMeals`, {
         traineeId: probs.userId,
         mealId: probs.mealId,
-        type: probs.type
+        type: probs.type,
       });
       console.log(response);
     } catch (err) {
@@ -106,30 +126,35 @@ export function TraineeMealCard(probs) {
                     </tr>
                   </thead>
                   <tbody>
-                    {ingredients.map(({ ingredient_id, name, quantity }, index) => {
-                      const isLast = index === ingredients.length - 1;
-                      const classes = isLast
-                        ? "p-4"
-                        : "p-4 border-b border-accent";
-                      return (
-                        <tr key={ingredient_id}>
-                          <td className={classes}>
-                            <Typography variant="small" className="font-normal">
-                              {name}
-                            </Typography>
-                          </td>
-                          <td className={classes}>
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              {quantity}
-                            </Typography>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {ingredients.map(
+                      ({ ingredient_id, name, quantity }, index) => {
+                        const isLast = index === ingredients.length - 1;
+                        const classes = isLast
+                          ? "p-4"
+                          : "p-4 border-b border-accent";
+                        return (
+                          <tr key={ingredient_id}>
+                            <td className={classes}>
+                              <Typography
+                                variant="small"
+                                className="font-normal"
+                              >
+                                {name}
+                              </Typography>
+                            </td>
+                            <td className={classes}>
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal"
+                              >
+                                {quantity}
+                              </Typography>
+                            </td>
+                          </tr>
+                        );
+                      }
+                    )}
                   </tbody>
                 </table>
               </Card>

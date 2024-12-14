@@ -10,6 +10,13 @@ router.get("/", (req, res, next) => {
   return mealController.getCurrentMealsByTraineeId(req, res, next);
 });
 
+router.use("/:mealId/ingredients", ingredientRouter);
+
+
+router.get("/:mealId/status/:type", (req, res, next) => {
+    return mealController.getCurrentMealStatusByType(req, res, next);
+  });
+
 router.post(
     "/",
     convertCamelToSnake,
@@ -17,6 +24,5 @@ router.post(
     mealController.addDoneMeal
   );
 
-router.use("/:mealId/ingredients", ingredientRouter);
 
 module.exports = router;

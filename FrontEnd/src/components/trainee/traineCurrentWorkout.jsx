@@ -55,6 +55,20 @@ export function TraineeCurrentWrokout(probs) {
       } catch (err) {
         console.log(err);
       }
+
+      try {
+        const response = await httpGet(
+          `/users/${probs.userId}/currentWorkout/status`,
+          {
+            headers: { "Cache-Control": "no-cache" },
+          }
+        );
+        if (response.data.isDone.rows.length > 0 && response.data.isDone.rows[0].isDone == true) {
+          setIsDone(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     fetchData();
