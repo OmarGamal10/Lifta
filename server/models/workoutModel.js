@@ -1,3 +1,4 @@
+const { values } = require("lodash");
 const db = require("../db");
 const AppError = require("../utils/AppError");
 
@@ -53,4 +54,18 @@ where workout_id = (select workout_id from lifta_schema.workouts_schedule
 where lifta_schema.workouts_schedule.trainee_id = $1
 and day = (select(TRIM(TO_CHAR(current_date,'Day'))::varchar)));`;
   return (await db.query(query, [traineeId])).rows;
+};
+
+exports.addDoneWorkout = async (trainee_id, workout_id) => {
+  try {
+    const query = `INSERT INTO lifta_schema.workout_log VALUES ($1, $2, current_date, true);`;
+    const values = [trainee_id, workout_id];
+
+    return await db.query(query, values);
+  } catch (err) {
+    if (err.code === "23505") {
+      throw new AppError("You already have a workout log in this date", 400);
+    }
+    throw err;
+  }
 };

@@ -57,7 +57,8 @@ export function TraineeCurrentMeals(probs) {
             protein={meal.protein}
             incrementDoneCount={incrementDoneCount}
             userId={probs.userId}
-            picture = {meal.picture}
+            picture={meal.picture}
+            type={meal.type}
           />
         </div>
       ))}

@@ -60,9 +60,20 @@ const getCurrentMealsByTraineeId = async (req, res, next) => {
   });
 };
 
+const addDoneMeal = async (req, res, next) => {
+  const { trainee_id, meal_id , type} = req.body;
+
+  await mealModel.addDoneMeal(trainee_id, meal_id, type);
+  res.status(201).json({
+    status: "success",
+    message: "Good Job!",
+  });
+};
+
 module.exports = {
   createMeal: catchAsync(createMeal),
   getMealsNutritionist: catchAsync(getMealsNutritionist),
   getMealNutritionInfo: catchAsync(getMealNutritionInfo),
   getCurrentMealsByTraineeId: catchAsync(getCurrentMealsByTraineeId),
+  addDoneMeal: catchAsync(addDoneMeal),
 };

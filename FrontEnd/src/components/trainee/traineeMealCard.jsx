@@ -20,7 +20,7 @@ export function TraineeMealCard(probs) {
   const [open, setOpen] = React.useState(0);
   const [isDone, setIsDone] = useState(false);
 
-  const { get: httpGet, loading, error } = useHttp("http://localhost:3000");
+  const { get: httpGet, post } = useHttp("http://localhost:3000");
 
   const [ingredients, setIngredients] = useState([]);
 
@@ -40,9 +40,19 @@ export function TraineeMealCard(probs) {
       fetchData();
     }, []);
 
-  function handleMarkAsDone() {
+  async function handleMarkAsDone() {
     setIsDone(true);
     probs.incrementDoneCount();
+    try {
+      const response = await post(`/users/${probs.userId}/currentMeals`, {
+        traineeId: probs.userId,
+        mealId: probs.mealId,
+        type: probs.type
+      });
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);

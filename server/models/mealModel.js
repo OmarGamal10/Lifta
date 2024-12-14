@@ -68,3 +68,17 @@ group by m.meal_id, md.type
 `;
   return (await db.query(query, [traineeId])).rows;
 };
+
+exports.addDoneMeal = async (trainee_id, meal_id, type) => {
+  try {
+    const query = `INSERT INTO lifta_schema.meal_log VALUES ($1, $2, current_date, true, $3);`;
+    const values = [trainee_id, meal_id, type];
+
+    return await db.query(query, values);
+  } catch (err) {
+    if (err.code === "23505") {
+      throw new AppError("You already have a meal log with this type in this date", 400);
+    }
+    throw err;
+  }
+};

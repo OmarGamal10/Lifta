@@ -47,8 +47,19 @@ const getCurrentWorkoutByTraineeId = async (req, res, next) => {
   });
 };
 
+const addDoneWorkout = async (req, res, next) => {
+  const { trainee_id, workout_id } = req.body;
+
+  await workoutModel.addDoneWorkout(trainee_id, workout_id);
+  res.status(201).json({
+    status: "success",
+    message: "Good Job!",
+  });
+};
+
 module.exports = {
   createWorkout: catchAsync(createWorkout),
   getWorkoutsCoach: catchAsync(getWorkoutsCoach),
-  getCurrentWorkoutByTraineeId: catchAsync(getCurrentWorkoutByTraineeId)
+  getCurrentWorkoutByTraineeId: catchAsync(getCurrentWorkoutByTraineeId),
+  addDoneWorkout: catchAsync(addDoneWorkout),
 };
