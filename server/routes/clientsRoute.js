@@ -1,8 +1,8 @@
-const router = require("express").Router();
+const express = require("express");
+const router = express.Router({ mergeParams: true }); // Enable mergeParams
 const coachController = require("../controllers/clientsController");
 
 router.get("/", (req, res, next) => {
-    console.log("hello from coachRoute")
     return coachController.getAllClients(req, res, next);
 })
 

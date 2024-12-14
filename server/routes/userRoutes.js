@@ -45,7 +45,7 @@ router.get("/logout", authController.logout);
 router.get("/checkAuth", authController.checkAuth);
 router.get("/:userId", authController.getUserById);
 
-// router.use("/:coachId/Clients", clientsRouter);
+router.use("/:coachId/clients", clientsRouter);
 //coach packages
 router.use("/:coachId/packages", packageRouter);
 router.use("/:coachId/exercises", exerciseRouter);

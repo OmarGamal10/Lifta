@@ -1,23 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useHttp from "../../hooks/useHTTP";
 
-const Clients = (userId) => {
+const Clients = ({ userId }) => {
   const [clients, setClients] = useState([]);
   
   const { get } = useHttp("http://localhost:3000");
   useEffect(() => {
       const LoadClients = async () => {
         try {
-          const response = await get(`/users/${userId}/getClients`);
-          // Assuming response.body has these values
-          setClients(response.Clients)
+          const response = await get(`/users/${userId}/clients`);
+          setClients(response.data.clients)
         } catch (err) {
           console.error(err);
-          setIsAuthenticated(false); // Set as unauthenticated on error
         }
       };
   
-      checkAuth();
+      LoadClients();
     }, []); // Run once when the component mounts
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,7 +61,7 @@ const Clients = (userId) => {
             className="bg-backGroundColor p-6 rounded-lg w-64 text-center transition-transform duration-300 hover:scale-110 hover:bg-primary cursor-pointer"
           >
             <img
-              src={client.photo}
+              src="src/assets/landingGym.svg"
               alt={client.name}
               className="w-28 h-28 rounded-full mx-auto mb-6"
             />

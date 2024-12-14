@@ -66,3 +66,26 @@ const addTrainer = async (values, id) => {
   await db.query(query, trainerValues);
   await db.query(query2, certification);
 };
+
+exports.assignToTrainer = async(s_id) => {
+  const query = `
+    UPDATE lifta_schema.trainee t
+    SET 
+        coach_id = CASE 
+            WHEN p.type IN ('Gym', 'Both') THEN p.trainer_id 
+            ELSE coach_id 
+        END,
+        nutritionist_id = CASE 
+            WHEN p.type IN ('Nutrition', 'Both') THEN p.trainer_id 
+            ELSE nutritionist_id 
+        END
+    FROM lifta_schema.subscription s
+    JOIN lifta_schema.package p
+    ON s.package_id = p.package_id
+    WHERE t.trainee_id = s.trainee_id
+    AND s.subscription_id = $1;`;
+
+    const value = s_id;
+
+    await db.query(query, value);
+}
