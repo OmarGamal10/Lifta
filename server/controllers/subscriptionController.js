@@ -1,4 +1,5 @@
 const subscriptionModel = require("../models/subscriptionModel");
+const userModel = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 
@@ -45,6 +46,9 @@ const subscriptionResponse = async (req, res, next) => {
       start_date,
       end_date
     );
+
+    assignToTrainer = await userModel.assignToTrainer(subscription_id);
+
   } else {
     subscription = await subscriptionModel.subscriptionResponse(
       subscription_id,
