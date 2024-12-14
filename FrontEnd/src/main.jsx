@@ -29,7 +29,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       // <ProtectedLoggedRoute>
-      <CreateMeal />
+      <AssignWorkout />
       // </ProtectedLoggedRoute>
     ),
   },

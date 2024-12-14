@@ -43,7 +43,7 @@ exports.createWorkout = async (trainer_id, name, _note, exercises) => {
 };
 
 exports.getWorkoutsByCoachId = async (coachId) => {
-  const query = `SELECT name,_note AS note  FROM lifta_schema.workout WHERE trainer_id = $1`;
+  const query = `SELECT workout_id AS id, name,_note AS note  FROM lifta_schema.workout WHERE trainer_id = $1`;
   return (await db.query(query, [coachId])).rows;
 };
 
