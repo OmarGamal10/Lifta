@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import useHttp from "./hooks/useHTTP";
 
-
-
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [userId, setUserId] = useState(null);
@@ -18,7 +16,7 @@ const ProtectedRoute = ({ children }) => {
         const response = await get("/users/checkAuth");
         // Assuming response.body has these values
         setIsAuthenticated(true);
-        setUserId(response.userId)
+        setUserId(response.userId);
       } catch (err) {
         console.error(err);
         setIsAuthenticated(false); // Set as unauthenticated on error
