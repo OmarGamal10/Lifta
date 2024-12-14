@@ -20,12 +20,15 @@ import ExerciseForm from "./components/coach/exerciseForm.jsx";
 import CreateWorkout from "./components/coach/CreateWorkout.jsx";
 import CreateMeal from "./components/coach/createMeal.jsx";
 import AssignWorkout from "./components/coach/assignWorkout.jsx";
+import AssignMeal from "./components/coach/assignMeal.jsx";
+import Meal from "./components/coach/mealCard.jsx";
+import { View } from "lucide-react";
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedLoggedRoute>
-        <AssignWorkout />
+        <AssignMeal />
       </ProtectedLoggedRoute>
     ),
   },

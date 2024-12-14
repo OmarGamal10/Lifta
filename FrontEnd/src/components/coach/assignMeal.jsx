@@ -1,18 +1,19 @@
 import React, { useState, useMemo } from "react";
-import Workout from "./workoutCard";
+import Meal from "./MealCard";
 import ErrorMessage from "../errorMsg";
-import workouts from "./testDataWorkouts";
+import meals from "./testDataMeals";
 import { useNavigate } from "react-router-dom";
 import Nodata from "../Nodata";
 
-function AssignWorkout() {
+function AssignMeal() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    workoutId: "",
+    mealId: "",
     day: "Sunday",
+    mealType: "Breakfast",
   });
   const [errors, setErrors] = useState({});
-  const [selectedWorkout, setSelectedWorkout] = useState(null);
+  const [selectedMeal, setSelectedMeal] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const days = [
@@ -25,20 +26,20 @@ function AssignWorkout() {
     "Saturday",
   ];
 
-  const workoutsPerPage = 6;
+  const mealTypes = ["Breakfast", "Lunch", "Dinner"];
 
-  const handleWorkoutSelect = (workout) => {
-    setSelectedWorkout(
-      selectedWorkout && selectedWorkout.id === workout.id ? null : workout
-    );
+  const mealsPerPage = 6;
+
+  const handleMealSelect = (meal) => {
+    setSelectedMeal(selectedMeal && selectedMeal.id === meal.id ? null : meal);
 
     setFormData((prevData) => ({
       ...prevData,
-      workoutId: workout.id === selectedWorkout?.id ? "" : workout.id,
+      mealId: meal.id === selectedMeal?.id ? "" : meal.id,
     }));
 
     setErrors((prevErrors) => {
-      const { workoutId, ...restErrors } = prevErrors; // Remove workoutId error
+      const { mealId, ...restErrors } = prevErrors;
       return restErrors;
     });
   };
@@ -51,11 +52,19 @@ function AssignWorkout() {
     }));
   };
 
+  const handleMealTypeChange = (e) => {
+    const selectedMealType = e.target.value;
+    setFormData((prevData) => ({
+      ...prevData,
+      mealType: selectedMealType,
+    }));
+  };
+
   const handleSubmit = (isAssign) => {
     const newErrors = {};
 
-    if (!selectedWorkout) {
-      newErrors.workoutId = "Please select a workout";
+    if (!selectedMeal) {
+      newErrors.mealId = "Please select a meal";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -64,37 +73,40 @@ function AssignWorkout() {
     }
 
     if (isAssign) {
-      console.log("Assigning workout:", {
-        workoutId: formData.workoutId,
+      console.log("Assigning meal:", {
+        mealId: formData.mealId,
         day: formData.day,
+        mealType: formData.mealType,
       });
     }
 
-    setSelectedWorkout(null);
+    setSelectedMeal(null);
     setFormData({
-      workoutId: "",
+      mealId: "",
       day: "Sunday",
+      mealType: "Breakfast",
     });
     setErrors({});
     navigate("/profile");
   };
 
   const handleCancel = () => {
-    setSelectedWorkout(null);
+    setSelectedMeal(null);
     setFormData({
-      workoutId: "",
+      mealId: "",
       day: "Sunday",
+      mealType: "Breakfast",
     });
     setErrors({});
     navigate("/profile");
   };
 
-  const paginatedWorkouts = useMemo(() => {
-    const startIndex = (currentPage - 1) * workoutsPerPage;
-    return workouts.slice(startIndex, startIndex + workoutsPerPage);
-  }, [currentPage, workouts]);
+  const paginatedMeals = useMemo(() => {
+    const startIndex = (currentPage - 1) * mealsPerPage;
+    return meals.slice(startIndex, startIndex + mealsPerPage);
+  }, [currentPage]);
 
-  const totalPages = Math.ceil(workouts.length / workoutsPerPage);
+  const totalPages = Math.ceil(meals.length / mealsPerPage);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -102,24 +114,25 @@ function AssignWorkout() {
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
-      <h2 className="text-2xl text-textColor font-bold mb-4">Assign Workout</h2>
+      <h2 className="text-2xl text-textColor font-bold mb-4">Assign Meal</h2>
 
-      {workouts.length > 0 ? (
+      {meals.length > 0 ? (
         <div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-5 mb-4">
-            {paginatedWorkouts.map((workout) => (
+            {paginatedMeals.map((meal) => (
               <div
-                key={workout.id}
-                onClick={() => handleWorkoutSelect(workout)}
+                key={meal.id}
+                onClick={() => handleMealSelect(meal)}
                 className={`cursor-pointer ${
-                  selectedWorkout?.id === workout.id
+                  selectedMeal?.id === meal.id
                     ? "border-4 border-primary rounded-2xl"
                     : ""
                 }`}
               >
-                <Workout
-                  name={workout.name}
-                  note={workout.note}
+                <Meal
+                  name={meal.name}
+                  photo={meal.photo}
+                  facts={meal.facts}
                   view={"display"}
                 />
               </div>
@@ -146,27 +159,47 @@ function AssignWorkout() {
             </button>
           </div>
 
-          {selectedWorkout && (
-            <div className="mb-4">
-              <label className="block mb-2 font-medium text-textColor">
-                Select Day for {selectedWorkout.name}
-              </label>
-              <select
-                name="day"
-                value={formData.day}
-                onChange={handleDayChange}
-                className="w-full p-2 border rounded"
-              >
-                {days.map((day) => (
-                  <option key={day} value={day}>
-                    {day}
-                  </option>
-                ))}
-              </select>
+          {selectedMeal && (
+            <div className="mb-4 flex gap-4">
+              <div className="flex-1">
+                <label className="block mb-2 font-medium text-textColor">
+                  Select Day for {selectedMeal.name}
+                </label>
+                <select
+                  name="day"
+                  value={formData.day}
+                  onChange={handleDayChange}
+                  className="w-full p-2 border rounded"
+                >
+                  {days.map((day) => (
+                    <option key={day} value={day}>
+                      {day}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="flex-1">
+                <label className="block mb-2 font-medium text-textColor">
+                  Select Meal Type
+                </label>
+                <select
+                  name="mealType"
+                  value={formData.mealType}
+                  onChange={handleMealTypeChange}
+                  className="w-full p-2 border rounded"
+                >
+                  {mealTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           )}
 
-          {errors.workoutId && <ErrorMessage error={errors.workoutId} />}
+          {errors.mealId && <ErrorMessage error={errors.mealId} />}
 
           <div className="flex justify-end space-x-4">
             <button
@@ -182,15 +215,15 @@ function AssignWorkout() {
               onClick={() => handleSubmit(true)}
               className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
             >
-              Assign Workout
+              Assign Meal
             </button>
           </div>
         </div>
       ) : (
-        <Nodata header="No Workouts Available" />
+        <Nodata header="No Meals Available" />
       )}
     </div>
   );
 }
 
-export default AssignWorkout;
+export default AssignMeal;
