@@ -2,13 +2,17 @@ import { useState, useRef } from "react";
 import "../output.css";
 import { BsUpload } from "react-icons/bs";
 import ErrorMessage from "../errorMsg";
-
+import handleImages from "../../freqUsedFuncs/handleImages";
+import useHttp from "../../hooks/useHTTP";
+import { jwtDecode } from "jwt-decode";
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 function ExerciseForm() {
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
   const [formData, setFormData] = useState({
     name: "",
     muscleGroup: "",
     description: "",
-    gif: "",
+    gifPath: "",
   });
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
@@ -20,7 +24,7 @@ function ExerciseForm() {
       if (file && file.type === "image/gif") {
         setFormData((prevData) => ({
           ...prevData,
-          gif: file, // Update gif in the formData
+          gifPath: file, // Update gif in the formData
         }));
       } else {
         alert("Please select a valid GIF file.");
@@ -41,7 +45,7 @@ function ExerciseForm() {
     fileInputRef.current.click();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -54,6 +58,35 @@ function ExerciseForm() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
+    }
+
+    const gifPath = await handleImages(formData.gifPath);
+    if (gifPath == null) {
+      setErrors({ ...errors, gifPath: "Error uploading gif" });
+      return;
+    } else setFormData({ ...formData, gifPath });
+
+    const token = getTokenFromCookies();
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken ? decodedToken.user_id : null;
+    console.log(userId);
+    try {
+      const response = await post(
+        "/exercises",
+        {
+          ...formData,
+          trainer_id: userId,
+          gif: gifPath,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -125,7 +158,7 @@ function ExerciseForm() {
               onChange={handleChange}
             />
           </div>
-          {errors.gif && <ErrorMessage error={errors.gif} />}
+          {errors.gif && <ErrorMessage error={errors.gifPath} />}
 
           <div className="mb-6">
             <h6 className="text-xs text-left text-backGroundColor mb-2">
