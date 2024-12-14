@@ -38,6 +38,14 @@ router.get("/trainees", async (req, res, next) => {
   });
 });
 
+router.get("/browse", async (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    data: {
+      coaches: await userModel.getAvailableCoaches(),
+    },
+  });
+});
 //auth routes
 router.post("/login", authController.login);
 router.post("/signup", convertToSnakeCase, authController.signup);

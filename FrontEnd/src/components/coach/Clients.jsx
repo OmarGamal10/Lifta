@@ -62,46 +62,50 @@ const Clients = ({ userId }) => {
         <h2 className="p-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
           Clients Section
         </h2>
-        <div className="flex flex-wrap gap-6">
-          {currentClients.map((client) => (
-            <div
-              key={client.trainee_id}
-              onClick={() => viewClient(client.trainee_id)}
-              className="bg-backGroundColor p-6 rounded-lg w-64 text-center transition-transform duration-300 hover:scale-110 hover:bg-primary cursor-pointer"
-            >
-              <img
-                src="src/assets/landingGym.svg"
-                alt={client.name}
-                className="w-28 h-28 rounded-full mx-auto mb-6"
-              />
-              <h3 className="text-2xl font-semibold mb-2">
-                {client.first_name + " " + client.last_name}
-              </h3>
-              <p className="text-textspan mb-6">{client.name}</p>
+        <div className="flex flex-wrap gap-6 justify-center">
+  {currentClients.map((client) => (
+    <div
+      key={client.trainee_id}
+      onClick={() => viewClient(client.trainee_id)}
+      className="bg-backGroundColor border-2 border-secondary p-6 rounded-lg w-64 text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer"
+    >
+      {/* Client Photo */}
+      <img
+        src="src/assets/landingGym.svg" // Replace with the actual path to the client's photo if available
+        alt={client.name}
+        className="w-24 h-24 rounded-full mx-auto cover mb-4" // Rounded photo with specific width and height
+      />
 
-              <div className="flex space-x-4">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent parent div's onClick from firing
-                    handleRemove(client.trainee_id);
-                  }}
-                  className="bg-backGroundColor text-textColor py-3 px-6 rounded hover:bg-primary hover:text-backGroundColor transition-transform duration-300 hover:scale-110"
-                >
-                  Remove
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent parent div's onClick from firing
-                    handleAssign(client.trainee_id);
-                  }}
-                  className="bg-backGroundColor text-textColor py-3 px-6 rounded hover:bg-primary hover:text-backGroundColor transition-transform duration-300 hover:scale-110"
-                >
-                  Assign
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+      <h3 className="text-2xl font-semibold mb-2">
+        {client.first_name + " " + client.last_name}
+      </h3>
+      <p className="text-textspan mb-2">{client.name}</p>
+
+      {/* Action Buttons */}
+      <div className="flex space-x-4 justify-center mt-4">
+        <button
+          onClick={(e) => {
+            e.stopPropagation(); // Prevents the parent div's onClick from firing
+            handleRemove(client.trainee_id);
+          }}
+          className="bg-backGroundColor border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+        >
+          Remove
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation(); // Prevents the parent div's onClick from firing
+            handleAssign(client.trainee_id);
+          }}
+          className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+        >
+          Assign
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
 
         {/* Pagination Controls */}
         <div className="flex justify-center gap-4 mt-6">

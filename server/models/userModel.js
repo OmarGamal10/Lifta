@@ -8,12 +8,12 @@ exports.getAllUsers = async () => {
 exports.getAllTrainees = async () => {
   const query = "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainee ON user_id = trainee_id";
   return (await db.query(query)).rows;
-}
+};
 
 exports.getAllCoaches = async () => {
   const query = "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainer ON user_id = trainer_id";
   return (await db.query(query)).rows;
-}
+};
 
 exports.SelectUserById = async (Id) => {
   const query = "SELECT * FROM lifta_schema.users WHERE user_id = $1";
@@ -67,7 +67,7 @@ const addTrainer = async (values, id) => {
   await db.query(query2, certification);
 };
 
-exports.assignToTrainer = async(s_id) => {
+exports.assignToTrainer = async (s_id) => {
   const query = `
     UPDATE lifta_schema.trainee t
     SET 
@@ -85,7 +85,24 @@ exports.assignToTrainer = async(s_id) => {
     WHERE t.trainee_id = s.trainee_id
     AND s.subscription_id = $1;`;
 
-    const value = s_id;
+  const value = s_id;
 
-    await db.query(query, value);
-}
+  await db.query(query, value);
+};
+
+exports.getAvailableCoaches = async () => {
+  const query = `SELECT c.trainer_id, 
+       u.first_name, 
+       u.last_name, 
+       c.experience_years, 
+       c.rating
+FROM lifta_schema.trainer c
+JOIN lifta_schema.users u ON u.user_id = c.trainer_id
+LEFT JOIN lifta_schema.trainee t 
+    ON t.coach_id = c.trainer_id OR t.nutritionist_id = c.trainer_id
+GROUP BY c.trainer_id, u.first_name, u.last_name, c.experience_years, c.rating, c.client_limit
+HAVING c.client_limit > COUNT(DISTINCT CASE WHEN t.coach_id = c.trainer_id OR t.nutritionist_id = c.trainer_id THEN t.trainee_id END);
+`;
+
+  return (await db.query(query)).rows;
+};
