@@ -29,8 +29,8 @@ const Clients = ({ userId }) => {
 
   const totalPages = Math.ceil(clients.length / clientsPerPage);
 
-  const handleRemove = (id) => {
-    setClients(clients.filter((client) => client.id !== id));
+  const handleRemove = (trainee_id) => {
+    setClients(clients.filter((client) => client.trainee_id !== trainee_id));
   };
 
   const handleAssign = (id) => {
@@ -59,8 +59,8 @@ const Clients = ({ userId }) => {
         <div className="flex flex-wrap gap-6">
           {currentClients.map((client) => (
             <div
-              key={client.id}
-              onClick={() => viewClient(client.id)}
+              key={client.trainee_id}
+              onClick={() => viewClient(client.trainee_id)}
               className="bg-backGroundColor p-6 rounded-lg w-64 text-center transition-transform duration-300 hover:scale-110 hover:bg-primary cursor-pointer"
             >
               <img
@@ -75,7 +75,7 @@ const Clients = ({ userId }) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation(); // Prevents the parent div's onClick from firing
-                    handleRemove(client.id);
+                    handleRemove(client.trainee_id);
                   }}
                   className="bg-backGroundColor text-textColor py-3 px-6 rounded hover:bg-primary hover:text-backGroundColor transition-transform duration-300 hover:scale-110"
                 >
@@ -84,7 +84,7 @@ const Clients = ({ userId }) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation(); // Prevents the parent div's onClick from firing
-                    handleAssign(client.id);
+                    handleAssign(client.trainee_id);
                   }}
                   className="bg-backGroundColor text-textColor py-3 px-6 rounded hover:bg-primary hover:text-backGroundColor transition-transform duration-300 hover:scale-110"
                 >
