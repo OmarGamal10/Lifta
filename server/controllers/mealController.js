@@ -11,6 +11,7 @@ const createMeal = async (req, res, next) => {
     picture,
     ingredients
   );
+  console.log(req.body);
   res.status(201).json({
     status: "success",
     data: {

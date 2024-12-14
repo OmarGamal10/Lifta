@@ -59,7 +59,7 @@ function Ingredient() {
 
     try {
       const response = await post(
-        "/packages",
+        "/ingredients",
         {
           ...formData,
           trainer_id: userId,

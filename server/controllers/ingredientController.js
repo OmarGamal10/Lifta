@@ -32,13 +32,13 @@ const getIngredientsMeal = async (req, res, next) => {
 const createIngredient = async (req, res, next) => {
   const { name, protein, carb, trainer_id, fat, calories } = req.body;
 
-  if (isNaN(Number(protein)) || Number(protein) <= 0) {
+  if (isNaN(Number(protein)) || Number(protein) < 0) {
     return next(new AppError("Please provide a valid protien", 400));
   }
-  if (isNaN(Number(carb)) || Number(carb) <= 0) {
+  if (isNaN(Number(carb)) || Number(carb) < 0) {
     return next(new AppError("Please provide a valid carb", 400));
   }
-  if (isNaN(Number(fat)) || Number(fat) <= 0) {
+  if (isNaN(Number(fat)) || Number(fat) < 0) {
     return next(new AppError("Please provide a valid fat", 400));
   }
   if (isNaN(Number(calories)) || Number(calories) <= 0) {

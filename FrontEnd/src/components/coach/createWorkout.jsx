@@ -48,19 +48,18 @@ function CreateWorkout() {
         });
 
         console.log("API Response: ", response);
-        // Ensure response is an array and set exercises
+
         const fetchedExercises = Array.isArray(response.data.exercises)
           ? response.data.exercises
           : [];
         setExercises(fetchedExercises);
 
-        // Reset pagination if no exercises found
         if (fetchedExercises.length === 0) {
           setCurPage(1);
         }
       } catch (err) {
         console.error("Error fetching exercises:", err);
-        setExercises([]); // Ensure exercises is an empty array on error
+        setExercises([]);
       }
     };
 

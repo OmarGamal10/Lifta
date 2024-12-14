@@ -88,7 +88,7 @@ function ExerciseForm() {
         }
       );
       console.log(response);
-      // navigate("/profile");
+      navigate("/profile");
     } catch (err) {
       console.log(err);
     }
