@@ -19,32 +19,32 @@ import "primeicons/primeicons.css";
 import { TraineeCurrentWrokout } from "./components/trainee/traineCurrentWorkout.jsx";
 import { TraineeMealCard } from "./components/trainee/traineeMealCard.jsx";
 import { TraineeCurrentMeals } from "./components/trainee/traineeCurrentMeals.jsx";
-
+import { PackageDashboard } from "./components/packageDashboard.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedLoggedRoute>
-      <LandingPage />
+        <LandingPage />
       </ProtectedLoggedRoute>
-    )
+    ),
   },
   {
     path: "log-in",
     element: (
       <ProtectedLoggedRoute>
-      <LoginForm />
+        <LoginForm />
       </ProtectedLoggedRoute>
-    )
+    ),
   },
   {
     path: "sign-up",
-    element:(
+    element: (
       <ProtectedLoggedRoute>
-      <SignUpForm />
+        <SignUpForm />
       </ProtectedLoggedRoute>
-    ) 
+    ),
   },
   {
     path: "profile",
@@ -52,15 +52,17 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <UserProfile />
       </ProtectedRoute>
-    )
+    ),
   },
   {
     path: "test",
     element: (
-      <PrimeReactProvider value={{  pt: Tailwind  }}>
-        <TraineeCurrentMeals/>
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <ProtectedRoute>
+          <TraineeCurrentWrokout />
+        </ProtectedRoute>
       </PrimeReactProvider>
-    )
+    ),
   },
   {
     path: "*",

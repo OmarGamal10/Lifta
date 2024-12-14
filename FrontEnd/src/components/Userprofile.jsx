@@ -52,7 +52,7 @@ const UserProfile = ({ userId }) => {
   // Components to render based on the active section
   const renderComponent = () => {
     if (activeSection == "Workouts") {
-      return <TraineeCurrentWrokout/>
+      return <TraineeCurrentWrokout userId={userId} />
     }
       if(activeSection) {
         return <NoDataDashboard header= {`${activeSection}` + " Section"} />;

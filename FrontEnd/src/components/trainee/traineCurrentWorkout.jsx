@@ -14,10 +14,42 @@ export function TraineeCurrentWrokout(probs) {
 
     function handleMarkAsDone() {
       setIsDone(true);
-    }  
+  }  
+  
+  const { get: httpGet, loading, error } = useHttp("http://localhost:3000");
+
+  const [workout, setWorkout] = useState({});
+  const [exercises, setExercises] = useState([]);
+  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await httpGet(`/users/${probs.userId}/currentWorkout`, {
+          headers: { "Cache-Control": "no-cache" },
+        });
+        setWorkout(response.data.workout[0]);
+        const fetchedWorkout = response.data.workout[0];
+        try {
+          const response = await httpGet(`/workouts/${fetchedWorkout.workout_id}/exercises`, {
+            headers: { "Cache-Control": "no-cache" },
+          });
+          setExercises(response.data.exercises);
+        } catch (err) {
+          console.log(err);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+      
+    };    
+
+    fetchData();
+  }, []);
   
   const objs = [
     {
+      id:1,
       name: "Shoulder Press",
       description: "This exercise targets shoulders muscles, blah blah blah",
       sets: 3,
@@ -25,6 +57,7 @@ export function TraineeCurrentWrokout(probs) {
       muscle: "Shoulders",
     },
     {
+      id:2,
       name: "Bench Press",
       description: "This exercise targets chest muscles, blah blah blah",
       sets: 4,
@@ -32,6 +65,7 @@ export function TraineeCurrentWrokout(probs) {
       muscle: "Chest",
     },
     {
+      id:3,
       name: "Push Ups",
       description: "This exercise targets triceps muscles, blah blah blah",
       sets: 4,
@@ -39,6 +73,7 @@ export function TraineeCurrentWrokout(probs) {
       muscle: "Triceps",
     },
     {
+      id:4,
       name: "Plank",
       description: "This exercise targets core muscles, blah blah blah",
       sets: 3,
@@ -57,14 +92,16 @@ export function TraineeCurrentWrokout(probs) {
           <div>
           <h2 className="text-2xl font-medium mb-4">
             Exercises
-          </h2>
-          {objs.map((exercise) => (
+        </h2>
+        {console.log(exercises)}
+          {exercises.map((exercise) => (
             <TraineeExerciseCard
+              key={exercise.exercise_id}
               name={exercise.name}
               description={exercise.description}
               sets={exercise.sets}
               reps={exercise.reps}
-              muscle={exercise.muscle}
+              muscle={exercise.musclegroup}
             />
           ))}
       </div>

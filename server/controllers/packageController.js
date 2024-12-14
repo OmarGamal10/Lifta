@@ -51,11 +51,20 @@ const createPackage = async (req, res, next) => {
     },
   });
 };
+const deletePackage = async (req, res, next) => {
+  const { package_id } = req.body;
+  await packageModel.deletePackage(package_id);
+  res.status(200).json({
+    status: "success",
+    message: "Package deleted successfully",
+  });
+};
 
 module.exports = {
   getAllPackages: catchAsync(getAllPackages),
   getPackagesCoach: catchAsync(getPackagesCoach),
   createPackage: catchAsync(createPackage),
+  deletePackage: catchAsync(deletePackage),
 };
 
 // /packages
