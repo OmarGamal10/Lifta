@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       // <ProtectedLoggedRoute>
-      <ExerciseForm />
+      <IngredientForm />
       // </ProtectedLoggedRoute>
     ),
   },

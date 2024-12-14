@@ -5,14 +5,17 @@ import ErrorMessage from "../errorMsg";
 import handleImages from "../../freqUsedFuncs/handleImages";
 import useHttp from "../../hooks/useHTTP";
 import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 function ExerciseForm() {
+  const navigate = useNavigate();
+
   const { post, loading, error, data } = useHttp("http://localhost:3000");
   const [formData, setFormData] = useState({
     name: "",
     muscleGroup: "",
     description: "",
-    gifPath: "",
+    gif: "",
   });
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
@@ -24,7 +27,7 @@ function ExerciseForm() {
       if (file && file.type === "image/gif") {
         setFormData((prevData) => ({
           ...prevData,
-          gifPath: file, // Update gif in the formData
+          gif: file, // Update gif in the formData
         }));
       } else {
         alert("Please select a valid GIF file.");
@@ -60,12 +63,12 @@ function ExerciseForm() {
       return;
     }
 
-    const gifPath = await handleImages(formData.gifPath);
-    if (gifPath == null) {
-      setErrors({ ...errors, gifPath: "Error uploading gif" });
+    const gif = await handleImages(formData.gif);
+    if (gif == null) {
+      setErrors({ ...errors, gif: "Error uploading gif" });
       return;
-    } else setFormData({ ...formData, gifPath });
-
+    }
+    console.log(formData.gif);
     const token = getTokenFromCookies();
     const decodedToken = token ? jwtDecode(token) : null;
     const userId = decodedToken ? decodedToken.user_id : null;
@@ -75,8 +78,8 @@ function ExerciseForm() {
         "/exercises",
         {
           ...formData,
+          gif,
           trainer_id: userId,
-          gif: gifPath,
         },
         {
           headers: {
@@ -85,6 +88,7 @@ function ExerciseForm() {
         }
       );
       console.log(response);
+      // navigate("/profile");
     } catch (err) {
       console.log(err);
     }
@@ -158,7 +162,7 @@ function ExerciseForm() {
               onChange={handleChange}
             />
           </div>
-          {errors.gif && <ErrorMessage error={errors.gifPath} />}
+          {errors.gif && <ErrorMessage error={errors.gif} />}
 
           <div className="mb-6">
             <h6 className="text-xs text-left text-backGroundColor mb-2">
