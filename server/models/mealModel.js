@@ -54,6 +54,28 @@ lifta_schema.ingredient i ON i.ingredient_id = mi.ingredient_id WHERE mi.meal_id
   return (await db.query(query, [mealId])).rows;
 };
 
+exports.assignMealToTrainee = async (trainee_id, meal_id, day, type) => {
+  try {
+    const query = `INSERT INTO lifta_schema.meals_diet (trainee_id,meal_id,day,type) VALUES ($1,$2,$3,$4) RETURNING * `;
+    return (await db.query(query, [trainee_id, meal_id, day, type])).rows;
+  } catch (err) {
+    if (err.code === "23505") {
+      throw new AppError(
+        `Trainee already have a ${type} meal on this day`,
+        400
+      );
+    }
+    throw err;
+  }
+};
+
+exports.getMealsByTraineeId = async (trainee_id) => {
+  const query = `SELECT m.meal_id ,m.name,m.picture ,md.day,md.type from lifta_schema.meal m 
+                JOIN lifta_schema.meals_diet md ON m.meal_id=md.meal_id 
+                WHERE md.trainee_id=$1 `;
+  return (await db.query(query, [trainee_id])).rows;
+};
+
 exports.removeIngredientFromMeal = async (meal_id, ingredient_id) => {
   const query = `DELETE FROM lifta_schema.meal_ingredient WHERE meal_id =$1 AND ingredient_id=$2`;
   return (await db.query(query, [meal_id, ingredient_id])).rows;

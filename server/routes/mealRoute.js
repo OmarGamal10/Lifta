@@ -14,6 +14,9 @@ router.get("/:mealId/facts", (req, res, next) => {
   return mealController.getMealNutritionInfo(req, res, next);
 });
 
+router.get("/trainee/:traineeId", mealController.getMealsTrainee);
+router.post("/trainee", mealController.assignMealTrainee);
+
 router.post(
   "/",
   convertCamelToSnake,
