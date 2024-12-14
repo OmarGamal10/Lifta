@@ -116,35 +116,29 @@ function CreateMeal() {
       className="bg-textColor flex min-h-screen justify-center px-12 py-3 relative"
       onClick={handlePageClick}
     >
-      <div className="w-3/5 flex flex-col relative ">
-        <div className="w-full flex flex-row flex-wrap flex-1 justify-between pb-16 pr-10">
-          {ingredients
-            .slice((curPage - 1) * 6, curPage * 6)
-            .map((ingredient) => (
-              <div
-                key={ingredient.id}
-                onClick={(e) => handleSelectIngredient(e, ingredient.id)}
-                className={
-                  choosedIngredients.some(
-                    (chosen) => chosen.id === ingredient.id
-                  )
-                    ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer"
-                }
-              >
-                <Ingredient
-                  readOnly={true}
-                  name={ingredient.name}
-                  protiens={ingredient.protien}
-                  carbs={ingredient.carb}
-                  fats={ingredient.fat}
-                  calories={ingredient.calories}
-                />
-              </div>
-            ))}
-        </div>
+      <div className="w-3/5 grid grid-cols-3 gap-4 relative">
+        {ingredients.slice((curPage - 1) * 6, curPage * 6).map((ingredient) => (
+          <div
+            key={ingredient.id}
+            onClick={(e) => handleSelectIngredient(e, ingredient.id)}
+            className={
+              choosedIngredients.some((chosen) => chosen.id === ingredient.id)
+                ? "opacity-50 cursor-not-allowed"
+                : "cursor-pointer"
+            }
+          >
+            <Ingredient
+              readOnly={true}
+              name={ingredient.name}
+              protiens={ingredient.protien}
+              carbs={ingredient.carb}
+              fats={ingredient.fat}
+              calories={ingredient.calories}
+            />
+          </div>
+        ))}
 
-        <div className="absolute bottom-0 left-30 right-0 flex justify-center items-center py-2 space-x-4">
+        <div className="col-span-3 absolute bottom-0 left-0 right-0 flex justify-center items-center py-2 space-x-4">
           <button
             onClick={handlePreviousPage}
             disabled={curPage === 1}
@@ -287,7 +281,6 @@ function CreateMeal() {
             value={mealName}
             autoComplete="off"
           />
-          {/* {errors.quantity && <ErrorMessage error={errors.quantity} />} */}
         </div>
       </div>
     </div>

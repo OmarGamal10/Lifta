@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 
 const NoDataDashboard = ({ header = "No Data Dashboard" }) => (
   <div className="flex gap-[40px] items-center flex-col size-full">
-    <h1 className=" p-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
-      {header}
-    </h1>
+    {header !== "" ? (
+      <h1 className=" p-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
+        {header}
+      </h1>
+    ) : (
+      ""
+    )}
     <div className="bg-backGroundColor border-l-textspan p-6 flex flex-col items-center rounded-lg w-full">
       {/* Dynamic Header */}
 

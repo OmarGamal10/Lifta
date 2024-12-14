@@ -5,7 +5,7 @@ import exercises from "./testData";
 
 function CreateWorkout() {
   const [workoutName, updateWorkoutName] = useState("");
-
+  const [workoutNote, updateWorkoutNote] = useState("");
   const [choosedExercises, updateChoosedExercises] = useState([]);
   const [curSelectedExercise, updateCurSelectedExercise] = useState(null);
   const [curPage, setCurPage] = useState(1);
@@ -81,7 +81,7 @@ function CreateWorkout() {
       onClick={handlePageClick}
     >
       <div className="w-3/5 flex flex-col relative ">
-        <div className="w-full flex flex-row flex-wrap flex-1 justify-between pb-16 pr-10">
+        <div className="w-full grid grid-cols-3 gap-4 pb-16 pr-10">
           {exercises.slice((curPage - 1) * 6, curPage * 6).map((exercise) => (
             <div
               key={exercise.id}

@@ -15,20 +15,17 @@ import NotFound from "./pages/Notfound.jsx";
 import IngredientForm from "./components/coach/IngredientForm.jsx";
 import IngredientCard from "./components/coach/ingredientCard.jsx";
 import WorkoutCard from "./components/coach/workoutCard.jsx";
-
+import PackageForm from "./components/coach/packageForm.jsx";
+import ExerciseForm from "./components/coach/exerciseForm.jsx";
+import CreateWorkout from "./components/coach/CreateWorkout.jsx";
+import CreateMeal from "./components/coach/createMeal.jsx";
+import AssignWorkout from "./components/coach/assignWorkout.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedLoggedRoute>
-        <div>
-          <WorkoutCard
-            name={"shady"}
-            note={
-              "ddd  dd  dddd  dd ddddd   dddd dd  ddd ddddd d  ddddddd   ddddd dddddd   ddd  dddd ddd  dd  dddd  dd ddddd   dddd dd  ddd ddddd d  ddddddd   ddddd dddddd   ddd  dddd"
-            }
-          />
-        </div>
+        <AssignWorkout />
       </ProtectedLoggedRoute>
     ),
   },
