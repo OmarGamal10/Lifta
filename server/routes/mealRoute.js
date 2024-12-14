@@ -14,11 +14,22 @@ router.get("/:mealId/facts", (req, res, next) => {
   return mealController.getMealNutritionInfo(req, res, next);
 });
 
+
+router.get("/trainee/:traineeId", mealController.getMealsTrainee);
+router.post("/trainee", mealController.assignMealTrainee);
+
 router.post(
   "/",
   convertCamelToSnake,
   sanitizeEmptyFields,
   mealController.createMeal
+);
+
+router.delete("/", convertCamelToSnake, mealController.deleteMeal);
+router.delete(
+  "/:mealId/trainee",
+  convertCamelToSnake,
+  mealController.removeMealFromDiet
 );
 
 router.use("/:mealId/ingredients", ingredientRouter);

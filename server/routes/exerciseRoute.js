@@ -2,6 +2,7 @@ const db = require("../db");
 const express = require("express");
 const router = express.Router({ mergeParams: true }); // Enable mergeParams
 const exerciseController = require("../controllers/exerciseController");
+const workoutController = require("../controllers/workoutController");
 const convertCamelToSnake = require("../middlewares/camelToSnakeMiddleware");
 const sanitizeEmptyFields = require("../middlewares/sanitizeEmptyFields");
 router.get("/", (req, res, next) => {
@@ -18,6 +19,10 @@ router.post(
   exerciseController.createExercise
 );
 
-router.delete("/", convertCamelToSnake, exerciseController.deleteExercise);
+router.delete("/", convertCamelToSnake, (req, res, next) => {
+  if (req.params.workoutId)
+    return workoutController.removeExerciseFromWorkout(req, res, next);
+  else return exerciseController.deleteExercise(req, res, next);
+});
 
 module.exports = router;

@@ -10,6 +10,7 @@ import LoginForm from "./components/loginForm";
 import LandingPage from "./components/landingPage";
 import FormCoach from "./components/coach/formCoach";
 import CertForm from "./components/coach/certificateForm";
+import workoutCard from "./components/coach/workoutCard.jsx";
 import UserTypeForm from "./components/userTypeForm";
 import SignUpForm from "./components/signUpForm.jsx";
 import { PackageCard } from "./components/packageCard.jsx";

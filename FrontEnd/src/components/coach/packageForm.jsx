@@ -75,7 +75,7 @@ function PackageForm() {
   return (
     <div
       name="pkgForm"
-      className="container border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8  max-w-lg rounded-3xl relative"
+      className=" border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8  max-w-lg rounded-3xl relative"
     >
       <h1 className="text-3xl font-bold">New Package</h1>
       <form
