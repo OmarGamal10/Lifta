@@ -25,6 +25,11 @@ router.post(
 );
 
 router.delete("/", convertCamelToSnake, mealController.deleteMeal);
+router.delete(
+  "/:mealId/trainee",
+  convertCamelToSnake,
+  mealController.removeMealFromDiet
+);
 
 router.use("/:mealId/ingredients", ingredientRouter);
 

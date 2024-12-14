@@ -87,10 +87,22 @@ const getMealsTrainee = async (req, res, next) => {
 const removeIngredientFromMeal = async (req, res, next) => {
   const { ingredient_id } = req.body;
   const { mealId: meal_id } = req.params;
+
   await mealModel.removeIngredientFromMeal(meal_id, ingredient_id);
   res.status(200).json({
     status: "success",
     message: "Ingredient removed successfully",
+  });
+};
+
+const removeMealFromDiet = async (req, res, next) => {
+  const { trainee_id } = req.body;
+  const { mealId: meal_id } = req.params;
+  console.log(meal_id, trainee_id);
+  await mealModel.removeMealFromDiet(meal_id, trainee_id);
+  res.status(200).json({
+    status: "success",
+    message: "Meal removed successfully",
   });
 };
 
@@ -111,4 +123,5 @@ module.exports = {
   removeIngredientFromMeal: catchAsync(removeIngredientFromMeal),
   assignMealTrainee: catchAsync(assignMealTrainee),
   getMealsTrainee: catchAsync(getMealsTrainee),
+  removeMealFromDiet: catchAsync(removeMealFromDiet),
 };

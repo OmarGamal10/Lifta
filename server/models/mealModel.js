@@ -76,6 +76,11 @@ exports.getMealsByTraineeId = async (trainee_id) => {
   return (await db.query(query, [trainee_id])).rows;
 };
 
+exports.removeMealFromDiet = async (meal_id, trainee_id) => {
+  const query = `DELETE FROM lifta_schema.meals_diet WHERE meal_id=$1 AND trainee_id=$2`;
+  return (await db.query(query, [meal_id, trainee_id])).rows;
+};
+
 exports.removeIngredientFromMeal = async (meal_id, ingredient_id) => {
   const query = `DELETE FROM lifta_schema.meal_ingredient WHERE meal_id =$1 AND ingredient_id=$2`;
   return (await db.query(query, [meal_id, ingredient_id])).rows;

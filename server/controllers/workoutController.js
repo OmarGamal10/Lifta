@@ -89,6 +89,16 @@ const removeExerciseFromWorkout = async (req, res, next) => {
   });
 };
 
+const removeWorkoutFromSchedule = async (req, res, next) => {
+  const { trainee_id } = req.body;
+  const { workoutId: workout_id } = req.params;
+  await workoutModel.removeWorkoutFromSchedule(workout_id, trainee_id);
+  res.status(200).json({
+    status: "success",
+    message: "Workout removed successfully",
+  });
+};
+
 module.exports = {
   createWorkout: catchAsync(createWorkout),
   getWorkoutsCoach: catchAsync(getWorkoutsCoach),
@@ -96,4 +106,5 @@ module.exports = {
   removeExerciseFromWorkout: catchAsync(removeExerciseFromWorkout),
   assignWorkoutTrainee: catchAsync(assignWorkoutTrainee),
   getWorkoutsTrainee: catchAsync(getWorkoutsTrainee),
+  removeWorkoutFromSchedule: catchAsync(removeWorkoutFromSchedule),
 };

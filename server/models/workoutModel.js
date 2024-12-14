@@ -66,6 +66,11 @@ exports.getWorkoutsByTraineeId = async (trainee_id) => {
   return (await db.query(query, [trainee_id])).rows;
 };
 
+exports.removeWorkoutFromSchedule = async (workout_id, trainee_id) => {
+  const query = `DELETE FROM lifta_schema.workouts_schedule WHERE workout_id=$1 AND trainee_id=$2`;
+  return (await db.query(query, [workout_id, trainee_id])).rows;
+};
+
 exports.removeExerciseFromWorkout = async (workoutId, exerciseId) => {
   const query = `DELETE FROM lifta_schema.workout_exercise WHERE workout_id =$1 AND  exercise_id=$2`;
   return (await db.query(query, [workoutId, exerciseId])).rows;

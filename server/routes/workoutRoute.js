@@ -21,6 +21,11 @@ router.post(
 );
 
 router.delete("/", convertCamelToSnake, workoutController.deleteWorkout);
+router.delete(
+  "/:workoutId/trainee",
+  convertCamelToSnake,
+  workoutController.removeWorkoutFromSchedule
+);
 
 router.use("/:workoutId/exercises", exerciseRouter);
 
