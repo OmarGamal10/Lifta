@@ -13,11 +13,20 @@ const getAllMessages = async (req, res, next) => {
 };
 
 const getMessagesByChatId = async (req, res, next) => {
-  const { sender_id, receiver_id } = req.params;
-  if (!sender_id || isNaN(sender_id) || !receiver_id || isNaN(receiver_id)) {
-    return next(new AppError("Please provide sender and receiver id", 400));
+  const { sender_id, receiver_id, subscription_id } = req.params;
+  if (
+    !sender_id ||
+    isNaN(sender_id) ||
+    !receiver_id ||
+    isNaN(receiver_id) ||
+    !subscription_id ||
+    isNaN(subscription_id)
+  ) {
+    return next(
+      new AppError("Please provide sender, receiver, and subscription id ", 400)
+    );
   }
-  const chatId = { sender_id, receiver_id };
+  const chatId = { sender_id, receiver_id, subscription_id };
   const messages = await messageModel.getMessagesByChatId(chatId);
   res.status(200).json({
     status: "success",

@@ -107,42 +107,54 @@ const getConversations = async (req, res, next) => {
     type
   );
 
-  // Group conversations by user_id
-  const groupedConvos = rawConvos.reduce((acc, convo) => {
-    if (!acc[convo.user_id]) {
-      // First occurrence of this user
-      acc[convo.user_id] = {
-        ...convo,
+  const groupedConvos = rawConvos.reduce((acc, trainee) => {
+    if (trainee.status === "Active") {
+      const existingTrainee = acc.find(
+        (t) => t.user_id === trainee.user_id && t.status === "Active"
+      );
+      if (existingTrainee) {
+        existingTrainee.packages.push({
+          package_id: trainee.package_id,
+          name: trainee.name,
+          type: trainee.type,
+          subscription_id: trainee.subscription_id,
+          status: trainee.status,
+        });
+      } else {
+        acc.push({
+          ...trainee,
+          packages: [
+            {
+              package_id: trainee.package_id,
+              name: trainee.name,
+              type: trainee.type,
+              subscription_id: trainee.subscription_id,
+              status: trainee.status,
+            },
+          ],
+        });
+      }
+    } else {
+      acc.push({
+        ...trainee,
         packages: [
           {
-            package_id: convo.package_id,
-            name: convo.name,
-            type: convo.type,
+            package_id: trainee.package_id,
+            name: trainee.name,
+            type: trainee.type,
+            subscription_id: trainee.subscription_id,
+            status: trainee.status,
           },
         ],
-      };
-      // Remove individual package fields
-      delete acc[convo.user_id].package_id;
-      delete acc[convo.user_id].name;
-      delete acc[convo.user_id].type;
-    } else {
-      // Add additional package info to existing user
-      acc[convo.user_id].packages.push({
-        package_id: convo.package_id,
-        name: convo.name,
-        type: convo.type,
       });
     }
     return acc;
-  }, {});
-
-  // back to array
-  const groupedConvoss = Object.values(groupedConvos);
+  }, []);
 
   res.status(200).json({
     status: "success",
     data: {
-      convos: groupedConvoss,
+      convos: groupedConvos,
     },
   });
 };

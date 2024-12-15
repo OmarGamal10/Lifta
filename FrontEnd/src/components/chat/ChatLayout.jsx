@@ -33,6 +33,10 @@ const ChatLayout = () => {
       console.log("Received message:", message);
       console.log(message.sender_id, message.receiver_id);
       setMessages((prevMessages) => {
+        console.log(activeChat);
+        if (activeChat) {
+          activeChat.last_message = message.content;
+        }
         const chatId =
           message.sender_id === userId
             ? message.receiver_id
@@ -55,7 +59,7 @@ const ChatLayout = () => {
       const fetchMessages = async () => {
         try {
           const response = await get(
-            `/messages/${userId}/${activeChat.user_id}`
+            `/messages/${userId}/${activeChat.user_id}/${activeChat.subscription_id}`
           );
           const messages = response.data.messages;
           console.log("Fetched messages:", messages);
@@ -79,12 +83,14 @@ const ChatLayout = () => {
       receiver_id: to,
       content,
       time: new Date(),
+      subscription_id: activeChat.subscription_id,
     };
     console.log("Sending message:", message);
     // Emit the message to the server
 
     socket.emit("private_message", { to, message });
-
+    activeChat.last_message = content;
+    console.log("Active chat:", activeChat);
     // Update the local state with the new message
     console.log(to);
     setMessages((prevMessages) => ({

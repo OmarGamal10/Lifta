@@ -34,10 +34,13 @@ const ChatWindow = ({ chat, messages, onSendMessage, currentId }) => {
           isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
         }`}
       >
-        <div className="p-4 border-b bg-accent">
+        <div className="p-4 border-b bg-accent flex items-center justify-between">
           <h3 className="font-bold text-lg">
             {chat?.first_name + " " + chat?.last_name}
           </h3>
+          <span className="bg-secondary rounded-full font-semibold px-2 py-1 text-sm ml-16 mt-0.5 ">
+            {chat.status === "Active" ? "Active" : "Expired"}
+          </span>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
@@ -59,6 +62,7 @@ const ChatWindow = ({ chat, messages, onSendMessage, currentId }) => {
                 messageEndRef.current.scrollIntoView({ behavior: "smooth" });
               }
             }}
+            chat={chat}
           />
         </div>
       </div>
