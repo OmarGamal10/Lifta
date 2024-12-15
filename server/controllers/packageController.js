@@ -35,6 +35,10 @@ const createPackage = async (req, res, next) => {
   if (isNaN(Number(duration)) || Number(duration) <= 0) {
     return next(new AppError("Please provide a valid duration", 400));
   }
+
+  if (isNaN(Number(price)) || Number(price) <= 0) {
+    return next(new AppError("Please provide a valid price", 400));
+  }
   const package = await packageModel.createPackage(
     name,
     price,
