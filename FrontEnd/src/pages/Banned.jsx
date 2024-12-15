@@ -2,6 +2,7 @@ import NavBar from "../components/Navbar";
 import Footer from "../components/Footer";
 import useHttp from "../hooks/useHTTP";
 import { useNavigate } from "react-router-dom";
+import ban from "../assets/ban.png"
 const Banned = () => {
   const navigate = useNavigate();
   const { get, loading, err } = useHttp("http://localhost:3000");
@@ -21,7 +22,7 @@ const Banned = () => {
     <div>
       <NavBar />
       <div className="flex flex-col justify-center items-center h-auto py-10">
-        <img src="src/assets/ban.png" className=" w-[720px] h-auto" />
+        <img src={ban} className=" w-[720px] h-auto" />
         <h1 className="text-3xl font-bold my-2 text-secondary">Oops!</h1>
         <h1 className="text-3xl font-bold text-secondary">
           You have been banned

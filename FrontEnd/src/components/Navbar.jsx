@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useHttp from "../hooks/useHTTP";
+import logo from "../assets/logo.png"
 import { Navigate, useNavigate } from "react-router-dom";
 const NavBar = () => {
   const [preference, setPreference] = useState();
@@ -71,7 +72,7 @@ const NavBar = () => {
           <span>LIFTA</span>
           <img
             className="object-cover h-10 w-14"
-            src="src/assets/logo.png"
+            src={logo}
             alt="logo"
           />
         </Link>
