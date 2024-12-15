@@ -1,20 +1,27 @@
 import { useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
+import useHttp from "../../hooks/useHTTP";
 
 function Ingredient() {
+  const navigate = useNavigate();
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
+
   const [formData, setFormData] = useState({
     name: "",
-    protiens: "",
-    carbs: "",
-    fats: "",
+    protein: "",
+    carb: "",
+    fat: "",
     calories: "",
   });
   const [errors, setErrors] = useState({});
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (
-      (name == "protiens" || name == "carbs" || name == "fats") &&
+      (name == "protein" || name == "carb" || name == "fat") &&
       value.length > 2
     )
       return;
@@ -30,7 +37,7 @@ function Ingredient() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -44,12 +51,36 @@ function Ingredient() {
       setErrors(newErrors);
       return;
     }
+
+    const token = getTokenFromCookies();
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken ? decodedToken.user_id : null;
+    console.log(userId);
+
+    try {
+      const response = await post(
+        "/ingredients",
+        {
+          ...formData,
+          trainer_id: userId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      navigate("/profile");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <div
       name="ingForm"
-      className="container border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8  max-w-lg rounded-3xl relative"
+      className="border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8  max-w-lg rounded-3xl relative"
     >
       <h1 className="text-3xl font-bold">New Ingredient</h1>
       <form
@@ -79,16 +110,16 @@ function Ingredient() {
             </h6>
             <input
               id="protiens-input"
-              name="protiens"
+              name="protein"
               className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-3 text-sm text-backGroundColor placeholder-gray-500 text-left"
               type="number"
-              placeholder="Protiens"
+              placeholder="Proteins"
               maxLength="2"
               onChange={handleChange}
-              value={formData.protiens}
+              value={formData.protein}
               autoComplete="off"
             />
-            {errors.protiens && <ErrorMessage error={errors.protiens} />}
+            {errors.protein && <ErrorMessage error={errors.protein} />}
           </div>
           <div className="w-1/4">
             <h6 className="text-xs text-left text-backGroundColor mb-2">
@@ -96,16 +127,16 @@ function Ingredient() {
             </h6>
             <input
               id="carbs-input"
-              name="carbs"
+              name="carb"
               className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-3 text-sm text-backGroundColor placeholder-gray-500 text-left"
               type="number"
               placeholder="Carbs"
               maxLength="2"
               onChange={handleChange}
-              value={formData.carbs}
+              value={formData.carb}
               autoComplete="off"
             />
-            {errors.carbs && <ErrorMessage error={errors.carbs} />}
+            {errors.carb && <ErrorMessage error={errors.carb} />}
           </div>
           <div className="w-1/4">
             <h6 className="text-xs text-left text-backGroundColor mb-2">
@@ -113,16 +144,16 @@ function Ingredient() {
             </h6>
             <input
               id="fats-input"
-              name="fats"
+              name="fat"
               className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-3 text-sm text-backGroundColor placeholder-gray-500 text-left"
               type="number"
               placeholder="fats"
               maxLength="2"
               onChange={handleChange}
-              value={formData.fats}
+              value={formData.fat}
               autoComplete="off"
             />
-            {errors.fats && <ErrorMessage error={errors.fats} />}
+            {errors.fat && <ErrorMessage error={errors.fat} />}
           </div>
         </div>
         <div className="flex flex-row justify-between">
