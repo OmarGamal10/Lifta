@@ -22,7 +22,7 @@ export function TraineeCurrentWrokout(probs) {
     try {
       const response = await post(`/users/${probs.userId}/currentWorkout`, {
         traineeId: probs.userId,
-        workoutId: workout.workout_id
+        workoutId: workout.workout_id,
       });
       console.log(response);
     } catch (err) {
@@ -39,18 +39,20 @@ export function TraineeCurrentWrokout(probs) {
             headers: { "Cache-Control": "no-cache" },
           }
         );
-        setWorkout(response.data.workout[0]);
-        const fetchedWorkout = response.data.workout[0];
-        try {
-          const response = await httpGet(
-            `/workouts/${fetchedWorkout.workout_id}/exercises`,
-            {
-              headers: { "Cache-Control": "no-cache" },
-            }
-          );
-          setExercises(response.data.exercises);
-        } catch (err) {
-          console.log(err);
+        if (response.data.workout.length) {
+          setWorkout(response.data.workout[0]);
+          const fetchedWorkout = response.data.workout[0];
+          try {
+            const response = await httpGet(
+              `/workouts/${fetchedWorkout.workout_id}/exercises`,
+              {
+                headers: { "Cache-Control": "no-cache" },
+              }
+            );
+            setExercises(response.data.exercises);
+          } catch (err) {
+            console.log(err);
+          }
         }
       } catch (err) {
         console.log(err);
@@ -63,7 +65,10 @@ export function TraineeCurrentWrokout(probs) {
             headers: { "Cache-Control": "no-cache" },
           }
         );
-        if (response.data.isDone.rows.length > 0 && response.data.isDone.rows[0].isDone == true) {
+        if (
+          response.data.isDone.rows.length > 0 &&
+          response.data.isDone.rows[0].isDone == true
+        ) {
           setIsDone(true);
         }
       } catch (err) {
@@ -74,37 +79,45 @@ export function TraineeCurrentWrokout(probs) {
     fetchData();
   }, []);
 
+  if (workout.workout_id) {
+    return (
+      <div className="text-textColor p-8 flex flex-col gap-6">
+        <div>
+          <h2 className="text-2xl font-medium">About this workout</h2>
+          <p className="p-4">{workout._note}</p>
+        </div>
+        <div>
+          <h2 className="text-2xl font-medium mb-4">Exercises</h2>
+          {exercises.map((exercise) => (
+            <TraineeExerciseCard
+              key={exercise.exercise_id}
+              name={exercise.name}
+              description={exercise.description}
+              sets={exercise.sets}
+              reps={exercise.reps}
+              muscle={exercise.musclegroup}
+            />
+          ))}
+        </div>
+        <button
+          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around
+           ${
+             isDone
+               ? "btn-disabled cursor-not-allowed bg-accent text-backGroundColor"
+               : "hover:bg-accent hover:text-backGroundColor"
+           } `}
+          onClick={handleMarkAsDone}
+        >
+          <span>{isDone ? "Done" : "Mark as done"}</span>
+          <span className="pi pi-check"></span>
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="text-textColor p-8 flex flex-col gap-6">
-      <div>
-        <h2 className="text-2xl font-medium">About this workout</h2>
-        <p className="p-4">{workout._note}</p>
-      </div>
-      <div>
-        <h2 className="text-2xl font-medium mb-4">Exercises</h2>
-        {exercises.map((exercise) => (
-          <TraineeExerciseCard
-            key={exercise.exercise_id}
-            name={exercise.name}
-            description={exercise.description}
-            sets={exercise.sets}
-            reps={exercise.reps}
-            muscle={exercise.musclegroup}
-          />
-        ))}
-      </div>
-      <button
-        className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around
-         ${
-           isDone
-             ? "btn-disabled cursor-not-allowed bg-accent text-backGroundColor"
-             : "hover:bg-accent hover:text-backGroundColor"
-         } `}
-        onClick={handleMarkAsDone}
-      >
-        <span>{isDone ? "Done" : "Mark as done"}</span>
-        <span className="pi pi-check"></span>
-      </button>
+    <div className="text-textColor h-[100vh] flex items-center">
+      <h2 className="text-2xl font-medium">No Workouts Today</h2>
     </div>
   );
 }

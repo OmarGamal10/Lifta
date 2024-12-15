@@ -27,7 +27,7 @@ import IngredientCard from "./components/coach/ingredientCard.jsx";
 import WorkoutCard from "./components/coach/workoutCard.jsx";
 import PackageForm from "./components/coach/packageForm.jsx";
 import ExerciseForm from "./components/coach/exerciseForm.jsx";
-import CreateWorkout from "./components/coach/CreateWorkout.jsx";
+import CreateWorkout from "./components/coach/createWorkout.jsx";
 import CreateMeal from "./components/coach/createMeal.jsx";
 import AssignWorkout from "./components/coach/assignWorkout.jsx";
 import AssignMeal from "./components/coach/assignMeal.jsx";
