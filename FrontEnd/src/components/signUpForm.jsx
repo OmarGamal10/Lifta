@@ -36,6 +36,7 @@ function SignUpForm() {
     title: "",
     dateIssued: "",
     description: "",
+    photo: "kjk;",
   });
 
   return (

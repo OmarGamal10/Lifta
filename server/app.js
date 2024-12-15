@@ -8,6 +8,10 @@ const packageRouter = require("./routes/packageRoute");
 const ingredientRouter = require("./routes/ingredientRoute");
 const exerciseRouter = require("./routes/exerciseRoute");
 const reviewRouter = require("./routes/reviewRoute");
+const workoutRouter = require("./routes/workoutRoute");
+const mealRouter = require("./routes/mealRoute");
+const traineeCurrentWorkoutRouter = require("./routes/traineeCurrentWorkoutRoute");
+
 const certificateRouter = require("./routes/certificateRoute");
 const messageRouter = require("./routes/messageRoutes");
 
@@ -52,6 +56,8 @@ app.use("/reviews", reviewRouter);
 app.use("/messages", messageRouter);
 
 app.use("/certificates", certificateRouter);
+app.use("/workouts", workoutRouter);
+app.use("/meals", mealRouter);
 
 // error handling middleware
 app.use(errorHandler);

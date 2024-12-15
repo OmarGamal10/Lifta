@@ -22,3 +22,8 @@ exports.createPackage = async (...values) => {
     }
   }
 };
+
+exports.deletePackage = async (packageId) => {
+  const query = "DELETE FROM lifta_schema.package WHERE package_id = $1 ";
+  return (await db.query(query, [packageId])).rows;
+};

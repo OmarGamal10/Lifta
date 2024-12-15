@@ -3,13 +3,14 @@ import { React } from "react";
 import IngForm from "./components/coach/IngredientForm.jsx";
 import PkgForm from "./components/coach/packageForm.jsx";
 import ExerciseForm from "./components/coach/exerciseForm.jsx";
-import UserProfile from "./components/userProfile.jsx";
+import UserProfile from "./components/Userprofile.jsx"
 import Form from "./components/mainForm";
 import FormTrainee from "./components/trainee/formTrainee";
 import LoginForm from "./components/loginForm";
 import LandingPage from "./components/landingPage";
 import FormCoach from "./components/coach/formCoach";
 import CertForm from "./components/coach/certificateForm";
+import workoutCard from "./components/coach/workoutCard.jsx";
 import UserTypeForm from "./components/userTypeForm";
 import SignUpForm from "./components/signUpForm.jsx";
 import { PackageCard } from "./components/packageCard.jsx";

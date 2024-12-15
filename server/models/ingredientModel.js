@@ -18,3 +18,13 @@ exports.createIngredient = async (...values) => {
     throw err;
   }
 };
+
+exports.deleteIngredient = async (ingredientId) => {
+  const query = "DELETE FROM lifta_schema.ingredient WHERE ingredient_id = $1 ";
+  return (await db.query(query, [ingredientId])).rows;
+};
+
+exports.getIngredientsByMealId = async (mealId) => {
+  const query = `SELECT i.ingredient_id , i.name,i.calories_serving,i.carb ,i.fat,i.protein , i.trainer_id, mi.quantity FROM lifta_schema.ingredient i join lifta_schema.meal_ingredient mi on mi.ingredient_id =i.ingredient_id WHERE mi.meal_id = $1`;
+  return (await db.query(query, [mealId])).rows;
+};
