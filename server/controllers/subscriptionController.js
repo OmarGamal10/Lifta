@@ -74,8 +74,9 @@ const getPendingSubscriptionsByCoachId = async (req, res, next) => {
 };
 
 const getTraineeHasGymSubscription = async (req, res, next) => {
-  const { id:trainee_id } = req.params;
-  const hasGymSubscription = await subscriptionModel.getTraineeHasGymSubscription(trainee_id);
+  const { id: trainee_id } = req.params;
+  const hasGymSubscription =
+    await subscriptionModel.getTraineeHasGymSubscription(trainee_id);
   res.status(200).json({
     status: "success",
     data: {
@@ -85,12 +86,63 @@ const getTraineeHasGymSubscription = async (req, res, next) => {
 };
 
 const getTraineeHasNutritionSubscription = async (req, res, next) => {
-  const { id:trainee_id } = req.params;
-  const hasNutritionSubscription = await subscriptionModel.getTraineeHasNutritionSubscription(trainee_id);
+  const { id: trainee_id } = req.params;
+  const hasNutritionSubscription =
+    await subscriptionModel.getTraineeHasNutritionSubscription(trainee_id);
   res.status(200).json({
     status: "success",
     data: {
       hasNutritionSubscription,
+    },
+  });
+};
+
+const getConversations = async (req, res, next) => {
+  const id = req.params.id;
+  const type = req.params.type;
+  // i did this because maybe one trainee has more than one subscription for the same trainee
+
+  const rawConvos = await subscriptionModel.getTraineesWithActiveSubscription(
+    id,
+    type
+  );
+
+  // Group conversations by user_id
+  const groupedConvos = rawConvos.reduce((acc, convo) => {
+    if (!acc[convo.user_id]) {
+      // First occurrence of this user
+      acc[convo.user_id] = {
+        ...convo,
+        packages: [
+          {
+            package_id: convo.package_id,
+            name: convo.name,
+            type: convo.type,
+          },
+        ],
+      };
+      // Remove individual package fields
+      delete acc[convo.user_id].package_id;
+      delete acc[convo.user_id].name;
+      delete acc[convo.user_id].type;
+    } else {
+      // Add additional package info to existing user
+      acc[convo.user_id].packages.push({
+        package_id: convo.package_id,
+        name: convo.name,
+        type: convo.type,
+      });
+    }
+    return acc;
+  }, {});
+
+  // back to array
+  const groupedConvoss = Object.values(groupedConvos);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      convos: groupedConvoss,
     },
   });
 };
@@ -103,5 +155,8 @@ module.exports = {
     getPendingSubscriptionsByCoachId
   ),
   getTraineeHasGymSubscription: catchAsync(getTraineeHasGymSubscription),
-  getTraineeHasNutritionSubscription: catchAsync(getTraineeHasNutritionSubscription),
+  getTraineeHasNutritionSubscription: catchAsync(
+    getTraineeHasNutritionSubscription
+  ),
+  getConversations: catchAsync(getConversations),
 };

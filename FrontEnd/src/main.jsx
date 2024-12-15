@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -12,31 +13,32 @@ import ProfileSection from "./components/Profilesection.jsx";
 import LandingPage from "./components/landingPage.jsx";
 import Banned from "./pages/Banned.jsx";
 import NotFound from "./pages/Notfound.jsx";
+import ChatLayout from "./components/chat/ChatLayout.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedLoggedRoute>
-      <LandingPage />
+        <LandingPage />
       </ProtectedLoggedRoute>
-    )
+    ),
   },
   {
     path: "log-in",
     element: (
       <ProtectedLoggedRoute>
-      <LoginForm />
+        <LoginForm />
       </ProtectedLoggedRoute>
-    )
+    ),
   },
   {
     path: "sign-up",
-    element:(
+    element: (
       <ProtectedLoggedRoute>
-      <SignUpForm />
+        <SignUpForm />
       </ProtectedLoggedRoute>
-    ) 
+    ),
   },
   {
     path: "profile",
@@ -44,7 +46,7 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <UserProfile />
       </ProtectedRoute>
-    )
+    ),
   },
   {
     path: "*",

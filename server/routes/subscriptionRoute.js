@@ -9,6 +9,7 @@ router.get(
   "/trainer/pending/:id",
   subscriptionController.getPendingSubscriptionsByCoachId
 );
+router.get("/:type/conversations/:id", subscriptionController.getConversations);
 router.post(
   "/",
   convertCamelCase,
@@ -20,7 +21,13 @@ router.patch(
   subscriptionController.subscriptionResponse
 );
 
-router.get("/hasGymSubscription/:id", subscriptionController.getTraineeHasGymSubscription);
-router.get("/hasNutritionSubscription/:id", subscriptionController.getTraineeHasNutritionSubscription);
+router.get(
+  "/hasGymSubscription/:id",
+  subscriptionController.getTraineeHasGymSubscription
+);
+router.get(
+  "/hasNutritionSubscription/:id",
+  subscriptionController.getTraineeHasNutritionSubscription
+);
 
 module.exports = router;

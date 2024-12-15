@@ -22,6 +22,7 @@ import { SubscriptionRequestCard } from "./components/coach/subscriptionRequestC
 import { SubReqDashboard } from "./components/coach/subReqDashboard.jsx";
 import { TraineesList } from "./components/admin/traineesList.jsx";
 import { CoachesList } from "./components/admin/coachesList.jsx";
+import ChatLayout from "./components/chat/ChatLayout.jsx";
 
 function App() {
   return (
