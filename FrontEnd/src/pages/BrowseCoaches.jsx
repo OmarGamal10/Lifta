@@ -5,9 +5,11 @@ import { FaStar } from "react-icons/fa";
 import useHttp from "../hooks/useHTTP";
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
 const BrowseCoaches = () => {
   const [ coaches, setCoaches ] = useState({});
   const [loading, setLoading] = useState(true); // State to track loading
+  const navigate = useNavigate();
   const { get } = useHttp("http://localhost:3000");
 
   useEffect(() => {
@@ -28,7 +30,9 @@ const BrowseCoaches = () => {
 
 
   // Navigate to Packages page when Subscribe button is clicked
-  const handleSubscribe = (trainer_id) => {};
+  const handleSubscribe = (trainer_id) => {
+    navigate(`${trainer_id}/packages`);
+  };
 
   const renderComponet = () => {
     return(

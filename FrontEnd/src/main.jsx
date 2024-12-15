@@ -13,31 +13,33 @@ import LandingPage from "./components/landingPage.jsx";
 import Banned from "./pages/Banned.jsx";
 import NotFound from "./pages/Notfound.jsx";
 import BrowseCoaches from "./pages/BrowseCoaches.jsx";
+import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import Tailwind from "primereact/passthrough/tailwind";
+import "primeicons/primeicons.css";
+import { PackageDashboard } from "./components/packageDashboard.jsx";
+import Footer from "./components/Footer.jsx";
+import NavBar from "./components/Navbar.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <ProtectedLoggedRoute>
-      <LandingPage />
-      </ProtectedLoggedRoute>
-    )
+    element: <App />,
   },
   {
     path: "log-in",
     element: (
       <ProtectedLoggedRoute>
-      <LoginForm />
+        <LoginForm />
       </ProtectedLoggedRoute>
-    )
+    ),
   },
   {
     path: "sign-up",
-    element:(
+    element: (
       <ProtectedLoggedRoute>
-      <SignUpForm />
+        <SignUpForm />
       </ProtectedLoggedRoute>
-    ) 
+    ),
   },
   {
     path: "profile",
@@ -45,11 +47,27 @@ const router = createBrowserRouter([
       <ProtectedRoute>
         <UserProfile />
       </ProtectedRoute>
-    )
+    ),
   },
   {
     path: "browse",
-    element: <BrowseCoaches />,
+    element:(
+      <ProtectedRoute>
+        <BrowseCoaches />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "browse/:coach_id/packages",
+    element: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <ProtectedRoute>
+        <NavBar />
+        <PackageDashboard who={1}/>
+        <Footer />
+        </ProtectedRoute>
+      </PrimeReactProvider>
+    ),
   },
   {
     path: "*",

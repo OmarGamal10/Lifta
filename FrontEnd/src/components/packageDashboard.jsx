@@ -3,19 +3,21 @@ import { PackageCard } from "./packageCard";
 import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
 import { ConstructionIcon, SendHorizontal } from "lucide-react";
+import { useParams } from "react-router-dom";
+import Loader from "./Loader";
+import NoDataDashboard from "./Nodata";
 
-export function PackageDashboard() {
+export function PackageDashboard({who, trainee_id}) {
   const { get: httpGet, loading, error } = useHttp("http://localhost:3000");
-
   const [packages, setPackages] = useState([]);
   const [hasGymSub, setHasGymSub] = useState([]);
   const [hasNutSub, setHasNutSub] = useState([]);
-  
 
+  const { coach_id } = useParams();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await httpGet("/users/70/packages", {
+        const response = await httpGet(`/users/${coach_id}/packages`, {
           headers: { "Cache-Control": "no-cache" },
         });
         console.log(response);
@@ -23,33 +25,39 @@ export function PackageDashboard() {
       } catch (err) {
         console.log(err);
       }
-      try {
-        const response = await httpGet("/subscriptions/hasGymSubscription/58", {
-          headers: { "Cache-Control": "no-cache" },
-        });
-        console.log(response.data);
-        if (response.data.hasGymSubscription.length == 1) {
-          setHasGymSub(true);
+      if (who == 1) {
+        try {
+          const response = await httpGet(
+            "/subscriptions/hasGymSubscription/58",
+            {
+              headers: { "Cache-Control": "no-cache" },
+            }
+          );
+          console.log(response.data);
+          if (response.data.hasGymSubscription.length == 1) {
+            setHasGymSub(true);
+          } else {
+            setHasGymSub(false);
+          }
+        } catch (err) {
+          console.log(err);
         }
-        else {
-          setHasGymSub(false);
+        try {
+          const response = await httpGet(
+            "/subscriptions/hasNutritionSubscription/58",
+            {
+              headers: { "Cache-Control": "no-cache" },
+            }
+          );
+          console.log(response.data);
+          if (response.data.hasNutritionSubscription.length == 1) {
+            setHasNutSub(true);
+          } else {
+            setHasNutSub(false);
+          }
+        } catch (err) {
+          console.log(err);
         }
-      } catch (err) {
-        console.log(err);
-      }
-      try {
-        const response = await httpGet("/subscriptions/hasNutritionSubscription/58", {
-          headers: { "Cache-Control": "no-cache" },
-        });
-        console.log(response.data)
-        if (response.data.hasNutritionSubscription.length == 1) {
-          setHasNutSub(true);
-        }
-        else {
-          setHasNutSub(false);
-        }
-      } catch (err) {
-        console.log(err);
       }
     };
 
@@ -57,7 +65,7 @@ export function PackageDashboard() {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-8">Loading packages...</div>;
+    return <Loader />;
   }
 
   if (error) {
@@ -79,19 +87,17 @@ export function PackageDashboard() {
             description={pack.description}
             price={pack.price}
             duration={pack.duration}
-            view={1}  //hardcoded
+            view={who} //hardcoded
             type={pack.type}
             hasGymSub={hasGymSub}
             hasNutSub={hasNutSub}
-            isActive = {true} //hardcoded
+            isActive={true} //hardcoded
             className="h-full" // Ensures cards have equal height
           />
         ))}
       </div>
       {packages.length === 0 && (
-        <div className="text-center text-gray-500 py-8">
-          No packages available
-        </div>
+        <NoDataDashboard header="Packages Available" />
       )}
     </div>
   );

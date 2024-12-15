@@ -22,12 +22,13 @@ import { SubscriptionRequestCard } from "./components/coach/subscriptionRequestC
 import { SubReqDashboard } from "./components/coach/subReqDashboard.jsx";
 import { TraineesList } from "./components/admin/traineesList.jsx";
 import { CoachesList } from "./components/admin/coachesList.jsx";
+import BrowseCoaches from "./pages/BrowseCoaches.jsx";
 
 function App() {
   return (
     <div>
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <PackageDashboard />
+        <LandingPage />
       </PrimeReactProvider>
     </div>
   );
