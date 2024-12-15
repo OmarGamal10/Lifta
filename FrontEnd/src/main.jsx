@@ -7,7 +7,7 @@ import SignUpForm from "./components/signUpForm.jsx";
 import ProtectedLoggedRoute from "./ProtectedLoggedRoute.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute.jsx";
-import UserProfile from "./components/userProfile.jsx";
+import UserProfile from "./components/Userprofile.jsx";
 import ProfileSection from "./components/Profilesection.jsx";
 import LandingPage from "./components/landingPage.jsx";
 import Banned from "./pages/Banned.jsx";
@@ -23,7 +23,11 @@ import NavBar from "./components/Navbar.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <ProtectedLoggedRoute>
+      <LandingPage />
+      </ProtectedLoggedRoute>
+    )
   },
   {
     path: "log-in",
@@ -62,7 +66,7 @@ const router = createBrowserRouter([
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <ProtectedRoute>
-        <NavBar />
+        <NavBar pref="NotDefault"/>
         <PackageDashboard who={1}/>
         <Footer />
         </ProtectedRoute>

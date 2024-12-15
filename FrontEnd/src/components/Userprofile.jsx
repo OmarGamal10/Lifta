@@ -10,6 +10,7 @@ import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
 import Clients from "./coach/Clients";
+import { PrimeReactProvider } from "primereact/api";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -51,7 +52,11 @@ const UserProfile = ({ userId }) => {
 
   }
   const components =  {
-    Clients: <Clients userId={userId} />,
+    Clients: (
+      <PrimeReactProvider>
+    <Clients userId={userId} />
+    </PrimeReactProvider>
+    ),
     Default: <NoDataDashboard header={activeSection + " Section"} />,
   }
 
@@ -62,7 +67,7 @@ const UserProfile = ({ userId }) => {
 
   return (
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
-      <NavBar />
+      <NavBar pref={"NotDefault"} />
       <ProfileSection userName={userName} userBio={userBio}/>
       <div className="h-[0.5px] bg-textspan "></div>
       <div className="flex h-[960px] w-full">

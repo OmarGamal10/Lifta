@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import useHttp from "../hooks/useHTTP";
 import logo from "../assets/logo.png"
 import { Navigate, useNavigate } from "react-router-dom";
-const NavBar = () => {
-  const [preference, setPreference] = useState();
+const NavBar = ({pref = "NotDefined"}) => {
+  const [preference, setPreference] = useState(pref);
   const navigate = useNavigate();
   const { get, loading, err } = useHttp("http://localhost:3000");
 
   useEffect(() => {
+    if(preference === "NotDefined") {
     const checkAuth = async () => {
       try {
         const response = await get("/users/checkAuth");
@@ -21,6 +22,7 @@ const NavBar = () => {
     };
 
     checkAuth();
+  }
   }, []); // Run once when the component mounts
   const handleLogout = async (e) => {
     e.preventDefault();

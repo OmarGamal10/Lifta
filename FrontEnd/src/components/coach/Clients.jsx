@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
 import Loader from "../Loader"; // Import your Loader component
+import { Paginator } from "primereact/paginator";
 
 const Clients = ({ userId }) => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading
+  const [currentPage, setCurrentPage] = useState(1);
+  const clientsPerPage = 4;
 
   const { get } = useHttp("http://localhost:3000");
 
   useEffect(() => {
-    const LoadClients = async () => {
+    const loadClients = async () => {
       setLoading(true); // Show loader when API call starts
       try {
         const response = await get(`/users/${userId}/clients`);
@@ -22,18 +25,13 @@ const Clients = ({ userId }) => {
       }
     };
 
-    LoadClients();
+    loadClients();
   }, [userId]); // Ensure useEffect depends on userId
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const clientsPerPage = 4;
 
   // Calculate the range of clients to display on the current page
   const indexOfLastClient = currentPage * clientsPerPage;
   const indexOfFirstClient = indexOfLastClient - clientsPerPage;
   const currentClients = clients.slice(indexOfFirstClient, indexOfLastClient);
-
-  const totalPages = Math.ceil(clients.length / clientsPerPage);
 
   const handleRemove = (trainee_id) => {
     setClients(clients.filter((client) => client.trainee_id !== trainee_id));
@@ -43,86 +41,80 @@ const Clients = ({ userId }) => {
     alert(`Assigning new package to client with ID: ${id}`);
   };
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
+  const viewClient = (trainee_id) => {
+    alert(`Viewing details for client with ID: ${trainee_id}`); // Placeholder function
   };
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
+  const onPageChange = (event) => {
+    const newPage = event.page + 1; // PrimeReact uses zero-based page indexing
+    setCurrentPage(newPage);
   };
 
   const renderClients = () => {
-    if (clients.length === 0) return <NoDataDashboard header="Clients Section" />;
+    if (clients.length === 0) {
+      return <NoDataDashboard header="Clients Section" />;
+    }
+
     return (
-      <div className="bg-backGroundColor text-textColor p-6 flex gap-16 items-center flex-col size-full">
+      <div className="bg-backGroundColor text-textColor p-6 flex gap-44 items-center flex-col size-full">
         <h2 className="p-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
           Clients Section
         </h2>
         <div className="flex flex-wrap gap-6 justify-center">
-  {currentClients.map((client) => (
-    <div
-      key={client.trainee_id}
-      onClick={() => viewClient(client.trainee_id)}
-      className="bg-backGroundColor border-2 border-secondary p-6 rounded-lg w-64 text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer"
-    >
-      {/* Client Photo */}
-      <img
-        src="src/assets/landingGym.svg" // Replace with the actual path to the client's photo if available
-        alt={client.name}
-        className="w-24 h-24 rounded-full mx-auto cover mb-4" // Rounded photo with specific width and height
-      />
+          {currentClients.map((client) => (
+            <div
+            key={`${client.package_id}_${client.trainee_id}`}
+              onClick={() => viewClient(client.trainee_id)}
+              className="bg-backGroundColor border-2 border-secondary p-6 rounded-lg text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer flex flex-col"
+            >
+              {/* Client Photo */}
+              <img
+                src="src/assets/landingGym.svg" // Replace with the actual path to the client's photo if available
+                alt={client.name}
+                className="w-24 h-24 rounded-full mx-auto object-cover mb-4"
+              />
 
-      <h3 className="text-2xl font-semibold mb-2">
-        {client.first_name + " " + client.last_name}
-      </h3>
-      <p className="text-textspan mb-2">{client.name}</p>
+              <h3 className="text-2xl font-semibold mb-2">
+                {client.first_name + " " + client.last_name}
+              </h3>
+              <p className="text-textspan mb-2">{client.name}</p>
 
-      {/* Action Buttons */}
-      <div className="flex space-x-4 justify-center mt-4">
-        <button
-          onClick={(e) => {
-            e.stopPropagation(); // Prevents the parent div's onClick from firing
-            handleRemove(client.trainee_id);
-          }}
-          className="bg-backGroundColor border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
-        >
-          Remove
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation(); // Prevents the parent div's onClick from firing
-            handleAssign(client.trainee_id);
-          }}
-          className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
-        >
-          Assign
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
+              {/* Push buttons to the end */}
+              <div className="flex-grow"></div>
 
-
-        {/* Pagination Controls */}
-        <div className="flex justify-center gap-4 mt-6">
-          <button
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-            className="bg-backGroundColor text-textColor py-2 px-4 rounded hover:bg-primary transition-all duration-300 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className="bg-backGroundColor text-textColor py-2 px-4 rounded hover:bg-primary transition-all duration-300 disabled:opacity-50"
-          >
-            Next
-          </button>
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-4 mt-4">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents the parent div's onClick from firing
+                    handleRemove(client.trainee_id);
+                  }}
+                  className="bg-backGroundColor border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+                >
+                  Remove
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents the parent div's onClick from firing
+                    handleAssign(client.trainee_id);
+                  }}
+                  className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+                >
+                  Assign
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="">
+          <Paginator
+            className="space-x-6"
+            first={indexOfFirstClient}
+            rows={clientsPerPage}
+            totalRecords={clients.length}
+            onPageChange={onPageChange}
+            template={{ layout: "PrevPageLink CurrentPageReport NextPageLink" }}
+          />
         </div>
       </div>
     );
