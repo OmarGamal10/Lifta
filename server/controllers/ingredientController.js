@@ -20,7 +20,7 @@ const getIngredientsMeal = async (req, res, next) => {
   if (!mealId || isNaN(mealId)) {
     return next(new AppError("Please provide a meal  id", 400));
   }
-  const ingredients = await ingredientModel.getExercisesByMealId(mealId);
+  const ingredients = await ingredientModel.getIngredientsByMealId(mealId);
   res.status(200).json({
     status: "success",
     data: {
