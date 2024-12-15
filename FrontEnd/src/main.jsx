@@ -33,7 +33,6 @@ import AssignWorkout from "./components/coach/assignWorkout.jsx";
 import AssignMeal from "./components/coach/assignMeal.jsx";
 import Meal from "./components/coach/mealCard.jsx";
 import { View } from "lucide-react";
-`
 
 const router = createBrowserRouter([
   {
@@ -67,8 +66,6 @@ const router = createBrowserRouter([
         <UserProfile />
       </ProtectedRoute>
     ),
-<<<<<<< HEAD
-=======
   },
   {
     path: "test",
@@ -79,7 +76,6 @@ const router = createBrowserRouter([
         </ProtectedRoute>
       </PrimeReactProvider>
     ),
->>>>>>> 82bb4ca46bcd26c0eb06feb354a0ffcbd67ac2ec
   },
   {
     path: "*",
