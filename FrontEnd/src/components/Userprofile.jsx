@@ -1,7 +1,7 @@
 import React from "react";
 import NavBar from "./Navbar";
 import ProfileSection from "./Profilesection";
-import SideBar from "./Sidebar";
+import { SubReqDashboard } from "./coach/subReqDashboard";
 import CoachSideBar from "./coach/Sidebar";
 import TraineeSideBar from "./trainee/Sidebar";
 import MyProfile from "./MyProfile";
@@ -11,6 +11,9 @@ import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
 import Clients from "./coach/Clients";
 import { PrimeReactProvider } from "primereact/api";
+import Tailwind from "primereact/passthrough/tailwind";
+import { Package } from "lucide-react";
+import { PackageDashboard } from "./packageDashboard";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -53,8 +56,18 @@ const UserProfile = ({ userId }) => {
   }
   const components =  {
     Clients: (
-      <PrimeReactProvider>
+      <PrimeReactProvider value={{ pt: Tailwind }}>
     <Clients userId={userId} />
+    </PrimeReactProvider>
+    ),
+    Packages: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <PackageDashboard/>
+    </PrimeReactProvider>
+    ),
+    Requests: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <SubReqDashboard user_id={userId}/>
     </PrimeReactProvider>
     ),
     Default: <NoDataDashboard header={activeSection + " Section"} />,

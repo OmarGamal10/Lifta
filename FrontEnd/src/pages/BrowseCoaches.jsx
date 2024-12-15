@@ -37,7 +37,7 @@ const BrowseCoaches = () => {
   const renderComponet = () => {
     return(
       <div>
-        <NavBar pref={"NotDafault"}/>
+        
 <div className="bg-backGroundColor text-textColor pt-6 pb-12">
   <h2 className="pt-8 pb-10 text-3xl font-bold text-center text-textColor">Available Coaches</h2>
   <div className="flex flex-wrap justify-center gap-32">
@@ -86,7 +86,7 @@ const BrowseCoaches = () => {
 
   return (
     <div className="w-full">
-      <NavBar />
+      <NavBar pref={"NotDafault"}/>
       {loading ? <Loader /> : renderComponet()}
       <Footer />
     </div>

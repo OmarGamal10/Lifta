@@ -19,15 +19,16 @@ import "primeicons/primeicons.css";
 import { PackageDashboard } from "./components/packageDashboard.jsx";
 import Footer from "./components/Footer.jsx";
 import NavBar from "./components/Navbar.jsx";
+import BrowseProtectedRoute from "./BrowseProtectedRoute.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
       <ProtectedLoggedRoute>
-      <LandingPage />
+        <LandingPage />
       </ProtectedLoggedRoute>
-    )
+    ),
   },
   {
     path: "log-in",
@@ -55,21 +56,23 @@ const router = createBrowserRouter([
   },
   {
     path: "browse",
-    element:(
-      <ProtectedRoute>
+    element: (
+      <BrowseProtectedRoute>
         <BrowseCoaches />
-      </ProtectedRoute>
+      </BrowseProtectedRoute>
     ),
   },
   {
     path: "browse/:coach_id/packages",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <ProtectedRoute>
-        <NavBar pref="NotDefault"/>
-        <PackageDashboard who={1}/>
-        <Footer />
-        </ProtectedRoute>
+        <BrowseProtectedRoute>
+        <div>
+          <NavBar pref="NotDefault" />
+          <PackageDashboard />
+          <Footer />
+          </div>
+        </BrowseProtectedRoute>
       </PrimeReactProvider>
     ),
   },

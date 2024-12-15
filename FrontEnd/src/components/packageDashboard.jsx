@@ -1,4 +1,4 @@
-import "./output.css"; // Adjust the path as needed
+
 import { PackageCard } from "./packageCard";
 import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
@@ -7,17 +7,26 @@ import { useParams } from "react-router-dom";
 import Loader from "./Loader";
 import NoDataDashboard from "./Nodata";
 
-export function PackageDashboard({who, trainee_id}) {
+export function PackageDashboard() {
   const { get: httpGet, loading, error } = useHttp("http://localhost:3000");
   const [packages, setPackages] = useState([]);
-  const [hasGymSub, setHasGymSub] = useState([]);
-  const [hasNutSub, setHasNutSub] = useState([]);
+  const [hasGymSub, setHasGymSub] = useState(false);
+  const [hasNutSub, setHasNutSub] = useState(false);
+  const [who, setWho] = useState();
+  const [traineeId, setTraineeId] = useState("");
 
-  const { coach_id } = useParams();
+  const { coach_id } = useParams(); // Get the coachId from URL params
+
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
-        const response = await httpGet(`/users/${coach_id}/packages`, {
+        const res = await httpGet("/users/checkAuth");
+        const coachId = (res.userType === "Trainer")? res.userId: coach_id;
+        const traineeId = (res.userType === "Trainer")? null: res.userId;
+        if(res.userType === "Trainer") setWho(0);
+        else setWho(1);
+        const response = await httpGet(`/users/${coachId}/packages`, {
           headers: { "Cache-Control": "no-cache" },
         });
         console.log(response);
@@ -25,36 +34,26 @@ export function PackageDashboard({who, trainee_id}) {
       } catch (err) {
         console.log(err);
       }
-      if (who == 1) {
+
+      if (who === "Trainer" && traineeId) {
         try {
-          const response = await httpGet(
-            "/subscriptions/hasGymSubscription/58",
-            {
-              headers: { "Cache-Control": "no-cache" },
-            }
+          const gymResponse = await httpGet(
+            `/subscriptions/hasGymSubscription/${traineeId}`,
+            { headers: { "Cache-Control": "no-cache" } }
           );
-          console.log(response.data);
-          if (response.data.hasGymSubscription.length == 1) {
-            setHasGymSub(true);
-          } else {
-            setHasGymSub(false);
-          }
+          console.log(gymResponse.data);
+          setHasGymSub(gymResponse.data.hasGymSubscription.length === 1);
         } catch (err) {
           console.log(err);
         }
+
         try {
-          const response = await httpGet(
-            "/subscriptions/hasNutritionSubscription/58",
-            {
-              headers: { "Cache-Control": "no-cache" },
-            }
+          const nutritionResponse = await httpGet(
+            `/subscriptions/hasNutritionSubscription/${traineeId}`,
+            { headers: { "Cache-Control": "no-cache" } }
           );
-          console.log(response.data);
-          if (response.data.hasNutritionSubscription.length == 1) {
-            setHasNutSub(true);
-          } else {
-            setHasNutSub(false);
-          }
+          console.log(nutritionResponse.data);
+          setHasNutSub(nutritionResponse.data.hasNutritionSubscription.length === 1);
         } catch (err) {
           console.log(err);
         }
@@ -62,7 +61,7 @@ export function PackageDashboard({who, trainee_id}) {
     };
 
     fetchData();
-  }, []);
+  }, []); // Add dependencies to avoid stale closure
 
   if (loading) {
     return <Loader />;
@@ -77,7 +76,7 @@ export function PackageDashboard({who, trainee_id}) {
   }
 
   return (
-    <div className="container mx-auto p-4 py-12 ">
+    <div className="container mx-auto p-12">
       <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-16 w-full">
         {packages.map((pack) => (
           <PackageCard
@@ -87,18 +86,16 @@ export function PackageDashboard({who, trainee_id}) {
             description={pack.description}
             price={pack.price}
             duration={pack.duration}
-            view={who} //hardcoded
+            view={who} // hardcoded
             type={pack.type}
             hasGymSub={hasGymSub}
             hasNutSub={hasNutSub}
-            isActive={true} //hardcoded
+            isActive={true} // hardcoded
             className="h-full" // Ensures cards have equal height
           />
         ))}
       </div>
-      {packages.length === 0 && (
-        <NoDataDashboard header="Packages Available" />
-      )}
+      {packages.length === 0 && <NoDataDashboard header="Packages Available" />}
     </div>
   );
 }

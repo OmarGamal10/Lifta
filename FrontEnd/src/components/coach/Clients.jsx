@@ -33,8 +33,12 @@ const Clients = ({ userId }) => {
   const indexOfFirstClient = indexOfLastClient - clientsPerPage;
   const currentClients = clients.slice(indexOfFirstClient, indexOfLastClient);
 
-  const handleRemove = (trainee_id) => {
-    setClients(clients.filter((client) => client.trainee_id !== trainee_id));
+  const handleRemove = (trainee_id, package_id) => {
+    setClients(
+      clients.filter(
+        (client) => client.trainee_id !== trainee_id || client.package_id !== package_id
+      )
+    );
   };
 
   const handleAssign = (id) => {
@@ -87,7 +91,7 @@ const Clients = ({ userId }) => {
                 <button
                   onClick={(e) => {
                     e.stopPropagation(); // Prevents the parent div's onClick from firing
-                    handleRemove(client.trainee_id);
+                    handleRemove(client.trainee_id, client.package_id);
                   }}
                   className="bg-backGroundColor border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
                 >

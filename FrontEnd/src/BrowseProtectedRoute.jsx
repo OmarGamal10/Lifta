@@ -5,7 +5,7 @@ import Loader from "./components/Loader";
 
 
 
-const ProtectedRoute = ({ children }) => {
+const BrowseProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [userId, setUserId] = useState(null);
   const [userType, setUserType] = useState(null);
@@ -19,6 +19,7 @@ const ProtectedRoute = ({ children }) => {
         const response = await get("/users/checkAuth");
         // Assuming response.body has these values
         setIsAuthenticated(true);
+        setUserType(response.userType);
         setUserId(response.userId)
       } catch (err) {
         console.error(err);
@@ -34,12 +35,12 @@ const ProtectedRoute = ({ children }) => {
     return <Loader />
   }
 
-  if (isAuthenticated === false) {
-    return <Navigate to="/log-in" />;
+  if (userType === "Trainer") {
+    return <Navigate to="/profile" replace />;
   }
 
-  // If authenticated, render children
+  // If authenticated, render the children with additional props
   return React.cloneElement(children, { userId });
 };
 
-export default ProtectedRoute;
+export default BrowseProtectedRoute;
