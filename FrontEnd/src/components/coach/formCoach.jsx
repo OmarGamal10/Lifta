@@ -53,6 +53,7 @@ function FormCoach({
       return;
     }
     try {
+      console.log("hi");
       const response = await post(
         "/users/signup",
         {

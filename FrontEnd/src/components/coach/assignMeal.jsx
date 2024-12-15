@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from "react";
-import Meal from "./MealCard";
+import Meal from "./mealCard";
 import ErrorMessage from "../errorMsg";
 import { useNavigate } from "react-router-dom";
 import Nodata from "../Nodata";
