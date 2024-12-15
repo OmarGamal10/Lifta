@@ -68,3 +68,8 @@ const addTrainer = async (values, id) => {
   await db.query(query, trainerValues);
   await db.query(query2, certification);
 };
+
+exports.deleteUserByUserId = async (userId) => {
+  const query = "DELETE FROM lifta_schema.users WHERE user_id = $1;";
+  return (await db.query(query, [userId])).rows;
+};

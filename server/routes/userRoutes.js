@@ -10,6 +10,7 @@ const reviewRouter = require("./reviewRoute");
 const certificateRouter = require("./certificateRoute");
 const workoutRouter = require("./workoutRoute");
 const mealRouter = require("./mealRoute");
+const adminController = require("../controllers/adminController");
 
 //for testing without opening pgAdmin (getting all users)
 router.get("/", async (req, res, next) => {
@@ -21,6 +22,7 @@ router.get("/", async (req, res, next) => {
   });
 });
 
+//Admin routes
 router.get("/coaches", async (req, res, next) => {
   res.status(200).json({
     status: "success",
@@ -38,6 +40,8 @@ router.get("/trainees", async (req, res, next) => {
     },
   });
 });
+
+router.delete("/:userId", adminController.deleteUserByUserId);
 
 //auth routes
 router.post("/login", authController.login);
