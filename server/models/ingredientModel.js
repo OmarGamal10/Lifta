@@ -2,7 +2,7 @@ const db = require("../db");
 const AppError = require("../utils/AppError");
 
 exports.getIngredientsByCoachId = async (coachId) => {
-  const query = `SELECT name,calories_serving,carb,fat,protein FROM lifta_schema.ingredient WHERE trainer_id = $1`;
+  const query = `SELECT  ingredient_id AS id,name,calories_serving AS calories,carb,fat,protein FROM lifta_schema.ingredient WHERE trainer_id = $1`;
   return (await db.query(query, [coachId])).rows;
 };
 

@@ -32,12 +32,14 @@ import CreateMeal from "./components/coach/createMeal.jsx";
 import AssignWorkout from "./components/coach/assignWorkout.jsx";
 import AssignMeal from "./components/coach/assignMeal.jsx";
 import Meal from "./components/coach/mealCard.jsx";
+import { PackageCard } from "./components/packageCard.jsx";
 import { View } from "lucide-react";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
+
       <ProtectedLoggedRoute>
         <LandingPage />
       </ProtectedLoggedRoute>
