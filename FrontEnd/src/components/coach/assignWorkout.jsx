@@ -35,7 +35,7 @@ function AssignWorkout({ trainee_id = 89 }) {
   /////////////////////
   ////////////////////////
   useEffect(() => {
-    const fetchExercises = async () => {
+    const fetchWorkouts = async () => {
       const token = getTokenFromCookies();
       const decodedToken = token ? jwtDecode(token) : null;
       const userId = decodedToken ? decodedToken.user_id : null;
@@ -68,7 +68,7 @@ function AssignWorkout({ trainee_id = 89 }) {
       }
     };
 
-    fetchExercises();
+    fetchWorkouts();
   }, []);
   //////////////////////////////////
   ///////////////////////

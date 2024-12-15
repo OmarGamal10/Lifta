@@ -40,7 +40,7 @@ function CreateMeal() {
       const totalNutrition = choosedIngredients.reduce(
         (acc, chosenIngredient) => {
           const ingredient = ingredients.find(
-            (ing) => ing.id === chosenIngredient.id
+            (ing) => ing.id === chosenIngredient.ingredient_id
           );
           if (!ingredient) return acc;
 
@@ -311,11 +311,11 @@ function CreateMeal() {
               ) : (
                 choosedIngredients.map((ingredient) => {
                   const fullIngredient = ingredients.find(
-                    (e) => e.id === ingredient.id
+                    (e) => e.id === ingredient.ingredient_id
                   );
                   return (
                     <div
-                      key={ingredient.id}
+                      key={ingredient.ingredient_id}
                       className="flex justify-between items-center p-3 border-b hover:bg-gray-100"
                     >
                       <div>
