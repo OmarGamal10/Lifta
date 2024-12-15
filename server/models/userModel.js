@@ -95,9 +95,11 @@ exports.getAvailableCoaches = async () => {
        u.first_name, 
        u.last_name, 
        c.experience_years, 
-       c.rating
+       c.rating,
+	   COUNT(p.package_id) AS package_count
 FROM lifta_schema.trainer c
 JOIN lifta_schema.users u ON u.user_id = c.trainer_id
+JOIN lifta_schema.package p ON p.trainer_id = c.trainer_id
 LEFT JOIN lifta_schema.trainee t 
     ON t.coach_id = c.trainer_id OR t.nutritionist_id = c.trainer_id
 GROUP BY c.trainer_id, u.first_name, u.last_name, c.experience_years, c.rating, c.client_limit
