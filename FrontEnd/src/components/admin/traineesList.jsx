@@ -88,9 +88,9 @@ export function TraineesList() {
           header="ID"
           filter
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by ID"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: "220px" }}
+          style={{ minWidth: "150px" }}
         />
         <Column
           field="email"
@@ -98,9 +98,9 @@ export function TraineesList() {
           header="Email"
           filter
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by email"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: "240px" }}
+          style={{ minWidth: "150px" }}
         />
         <Column
           field="first_name"
@@ -108,9 +108,9 @@ export function TraineesList() {
           header="First Name"
           filter
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by first name"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: "280px" }}
+          style={{ minWidth: "150px" }}
         />
         <Column
           field="last_name"
@@ -118,9 +118,9 @@ export function TraineesList() {
           header="Last Name"
           filter
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by last name"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: "280px" }}
+          style={{ minWidth: "150px" }}
         />
         <Column
           field="phone_number"
@@ -128,9 +128,9 @@ export function TraineesList() {
           header="Phone Number"
           filter
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by phone number"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: "320px" }}
+          style={{ minWidth: "150px" }}
         />
         <Column
           field="gender"
@@ -138,99 +138,37 @@ export function TraineesList() {
           header="Gender"
           filter
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by gender"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: "260px" }}
-        />
-        <Column
-          field="birth_date"
-          filterField="birth_date"
-          header="Birth Date"
-          filter
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by birth date"
-          headerClassName="bg-secondary"
-          style={{ minWidth: "280px" }}
-        />
-        <Column
-          field="height"
-          filterField="height"
-          header="Heigh"
-          filter
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by height"
-          headerClassName="bg-secondary"
-          style={{ minWidth: "260px" }}
-        />
-        <Column
-          field="weight"
-          filterField="weight"
-          header="Weight"
-          filter
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by weight"
-          headerClassName="bg-secondary"
-          style={{ minWidth: "260px" }}
-        />
-        <Column
-          field="food_allergies"
-          filterField="food_allergies"
-          header="Food Allergies"
-          filter
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by food allergies"
-          headerClassName="bg-secondary"
-          style={{ minWidth: "300px" }}
+          style={{ minWidth: "150px" }}
         />
         <Column
           field="workout_preferences"
           filterField="workout_preferences"
           header="Workout Preferences"
+          headerClassName="bg-secondary"
           filter
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by workout preferences"
-          headerClassName="bg-secondary"
-          style={{ minWidth: "360px" }}
+          filterPlaceholder="Search"
+          style={{ minWidth: "140px" }}
         />
         <Column
-          field="bio"
-          filterField="bio"
-          header="BIO"
-          filter
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by BIO"
+          field="height"
+          header="Height"
+          sortable
           headerClassName="bg-secondary"
-          style={{ minWidth: "240px" }}
         />
         <Column
-          field="photo"
-          filterField="photo"
-          header="Photo"
-          filter
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by photo"
+          field="weight"
+          header="Weight"
+          sortable
           headerClassName="bg-secondary"
-          style={{ minWidth: "260px" }}
         />
         <Column
-          field="coach_id"
-          filterField="coach_id"
-          header="Coach ID"
-          filter
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by coach ID"
+          field="subscriptions"
+          header="Subscriptions"
+          sortable
           headerClassName="bg-secondary"
-          style={{ minWidth: "300px" }}
-        />
-        <Column
-          field="nutritionist_id"
-          filterField="nutritionist_id"
-          header="Nutritionist ID"
-          filter
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by nutritionist ID"
-          headerClassName="bg-secondary"
-          style={{ minWidth: "320px" }}
         />
       </DataTable>
 

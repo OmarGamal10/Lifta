@@ -82,9 +82,10 @@ export function CoachesList() {
           header="ID"
           filter          
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by ID"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: '220px'}}
+          filterHeaderClassName="flex items-center space-x-2"
+          style={{ minWidth: '150px'}}
         />
          <Column
           field="email"
@@ -92,9 +93,9 @@ export function CoachesList() {
           header="Email"
           filter          
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by email"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: '240px' }}
+          style={{ minWidth: '145px' }}
         />
          <Column
           field="first_name"
@@ -102,9 +103,9 @@ export function CoachesList() {
           header="First Name"
           filter          
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by first name"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: '280px' }}
+          style={{ minWidth: '150px' }}
         />
         <Column
          field="last_name"
@@ -112,9 +113,9 @@ export function CoachesList() {
          header="Last Name"
          filter          
          filterMenuClassName="bg-secondary text-textColor"
-         filterPlaceholder="Search by last name"
+         filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: '280px' }}
+          style={{ minWidth: '150px' }}
        />
         <Column
           field="phone_number"
@@ -122,9 +123,9 @@ export function CoachesList() {
           header="Phone Number"
           filter
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by phone number"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: '320px' }}
+          style={{ minWidth: '150px' }}
         />
         <Column
           field="gender"
@@ -132,69 +133,27 @@ export function CoachesList() {
           header="Gender"
           filter          
           filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by gender"
+          filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: '260px' }}
-        />
-        <Column
-          field="birth_date"
-          filterField="birth_date"
-          header="Birth Date"
-          filter          
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by birth date"
-          headerClassName="bg-secondary"
-          style={{ minWidth: '280px' }}
+          style={{ minWidth: '150px' }}
         />
         <Column
           field="experience_years"
-          filterField="experience_years"
           header="Experience Years"
-          filter          
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by experience years"
+          sortable
           headerClassName="bg-secondary"
-          style={{ minWidth: '340px' }}
         />
         <Column
           field="rating"
-          filterField="rating"
           header="Rating"
-          filter          
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by rating"
+          sortable
           headerClassName="bg-secondary"
-          style={{ minWidth: '250px' }}
         />
         <Column
-          field="client_limit"
-          filterField="client_limit"
-          header="Clients Limit"
-          filter          
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by clients limit"
+          field="subscriptions"
+          header="Subscriptions"
+          sortable 
           headerClassName="bg-secondary"
-          style={{ minWidth: '300px' }}
-        />
-        <Column
-          field="bio"
-          filterField="bio"
-          header="BIO"
-          filter          
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by BIO"
-          headerClassName="bg-secondary"
-          style={{ minWidth: '240px' }}
-        />
-        <Column
-          field="photo"
-          filterField="photo"
-          header="Photo"
-          filter          
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search by photo"
-          headerClassName="bg-secondary"
-          style={{ minWidth: '260px' }}
         />
       </DataTable>
       
