@@ -1,12 +1,15 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Meal from "./mealCard";
 import ErrorMessage from "../errorMsg";
-import meals from "./testDataMeals";
 import { useNavigate } from "react-router-dom";
 import Nodata from "../Nodata";
-
-function AssignMeal() {
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
+import { jwtDecode } from "jwt-decode";
+import useHttp from "../../hooks/useHTTP";
+function AssignMeal({ trainee_id = 89 }) {
   const navigate = useNavigate();
+  const { get, post, loading, error, data } = useHttp("http://localhost:3000");
+
   const [formData, setFormData] = useState({
     mealId: "",
     day: "Sunday",
@@ -15,6 +18,7 @@ function AssignMeal() {
   const [errors, setErrors] = useState({});
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [meals, setMeals] = useState([]);
 
   const days = [
     "Sunday",
@@ -29,6 +33,45 @@ function AssignMeal() {
   const mealTypes = ["Breakfast", "Lunch", "Dinner"];
 
   const mealsPerPage = 6;
+
+  ////////////////////////
+  useEffect(() => {
+    const fetchMeals = async () => {
+      const token = getTokenFromCookies();
+      const decodedToken = token ? jwtDecode(token) : null;
+      const userId = decodedToken ? decodedToken.user_id : null;
+
+      if (!userId) {
+        console.error("User ID not found in token.");
+        return;
+      }
+
+      try {
+        const response = await get(`/users/${userId}/meals`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        console.log("API Response: ", response);
+
+        const fetchedMeals = Array.isArray(response.data.meals)
+          ? response.data.meals
+          : [];
+        setMeals(fetchedMeals);
+
+        if (fetchedMeals.length === 0) {
+          setCurrentPage(1);
+        }
+      } catch (err) {
+        console.error("Error fetching meals:", err);
+        setMeals([]);
+      }
+    };
+
+    fetchMeals();
+  }, []);
+  //////////////////////////////////
 
   const handleMealSelect = (meal) => {
     setSelectedMeal(selectedMeal && selectedMeal.id === meal.id ? null : meal);
@@ -60,7 +103,7 @@ function AssignMeal() {
     }));
   };
 
-  const handleSubmit = (isAssign) => {
+  const handleSubmit = async (isAssign) => {
     const newErrors = {};
 
     if (!selectedMeal) {
@@ -80,14 +123,34 @@ function AssignMeal() {
       });
     }
 
-    setSelectedMeal(null);
-    setFormData({
-      mealId: "",
-      day: "Sunday",
-      mealType: "Breakfast",
-    });
-    setErrors({});
-    navigate("/profile");
+    try {
+      const response = await post(
+        "/meals/trainee",
+        {
+          meal_id: formData.mealId,
+          trainee_id,
+          day: formData.day,
+          type: formData.mealType,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      setSelectedMeal(null);
+      setFormData({
+        mealId: "",
+        day: "Sunday",
+        mealType: "Breakfast",
+      });
+      setErrors({});
+      navigate("/profile");
+    } catch (err) {
+      console.log(err.response.data.message);
+      errors.mealId = err.response.data.message;
+    }
   };
 
   const handleCancel = () => {
@@ -104,7 +167,7 @@ function AssignMeal() {
   const paginatedMeals = useMemo(() => {
     const startIndex = (currentPage - 1) * mealsPerPage;
     return meals.slice(startIndex, startIndex + mealsPerPage);
-  }, [currentPage]);
+  }, [currentPage, meals]);
 
   const totalPages = Math.ceil(meals.length / mealsPerPage);
 
@@ -131,8 +194,13 @@ function AssignMeal() {
               >
                 <Meal
                   name={meal.name}
-                  photo={meal.photo}
-                  facts={meal.facts}
+                  photo={meal.picture}
+                  facts={{
+                    carb: meal.carb,
+                    protein: meal.protein,
+                    fat: meal.fat,
+                    calories: meal.calories,
+                  }}
                   view={"display"}
                 />
               </div>

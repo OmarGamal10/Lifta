@@ -5,7 +5,7 @@ const { hashPassword, validatePassword } = require("../utils/hashPassword");
 const createToken = require("../utils/createToken");
 const userModel = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 const getUserById = async (req, res) => {
   const userId = req.params.userId;
@@ -18,10 +18,9 @@ const getUserById = async (req, res) => {
     userId: userId,
     userName: user["first_name"] + " " + user["last_name"],
     userType: user["type"],
-    userBio: user["bio"]
-  })
-}
-
+    userBio: user["bio"],
+  });
+};
 
 const checkAuth = async (req, res) => {
   // Retrieve the token from the cookies
@@ -29,7 +28,12 @@ const checkAuth = async (req, res) => {
 
   // If no token is found, return an error response
   if (!token) {
-    return res.status(401).json({ isAuthenticated: false, userId:"", userType:"", message: "No token provided" });
+    return res.status(401).json({
+      isAuthenticated: false,
+      userId: "",
+      userType: "",
+      message: "No token provided",
+    });
   }
 
   try {
@@ -48,10 +52,14 @@ const checkAuth = async (req, res) => {
   } catch (err) {
     // Handle invalid or expired tokens
     console.error("Token verification failed:", err.message);
-    return res.status(401).json({ isAuthenticated: false, userId:"", userType:"", message: "Invalid or expired token" });
+    return res.status(401).json({
+      isAuthenticated: false,
+      userId: "",
+      userType: "",
+      message: "Invalid or expired token",
+    });
   }
-}
-
+};
 
 // Log-In
 const login = async (req, res, next) => {
@@ -105,6 +113,8 @@ const signup = async (req, res, next) => {
     bio,
     phone_number,
     type,
+    photo,
+    birth_date,
   } = req.body;
 
   let food_allergies,
@@ -115,7 +125,7 @@ const signup = async (req, res, next) => {
     experience_years,
     client_limit,
     title,
-    photo,
+    certificate_photo,
     description,
     date_issued;
   if (type === "Trainee") {
@@ -125,7 +135,7 @@ const signup = async (req, res, next) => {
       experience_years,
       client_limit,
       title,
-      photo,
+      certificate_photo,
       description,
       date_issued,
     } = req.body);
@@ -144,6 +154,8 @@ const signup = async (req, res, next) => {
     bio,
     phone_number,
     type,
+    photo,
+    birth_date,
   ];
   type === "Trainee"
     ? values.push(food_allergies, weight, height, goal, workout_preferences)
@@ -151,7 +163,7 @@ const signup = async (req, res, next) => {
         experience_years,
         client_limit,
         title,
-        photo,
+        certificate_photo,
         description,
         date_issued
       );

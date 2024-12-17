@@ -35,7 +35,7 @@ function Meal({ name, photo, facts, view }) {
         </div>
         <div>
           <h6 className="text-textColor text-md">Protein</h6>
-          <p className="text-textColor text-md">{facts.protien}g</p>
+          <p className="text-textColor text-md">{facts.protein}g</p>
         </div>
         <div>
           <h6 className="text-textColor text-md">Fats</h6>

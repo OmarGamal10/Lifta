@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
-import { Link } from "react-router-dom";
 
 import "../output.css"; // Adjust the path as needed
 

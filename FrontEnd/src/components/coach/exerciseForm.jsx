@@ -2,8 +2,15 @@ import { useState, useRef } from "react";
 import "../output.css";
 import { BsUpload } from "react-icons/bs";
 import ErrorMessage from "../errorMsg";
-
+import handleImages from "../../freqUsedFuncs/handleImages";
+import useHttp from "../../hooks/useHTTP";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 function ExerciseForm() {
+  const navigate = useNavigate();
+
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
   const [formData, setFormData] = useState({
     name: "",
     muscleGroup: "",
@@ -41,7 +48,7 @@ function ExerciseForm() {
     fileInputRef.current.click();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -54,6 +61,36 @@ function ExerciseForm() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
+    }
+
+    const gif = await handleImages(formData.gif);
+    if (gif == null) {
+      setErrors({ ...errors, gif: "Error uploading gif" });
+      return;
+    }
+    console.log(formData.gif);
+    const token = getTokenFromCookies();
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken ? decodedToken.user_id : null;
+    console.log(userId);
+    try {
+      const response = await post(
+        "/exercises",
+        {
+          ...formData,
+          gif,
+          trainer_id: userId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      navigate("/profile");
+    } catch (err) {
+      console.log(err);
     }
   };
 

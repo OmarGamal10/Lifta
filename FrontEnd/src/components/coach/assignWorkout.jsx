@@ -1,11 +1,16 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Workout from "./workoutCard";
 import ErrorMessage from "../errorMsg";
 import workouts from "./testDataWorkouts";
 import { useNavigate } from "react-router-dom";
 import Nodata from "../Nodata";
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
+import { jwtDecode } from "jwt-decode";
+import useHttp from "../../hooks/useHTTP";
 
-function AssignWorkout() {
+function AssignWorkout({ trainee_id = 89 }) {
+  const { get, post, loading, error, data } = useHttp("http://localhost:3000");
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     workoutId: "",
@@ -14,6 +19,7 @@ function AssignWorkout() {
   const [errors, setErrors] = useState({});
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [workouts, setworkouts] = useState([]);
 
   const days = [
     "Sunday",
@@ -26,7 +32,46 @@ function AssignWorkout() {
   ];
 
   const workoutsPerPage = 6;
+  /////////////////////
+  ////////////////////////
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      const token = getTokenFromCookies();
+      const decodedToken = token ? jwtDecode(token) : null;
+      const userId = decodedToken ? decodedToken.user_id : null;
 
+      if (!userId) {
+        console.error("User ID not found in token.");
+        return;
+      }
+
+      try {
+        const response = await get(`/users/${userId}/workouts`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        console.log("API Response: ", response);
+
+        const fetchedWorkouts = Array.isArray(response.data.workouts)
+          ? response.data.workouts
+          : [];
+        setworkouts(fetchedWorkouts);
+
+        if (fetchedWorkouts.length === 0) {
+          setCurrentPage(1);
+        }
+      } catch (err) {
+        console.error("Error fetching workouts:", err);
+        setworkouts([]);
+      }
+    };
+
+    fetchWorkouts();
+  }, []);
+  //////////////////////////////////
+  ///////////////////////
   const handleWorkoutSelect = (workout) => {
     setSelectedWorkout(
       selectedWorkout && selectedWorkout.id === workout.id ? null : workout
@@ -51,7 +96,7 @@ function AssignWorkout() {
     }));
   };
 
-  const handleSubmit = (isAssign) => {
+  const handleSubmit = async (isAssign) => {
     const newErrors = {};
 
     if (!selectedWorkout) {
@@ -70,13 +115,32 @@ function AssignWorkout() {
       });
     }
 
-    setSelectedWorkout(null);
-    setFormData({
-      workoutId: "",
-      day: "Sunday",
-    });
-    setErrors({});
-    navigate("/profile");
+    try {
+      const response = await post(
+        "/workouts/trainee",
+        {
+          workout_id: formData.workoutId,
+          trainee_id,
+          day: formData.day,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setSelectedWorkout(null);
+      setFormData({
+        workoutId: "",
+        day: "Sunday",
+      });
+      setErrors({});
+      console.log(response);
+      navigate("/profile");
+    } catch (err) {
+      console.log(err.response.data.message);
+      errors.workoutId = err.response.data.message;
+    }
   };
 
   const handleCancel = () => {

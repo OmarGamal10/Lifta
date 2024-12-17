@@ -2,7 +2,7 @@ const db = require("../db");
 const AppError = require("../utils/AppError");
 
 exports.getIngredientsByCoachId = async (coachId) => {
-  const query = `SELECT name,calories_serving,carb,fat,protein FROM lifta_schema.ingredient WHERE trainer_id = $1`;
+  const query = `SELECT  ingredient_id AS id,name,calories_serving AS calories,carb,fat,protein FROM lifta_schema.ingredient WHERE trainer_id = $1`;
   return (await db.query(query, [coachId])).rows;
 };
 
@@ -24,7 +24,7 @@ exports.deleteIngredient = async (ingredientId) => {
   return (await db.query(query, [ingredientId])).rows;
 };
 
-exports.getExercisesByMealId = async (mealId) => {
-  const query = `SELECT i.ingredient_id , i.name,i.calories_serving,i.carb ,i.fat,i.protein , i.trainer_id  FROM lifta_schema.ingredient i join lifta_schema.meal_ingredient mi on mi.ingredient_id =i.ingredient_id WHERE mi.meal_id = $1`;
+exports.getIngredientsByMealId = async (mealId) => {
+  const query = `SELECT i.ingredient_id , i.name,i.calories_serving,i.carb ,i.fat,i.protein , i.trainer_id, mi.quantity FROM lifta_schema.ingredient i join lifta_schema.meal_ingredient mi on mi.ingredient_id =i.ingredient_id WHERE mi.meal_id = $1`;
   return (await db.query(query, [mealId])).rows;
 };

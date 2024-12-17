@@ -3,29 +3,22 @@ import { React } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 
-function Ingredient({
-  name,
-  fats,
-  protiens,
-  carbs,
-  calories,
-  readOnly = false,
-}) {
+function Ingredient({ name, fat, protein, carb, calories, readOnly = false }) {
   return (
     <div className="border-2 flex flex-col text-center bg-backGroundColor border-secondary w-full max-w-64 min-w-64 bord rounded-2xl p-4">
       <h3 className=" text-textColor font-bold text-2xl mb-8">{name}</h3>
       <div className="flex flex-row justify-between mb-5">
         <div>
           <h6 className="text-textColor text-xl">Carbs</h6>
-          <p className="text-textColor text-xl">{carbs}g</p>
+          <p className="text-textColor text-xl">{carb}g</p>
         </div>
         <div>
           <h6 className="text-textColor text-xl">Protien</h6>
-          <p className="text-textColor text-xl">{protiens}g</p>
+          <p className="text-textColor text-xl">{protein}g</p>
         </div>
         <div>
           <h6 className="text-textColor text-xl">Fats</h6>
-          <p className="text-textColor text-xl">{fats}g</p>
+          <p className="text-textColor text-xl">{fat}g</p>
         </div>
       </div>
       <div className="flex flex-col mb-5">

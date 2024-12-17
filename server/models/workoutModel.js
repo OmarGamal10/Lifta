@@ -1,3 +1,4 @@
+const { values } = require("lodash");
 const db = require("../db");
 const AppError = require("../utils/AppError");
 
@@ -43,8 +44,30 @@ exports.createWorkout = async (trainer_id, name, _note, exercises) => {
 };
 
 exports.getWorkoutsByCoachId = async (coachId) => {
-  const query = `SELECT name,_note AS note  FROM lifta_schema.workout WHERE trainer_id = $1`;
+  const query = `SELECT workout_id AS id, name,_note AS note  FROM lifta_schema.workout WHERE trainer_id = $1`;
   return (await db.query(query, [coachId])).rows;
+};
+
+exports.getCurrentWorkoutByTraineeId = async (traineeId) => {
+  const query = `select * from lifta_schema.workout
+where workout_id = (select workout_id from lifta_schema.workouts_schedule
+where lifta_schema.workouts_schedule.trainee_id = $1
+and day = (select(TRIM(TO_CHAR(current_date,'Day'))::varchar)));`;
+  return (await db.query(query, [traineeId])).rows;
+};
+
+exports.addDoneWorkout = async (trainee_id, workout_id) => {
+  try {
+    const query = `INSERT INTO lifta_schema.workout_log VALUES ($1, $2, current_date, true);`;
+    const values = [trainee_id, workout_id];
+
+    return await db.query(query, values);
+  } catch (err) {
+    if (err.code === "23505") {
+      throw new AppError("You already have a workout log in this date", 400);
+      }
+    throw err;
+  }
 };
 
 exports.assignWorkoutToTrainee = async (trainee_id, workout_id, day) => {
@@ -54,10 +77,17 @@ exports.assignWorkoutToTrainee = async (trainee_id, workout_id, day) => {
   } catch (err) {
     if (err.code === "23505") {
       throw new AppError("Trainee already have a workout on this day", 400);
-    }
+      }
     throw err;
   }
 };
+
+exports.getCurrentWorkoutStatus = async (trainee_id) => {
+  const query = `SELECT "isDone" FROM lifta_schema.workout_log
+    WHERE trainee_id = $1 AND date = current_date;`;
+
+  return await db.query(query, [trainee_id]);
+ };
 
 exports.getWorkoutsByTraineeId = async (trainee_id) => {
   const query = `SELECT w.workout_id ,w.name,w._note AS note ,ws.day from lifta_schema.workout w 

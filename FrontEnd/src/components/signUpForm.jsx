@@ -18,8 +18,9 @@ function SignUpForm(probs) {
     phoneNumber: "",
     bio: "",
     gender: "M",
-    birthdate: "",
+    birthDate: "",
     type: "",
+    photo: "",
   });
 
   const [traineeData, setTraineeData] = useState({
@@ -46,7 +47,7 @@ function SignUpForm(probs) {
     title: "",
     dateIssued: "",
     description: "",
-    photo: "kjk;",
+    certificatePhoto: "",
   });
 
   return (

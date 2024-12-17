@@ -5,7 +5,7 @@ import { CiEdit } from "react-icons/ci";
 function Exersize({ name, description, targetMuscle, gif, usage = false }) {
   return (
     <div
-      className="border-2 flex flex-col  text-center hover:border-primary hover:cursor-pointer bg-backGroundColor border-secondary w-full min-w-64 max-w-64 rounded-2xl p-5"
+      className="border-2 flex flex-col  text-center hover:border-primary hover:cursor-pointer bg-backGroundColor border-secondary w-full min-w-64 max-w-64 min-h-64 rounded-2xl p-5"
       onClick={
         usage === "addWorkout" ? undefined : () => window.open(gif, "_blank")
       }

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -12,6 +13,14 @@ import ProfileSection from "./components/Profilesection.jsx";
 import LandingPage from "./components/landingPage.jsx";
 import Banned from "./pages/Banned.jsx";
 import NotFound from "./pages/Notfound.jsx";
+import { TraineeExerciseCard } from "./components/trainee/traineeExerciseCard.jsx";
+import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import Tailwind from "primereact/passthrough/tailwind";
+import "primeicons/primeicons.css";
+import { TraineeCurrentWrokout } from "./components/trainee/traineCurrentWorkout.jsx";
+import { TraineeMealCard } from "./components/trainee/traineeMealCard.jsx";
+import { TraineeCurrentMeals } from "./components/trainee/traineeCurrentMeals.jsx";
+import { PackageDashboard } from "./components/packageDashboard.jsx";
 import IngredientForm from "./components/coach/IngredientForm.jsx";
 import IngredientCard from "./components/coach/ingredientCard.jsx";
 import WorkoutCard from "./components/coach/workoutCard.jsx";
@@ -22,12 +31,11 @@ import CreateMeal from "./components/coach/createMeal.jsx";
 import AssignWorkout from "./components/coach/assignWorkout.jsx";
 import AssignMeal from "./components/coach/assignMeal.jsx";
 import Meal from "./components/coach/mealCard.jsx";
+import { PackageCard } from "./components/packageCard.jsx";
 import { View } from "lucide-react";
 import { TraineesList } from "./components/admin/traineesList.jsx";
-import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
-import Tailwind from "primereact/passthrough/tailwind";
-import "primeicons/primeicons.css";
 import { CoachesList } from "./components/admin/coachesList.jsx";
+import { AdminStatistics } from "./components/admin/adminStatistics.jsx";
 
 const router = createBrowserRouter([
   {
@@ -66,7 +74,7 @@ const router = createBrowserRouter([
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <SignUpForm isAdmin={1} />
+        <AdminStatistics />
       </PrimeReactProvider>
     ),
   },

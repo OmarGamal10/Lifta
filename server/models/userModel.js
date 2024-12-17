@@ -1,4 +1,5 @@
 const db = require("../db");
+const AppError = require("../utils/AppError");
 
 exports.getAllUsers = async () => {
   const query = "SELECT * FROM lifta_schema.users";
@@ -40,16 +41,33 @@ exports.SelectTraineeOrTrainerById = async (id, type) => {
 };
 
 exports.AddUser = async (values) => {
-  const type = values[7];
-  const userValues = values.slice(0, 8);
-  const rest = values.slice(8);
-  const query =
-    "INSERT INTO lifta_schema.users (email, first_name, last_name, password, gender, bio, phone_number, type)VAlUES($1, $2, $3, $4, $5, $6, $7,$8) RETURNING user_id";
-  const id = (await db.query(query, userValues)).rows[0].user_id;
-  if (type === "Trainee") {
-    addTrainee(rest, id);
-  } else {
-    addTrainer(rest, id);
+  try {
+    const type = values[7]; // Get type from the values array
+    const userValues = values.slice(0, 10); // Extract first 10 values for user
+    const rest = values.slice(10); // Remaining values for other functionality
+
+    const query = `
+      INSERT INTO lifta_schema.users 
+      (email, first_name, last_name, password, gender, bio, phone_number, type, photo, birth_date) 
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+      RETURNING user_id;
+    `;
+
+    const id = (await db.query(query, userValues)).rows[0].user_id;
+
+    if (type === "Trainee") {
+      await addTrainee(rest, id);
+    } else {
+      await addTrainer(rest, id);
+    }
+  } catch (err) {
+    if (err.code === "23505") {
+      throw new AppError(
+        "This email is already registered. Please use another email.",
+        400
+      );
+    }
+    throw err;
   }
 };
 

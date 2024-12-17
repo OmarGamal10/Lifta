@@ -1,8 +1,13 @@
 import { useState } from "react";
 import "../output.css";
 import ErrorMessage from "../errorMsg";
-
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
+import useHttp from "../../hooks/useHTTP";
 function PackageForm() {
+  const navigate = useNavigate();
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -46,10 +51,11 @@ function PackageForm() {
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: "",
+      submit: "",
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -68,8 +74,36 @@ function PackageForm() {
       return;
     }
 
-    // Additional submit logic can go here
-    console.log("Form submitted", formData);
+    const token = getTokenFromCookies();
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken ? decodedToken.user_id : null;
+    console.log(userId);
+    const data = { ...formData };
+    if (data.type.length == 2) data.type = "Both";
+    else {
+      data.type = data.type[0];
+      data.type = data.type[0].toUpperCase() + data.type.slice(1);
+    }
+    console.log(formData);
+    try {
+      const response = await post(
+        "/packages",
+        {
+          ...data,
+          trainer_id: userId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      navigate("/profile");
+    } catch (err) {
+      console.log(err);
+      setErrors({ submit: err.response.data.message });
+    }
   };
 
   return (
@@ -91,7 +125,7 @@ function PackageForm() {
             className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
             type="text"
             placeholder="Enter Name"
-            maxLength="15"
+            maxLength="40"
             onChange={handleChange}
             value={formData.name}
             autoComplete="off"
@@ -212,6 +246,7 @@ function PackageForm() {
             Add Package
           </button>
         </div>
+        {errors.submit && <ErrorMessage error={errors.submit} />}
       </form>
     </div>
   );

@@ -33,6 +33,20 @@ const getWorkoutsCoach = async (req, res, next) => {
   });
 };
 
+const getCurrentWorkoutByTraineeId = async (req, res, next) => {
+  const { traineeId } = req.params;
+  if (!traineeId || isNaN(traineeId)) {
+    return next(new AppError("Please provide a trainee id", 400));
+  }
+  const workout = await workoutModel.getCurrentWorkoutByTraineeId(traineeId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      workout,
+    },
+  });
+};
+
 const assignWorkoutTrainee = async (req, res, next) => {
   const { trainee_id, workout_id, day } = req.body;
   if (!trainee_id || isNaN(trainee_id)) {
@@ -68,6 +82,30 @@ const getWorkoutsTrainee = async (req, res, next) => {
       workouts,
     },
   });
+};  
+
+const addDoneWorkout = async (req, res, next) => {
+  const { trainee_id, workout_id } = req.body;
+
+  await workoutModel.addDoneWorkout(trainee_id, workout_id);
+  res.status(201).json({
+    status: "success",
+    message: "Good Job!",
+  });
+};
+
+const getCurrentWorkoutStatus = async (req, res, next) => {
+  const { traineeId } = req.params;
+  if (!traineeId || isNaN(traineeId)) {
+    return next(new AppError("Please provide a trainee id", 400));
+  }
+  const isDone = await workoutModel.getCurrentWorkoutStatus(traineeId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      isDone,
+    },
+   });
 };
 
 const deleteWorkout = async (req, res, next) => {
@@ -102,6 +140,9 @@ const removeWorkoutFromSchedule = async (req, res, next) => {
 module.exports = {
   createWorkout: catchAsync(createWorkout),
   getWorkoutsCoach: catchAsync(getWorkoutsCoach),
+  getCurrentWorkoutByTraineeId: catchAsync(getCurrentWorkoutByTraineeId),
+  addDoneWorkout: catchAsync(addDoneWorkout),
+  getCurrentWorkoutStatus: catchAsync(getCurrentWorkoutStatus),
   deleteWorkout: catchAsync(deleteWorkout),
   removeExerciseFromWorkout: catchAsync(removeExerciseFromWorkout),
   assignWorkoutTrainee: catchAsync(assignWorkoutTrainee),
