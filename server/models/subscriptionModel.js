@@ -64,17 +64,22 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
       package.package_id,
       package.name, 
       package.type,
+      subscription.subscription_id,
+      subscription.status,
       (
         SELECT content 
         FROM lifta_schema.message 
-        WHERE (sender_id = users.user_id AND receiver_id = $1) 
+        WHERE 
+        (subscription_id = subscription.subscription_id)
+        AND (sender_id = users.user_id AND receiver_id = $1) 
         OR (sender_id = $1 AND receiver_id = users.user_id) 
         ORDER BY time DESC LIMIT 1
       ) AS last_message
     FROM lifta_schema.subscription 
     JOIN lifta_schema.package ON subscription.package_id = package.package_id 
     JOIN lifta_schema.users ON package.trainer_id = users.user_id
-    WHERE subscription.trainee_id = $1 AND subscription.status = 'Active';`;
+    WHERE subscription.trainee_id = $1 AND subscription.status = 'Active' or subscription.status='Expired'
+    order by subscription.status, users.user_id; `;
 
   const getTraineesQuery = `
     SELECT 
@@ -84,17 +89,23 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
       package.package_id,
       package.name, 
       package.type,
+      subscription.subscription_id,
+      subscription.status,
       (
         SELECT content 
         FROM lifta_schema.message 
-        WHERE (sender_id = users.user_id AND receiver_id = $1) 
+        WHERE 
+        (subscription_id = subscription.subscription_id)
+        AND (sender_id = users.user_id AND receiver_id = $1) 
         OR (sender_id = $1 AND receiver_id = users.user_id) 
         ORDER BY time DESC LIMIT 1
       ) AS last_message
     FROM lifta_schema.subscription 
     JOIN lifta_schema.package ON subscription.package_id = package.package_id 
     JOIN lifta_schema.users ON subscription.trainee_id = users.user_id
-    WHERE package.trainer_id = $1 AND subscription.status = 'Active';`;
+    WHERE package.trainer_id = $1 AND subscription.status = 'Active' or subscription.status='Expired'
+    ORDER BY subscription.status , users.user_id;
+  `;
 
   return type === "Trainer"
     ? (await db.query(getTraineesQuery, [Id])).rows

@@ -31,19 +31,28 @@ const ChatSidebar = ({ onChatSelect, activeChat, id, type }) => {
       {chats.length > 0 ? (
         chats.map((chat) => (
           <div
-            key={chat.user_id}
+            key={chat.subscription_id}
             onClick={() => onChatSelect(chat)}
             className={`p-4 hover:bg-secondary transition-all cursor-pointer bg-accent
-              ${activeChat?.id === chat.user_id ? "bg-secondary" : ""}`}
+              ${
+                activeChat?.subscription_id === chat.subscription_id
+                  ? "bg-secondary"
+                  : ""
+              }`}
           >
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                 {chat.photo || "👤"}
               </div>
               <div>
-                <h3 className="font-bold text-gray-800">
-                  {chat.first_name + " " + chat.last_name}
-                </h3>
+                <div className="flex items-center gap-1">
+                  <h3 className="font-bold text-gray-800">
+                    {chat.first_name + " " + chat.last_name}
+                  </h3>
+                  <span className="bg-secondary font-semibold rounded-full px-1 py-0.5 text-xs ml-16 mt-0.5 ">
+                    {chat.status === "Active" ? "Active" : "Expired"}
+                  </span>
+                </div>
                 <p className="text-sm font-semibold text-gray-500">
                   {chat.packages.map((pack) => (
                     <span key={pack.package_id} className="block">
@@ -58,9 +67,12 @@ const ChatSidebar = ({ onChatSelect, activeChat, id, type }) => {
                     </span>
                   ))}
                 </p>
-                <p className="text-sm text-gray-500 flex items-center justify-between">
-                  <span className="w-3 h-3 bg-secondary rounded-full mr-2 mt-1"></span>
-                  {chat.last_message}
+                <p className="text-sm text-gray-500 flex items-center font-semibold">
+                  <span className="w-3 h-3 bg-secondary rounded-full mr-2 mt-1 "></span>
+                  {activeChat?.subscription_id === chat.subscription_id &&
+                  activeChat.last_message
+                    ? activeChat.last_message
+                    : chat.last_message}
                 </p>
               </div>
             </div>

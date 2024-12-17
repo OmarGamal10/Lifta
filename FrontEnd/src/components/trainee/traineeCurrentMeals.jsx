@@ -42,37 +42,46 @@ export function TraineeCurrentMeals(probs) {
     setKnobValue(newValue);
   }
 
-  return (
-    <div className="text-textColor p-8 flex flex-col gap-6">
-      {meals.map((meal) => (
-        <div key={[meal.meal_id, meal.type].join('-')}>
-          <h2 className="text-2xl font-medium mb-4">{meal.type}</h2>
-          <TraineeMealCard
-            key={[meal.meal_id, meal.type].join('-')}
-            mealId={meal.meal_id}
-            name={meal.name}
-            calories={meal.calories}
-            fats={meal.fat}
-            carbs={meal.carb}
-            protein={meal.protein}
-            incrementDoneCount={incrementDoneCount}
-            userId={probs.userId}
-            picture={meal.picture}
-            type={meal.type}
+  if (meals.length > 0) {
+    return (
+      <div className="text-textColor p-8 flex flex-col gap-6">
+        {meals.map((meal) => (
+          <div key={[meal.meal_id, meal.type].join('-')}>
+            <h2 className="text-2xl font-medium mb-4">{meal.type}</h2>
+            <TraineeMealCard
+              key={[meal.meal_id, meal.type].join('-')}
+              mealId={meal.meal_id}
+              name={meal.name}
+              calories={meal.calories}
+              fats={meal.fat}
+              carbs={meal.carb}
+              protein={meal.protein}
+              incrementDoneCount={incrementDoneCount}
+              userId={probs.userId}
+              picture={meal.picture}
+              type={meal.type}
+            />
+          </div>
+        ))}
+        <div className="w-[75vw] flex justify-center">
+          <Knob
+            value={knobValue}
+            valueTemplate={"{value}%"}
+            readOnly
+            valueColor="#B076A9"
+            rangeColor="#E3E5EF"
+                    textColor="#E3E5EF"
+                    size={320}
           />
         </div>
-      ))}
-      <div className="w-[75vw] flex justify-center">
-        <Knob
-          value={knobValue}
-          valueTemplate={"{value}%"}
-          readOnly
-          valueColor="#B076A9"
-          rangeColor="#E3E5EF"
-                  textColor="#E3E5EF"
-                  size={320}
-        />
       </div>
+    );
+  }
+ 
+
+  return (
+    <div className="text-textColor h-[100vh] flex items-center">
+      <h2 className="text-2xl font-medium">No Meals Today</h2>
     </div>
   );
 }
