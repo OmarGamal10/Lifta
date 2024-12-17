@@ -35,6 +35,9 @@ const BrowseProtectedRoute = ({ children }) => {
     return <Loader />
   }
 
+  if(isAuthenticated === false) 
+    return <Navigate to="/" replace />;
+
   if (userType === "Trainer") {
     return <Navigate to="/profile" replace />;
   }

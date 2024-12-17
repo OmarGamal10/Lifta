@@ -155,14 +155,15 @@ const signup = async (req, res, next) => {
         description,
         date_issued
       );
-  await userModel.AddUser(values);
+  const userId = await userModel.AddUser(values);
 
   //jwt token by cookie
   const payload = {
-    email,
-    phone_number,
-    type,
+    user_id: userId,
+    email: email,
+    type: type,
   };
+
 
   const token = createToken(payload);
   res.cookie("jwt", token);

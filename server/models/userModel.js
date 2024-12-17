@@ -45,6 +45,8 @@ exports.AddUser = async (values) => {
   } else {
     addTrainer(rest, id);
   }
+
+  return id;
 };
 
 const addTrainee = async (values, id) => {
