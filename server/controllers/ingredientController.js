@@ -93,7 +93,6 @@ const updateIngredient = async (req, res, next) => {
   if (isNaN(Number(calories)) || Number(calories) <= 0) {
     return next(new AppError("Please provide a valid calories", 400));
   }
-  console.log(ingId, name, protein, carb, fat, calories);
   const ingredient = await ingredientModel.updateIngredient(
     name,
     protein,

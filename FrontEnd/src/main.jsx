@@ -40,7 +40,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       // <ProtectedLoggedRoute>
-      <IngredientForm />
+      <ExerciseForm />
       // </ProtectedLoggedRoute>
     ),
   },
