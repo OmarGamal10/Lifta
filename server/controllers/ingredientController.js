@@ -15,6 +15,21 @@ const getIngredientsCoach = async (req, res, next) => {
     },
   });
 };
+
+const getIngredient = async (req, res, next) => {
+  const { ingId } = req.params;
+  if (!ingId || isNaN(ingId)) {
+    return next(new AppError("Please provide a ingredient id", 400));
+  }
+  const ingredient = await ingredientModel.getIngredientById(ingId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      ingredient,
+    },
+  });
+};
+
 const getIngredientsMeal = async (req, res, next) => {
   const { mealId } = req.params;
   if (!mealId || isNaN(mealId)) {
@@ -59,6 +74,41 @@ const createIngredient = async (req, res, next) => {
     },
   });
 };
+const updateIngredient = async (req, res, next) => {
+  const { ingId } = req.params;
+  if (!ingId || isNaN(ingId)) {
+    return next(new AppError("Please provide a ingredient id", 400));
+  }
+  const { name, protein, carb, fat, calories } = req.body;
+
+  if (isNaN(Number(protein)) || Number(protein) < 0) {
+    return next(new AppError("Please provide a valid protien", 400));
+  }
+  if (isNaN(Number(carb)) || Number(carb) < 0) {
+    return next(new AppError("Please provide a valid carb", 400));
+  }
+  if (isNaN(Number(fat)) || Number(fat) < 0) {
+    return next(new AppError("Please provide a valid fat", 400));
+  }
+  if (isNaN(Number(calories)) || Number(calories) <= 0) {
+    return next(new AppError("Please provide a valid calories", 400));
+  }
+  console.log(ingId, name, protein, carb, fat, calories);
+  const ingredient = await ingredientModel.updateIngredient(
+    name,
+    protein,
+    carb,
+    fat,
+    calories,
+    ingId
+  );
+
+  res.status(200).json({
+    status: "success",
+    message: "Ingredient updated successfully",
+    data: { ingredient },
+  });
+};
 
 const deleteIngredient = async (req, res, next) => {
   const { ingredient_id } = req.body;
@@ -74,4 +124,6 @@ module.exports = {
   createIngredient: catchAsync(createIngredient),
   deleteIngredient: catchAsync(deleteIngredient),
   getIngredientsMeal: catchAsync(getIngredientsMeal),
+  getIngredient: catchAsync(getIngredient),
+  updateIngredient: catchAsync(updateIngredient),
 };
