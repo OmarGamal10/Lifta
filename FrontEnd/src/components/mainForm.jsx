@@ -1,12 +1,18 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
+import handleImages from "../freqUsedFuncs/handleImages";
+import { useNavigate } from "react-router-dom";
 
 function Form({ formData, setFormData, toNext }) {
+  const navigate = useNavigate();
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [showPassword, setPassState] = useState(false);
   const [errors, setErrors] = useState({});
+  const fileInputRef = useRef(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -55,19 +61,64 @@ function Form({ formData, setFormData, toNext }) {
       phoneNumber: "",
       bio: "",
       gender: "M",
-      birthdate: "",
+      birthDate: "",
     });
+    navigate("/");
+  };
+  const handleUploadButtonClick = () => {
+    fileInputRef.current.click();
+  };
+  const handlePhotoChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check if the file is a valid photo type (jpeg, png, jpg)
+      if (["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+        const photoUrl = await handleImages(file);
+        setFormData((prevData) => ({
+          ...prevData,
+          photo: photoUrl, // Store the URL instead of the file
+        }));
+
+        setErrors((prev) => {
+          const { photo, ...rest } = prev;
+          return rest;
+        });
+      } else {
+        setFormData((prevData) => {
+          const { photo, ...rest } = prevData;
+          return rest;
+        });
+
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          photo: "Please select a valid photo file (jpeg, jpg, png).",
+        }));
+      }
+    }
   };
   return (
     <div className="flex flex-row min-h-screen justify-center items-center bg-backGroundColor p-16">
       <div className="container border-2 border-solid bg-backGroundColor border-secondary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
-        <div className="absolute top-[-65px] left-1/2 transform -translate-x-1/2">
+        <div
+          className="absolute top-[-65px] left-1/2 transform -translate-x-1/2 cursor-pointer"
+          onClick={handleUploadButtonClick}
+        >
           <input
-            type="image"
-            src="./src/assets/user-icon-on-transparent-background-free-png.webp"
+            type="file"
+            name="photo"
+            accept="image/jpeg, image/png, image/jpg"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handlePhotoChange}
+          />
+          <img
+            src={
+              formData.photo
+                ? formData.photo
+                : "./src/assets/user-icon-on-transparent-background-free-png.webp"
+            }
             alt="Submit"
-            width="250"
-            height="150"
+            className="w-[150px] h-[150px] object-cover rounded-full"
           />
         </div>
         <form
@@ -256,16 +307,16 @@ function Form({ formData, setFormData, toNext }) {
             <h6 className="text-xs text-left text-textColor mb-2">Birthdate</h6>
             <input
               type="date"
-              id="birthdate"
-              name="birthdate"
-              value={formData.birthdate}
+              id="birthDate"
+              name="birthDate"
+              value={formData.birthDate}
               className="bg-backGroundColor border pl-4 w-1/2 rounded-xl border-secondary py-4 text-sm text-textColor text-left"
               onChange={handleChange}
               autoComplete="off"
             />
-            {errors.birthdate && <ErrorMessage error={errors.birthdate} />}
+            {errors.birthDate && <ErrorMessage error={errors.birthDate} />}
           </div>
-
+          {errors.photo && <ErrorMessage error={errors.photo} />}
           {/* Buttons */}
 
           <div className="flex justify-between">

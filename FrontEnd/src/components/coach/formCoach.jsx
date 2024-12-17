@@ -7,6 +7,7 @@ import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import { FaPlus } from "react-icons/fa";
 import CertForm from "./certificateForm";
 import useHttp from "../../hooks/useHTTP";
+import { useNavigate } from "react-router-dom";
 
 function FormCoach({
   userData,
@@ -17,7 +18,7 @@ function FormCoach({
   setCertData,
 }) {
   const [viewCertForm, setViewCert] = useState(false);
-
+  const navigate = useNavigate();
   const { post, loading, error, data } = useHttp("http://localhost:3000");
 
   const [errors, setErrors] = useState({});
@@ -69,8 +70,12 @@ function FormCoach({
       );
       console.log(response);
     } catch (err) {
+      setErrors((prev) => {
+        return { ...prev, postError: err.response.data.message };
+      });
       console.log(err);
     }
+    navigate("/profile");
   };
   const handleAdd = (e) => {
     e.preventDefault();
@@ -82,10 +87,6 @@ function FormCoach({
       }
     });
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
-    }
     setViewCert(true);
   };
   return (
@@ -179,6 +180,7 @@ function FormCoach({
               Add certificate
             </button>
           </div>
+          {errors.postError && <ErrorMessage error={errors.postError} />}
 
           <div className="flex justify-between">
             <button

@@ -51,6 +51,7 @@ function PackageForm() {
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: "",
+      submit: "",
     }));
   };
 
@@ -77,12 +78,18 @@ function PackageForm() {
     const decodedToken = token ? jwtDecode(token) : null;
     const userId = decodedToken ? decodedToken.user_id : null;
     console.log(userId);
-
+    const data = { ...formData };
+    if (data.type.length == 2) data.type = "Both";
+    else {
+      data.type = data.type[0];
+      data.type = data.type[0].toUpperCase() + data.type.slice(1);
+    }
+    console.log(formData);
     try {
       const response = await post(
         "/packages",
         {
-          ...formData,
+          ...data,
           trainer_id: userId,
         },
         {
@@ -92,9 +99,10 @@ function PackageForm() {
         }
       );
       console.log(response);
-      // navigate("/profile");
+      navigate("/profile");
     } catch (err) {
       console.log(err);
+      setErrors({ submit: err.response.data.message });
     }
   };
 
@@ -117,7 +125,7 @@ function PackageForm() {
             className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
             type="text"
             placeholder="Enter Name"
-            maxLength="15"
+            maxLength="40"
             onChange={handleChange}
             value={formData.name}
             autoComplete="off"
@@ -238,6 +246,7 @@ function PackageForm() {
             Add Package
           </button>
         </div>
+        {errors.submit && <ErrorMessage error={errors.submit} />}
       </form>
     </div>
   );
