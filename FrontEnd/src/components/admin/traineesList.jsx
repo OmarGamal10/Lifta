@@ -10,7 +10,8 @@ export function TraineesList() {
     post,
     loading,
     error,
-    del
+    del,
+    patch,
   } = useHttp("http://localhost:3000");
 
   const fetchData = async () => {
@@ -39,13 +40,48 @@ export function TraineesList() {
         data: {},
       });
       console.log(response);
-      
+
       fetchData();
+      handleCloseModal();
+
     } catch (err) {
       console.log(err);
     }
-  
-  }
+  };
+
+  const toggleBan = async (userId, isBanned) => {
+    if (isBanned) {
+      try {
+        const response = await patch(`/users/${userId}/unban`, {
+          headers: { "Cache-Control": "no-cache" },
+          body: {},
+          data: {},
+        });
+        console.log(response);
+
+        fetchData();
+
+        handleCloseModal();
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const response = await patch(`/users/${userId}/ban`, {
+          headers: { "Cache-Control": "no-cache" },
+          body: {},
+          data: {},
+        });
+        console.log(response);
+
+        fetchData();
+
+        handleCloseModal();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   const [selectedUser, setSelectedUser] = useState(null);
   const dialogRef = useRef(null);
@@ -185,11 +221,7 @@ export function TraineesList() {
                 </h2>
                 <p className="py-2 px-4"> {selectedUser.bio}</p>
               </div>
-              <button
-                onClick={handleCloseModal}
-              >
-                ✕
-              </button>
+              <button onClick={handleCloseModal}>✕</button>
             </div>
 
             <div className="space-y-4 px-4">
@@ -206,9 +238,22 @@ export function TraineesList() {
                 <strong>Nutritionist ID:</strong> {selectedUser.nutritionist_id}
               </div>
             </div>
-            <div className="flex justify-center mt-12">
-              <button onClick={()=>handleDelete(selectedUser.user_id)} className="border-accent border-2 py-2 px-6 rounded-full hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50">
+            <div className="flex justify-center gap-8 mt-12">
+              <button
+                onClick={() => handleDelete(selectedUser.user_id)}
+                className="border-accent border-2 py-2 px-6 rounded-full hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50 w-36"
+              >
                 Delete User
+              </button>
+              <button
+                onClick={() => {
+                  selectedUser.is_banned
+                    ? toggleBan(selectedUser.user_id, true)
+                    : toggleBan(selectedUser.user_id, false);
+                }}
+                className="border-accent border-2 py-2 px-6 rounded-full hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50 w-36"
+              >
+                {selectedUser.is_banned ? "Unban User" : "Ban User"}
               </button>
             </div>
           </>

@@ -44,6 +44,8 @@ router.get("/trainees", async (req, res, next) => {
 });
 
 router.delete("/:userId", adminController.deleteUserByUserId);
+router.patch("/:userId/ban", adminController.banUser);
+router.patch("/:userId/unban", adminController.unbanUser);
 
 //auth routes
 router.post("/login", authController.login);
