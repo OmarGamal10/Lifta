@@ -16,8 +16,9 @@ function SignUpForm() {
     phoneNumber: "",
     bio: "",
     gender: "M",
-    birthdate: "",
+    birthDate: "",
     type: "",
+    photo: "",
   });
 
   const [traineeData, setTraineeData] = useState({
@@ -36,7 +37,7 @@ function SignUpForm() {
     title: "",
     dateIssued: "",
     description: "",
-    photo: "kjk;",
+    certificatePhoto: "",
   });
 
   return (

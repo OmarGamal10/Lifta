@@ -2,8 +2,8 @@ import { useState } from "react";
 import "../output.css"; // Adjust the path as needed
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
+import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHTTP";
 
 function Ingredient() {

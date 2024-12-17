@@ -39,9 +39,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      // <ProtectedLoggedRoute>
-      <PackageForm />
-      // </ProtectedLoggedRoute>
+      <ProtectedLoggedRoute>
+        <LandingPage />
+      </ProtectedLoggedRoute>
     ),
   },
   {
