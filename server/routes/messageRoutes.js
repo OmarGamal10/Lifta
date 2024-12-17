@@ -5,6 +5,9 @@ const messageController = require("../controllers/messageController");
 
 router.post("/", convertCamelToSnake, messageController.createMessage);
 router.get("/", messageController.getAllMessages);
-router.get("/:sender_id/:receiver_id", messageController.getMessagesByChatId);
+router.get(
+  "/:sender_id/:receiver_id/:subscription_id",
+  messageController.getMessagesByChatId
+);
 
 module.exports = router;
