@@ -6,7 +6,7 @@ import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHTTP";
 
-function Ingredient({ edit = true, idToEdit = 1 }) {
+function Ingredient({ edit = false, idToEdit = 1 }) {
   const navigate = useNavigate();
   const { post, get, patch, loading, error, data } = useHttp(
     "http://localhost:3000"

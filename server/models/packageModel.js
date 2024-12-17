@@ -5,7 +5,11 @@ exports.getAllPackages = async () => {
   const query = "SELECT * FROM lifta_schema.package;";
   return (await db.query(query)).rows;
 };
-
+exports.getPackageById = async (packageId) => {
+  const query =
+    "SELECT price,duration FROM lifta_schema.package WHERE package_id = $1";
+  return (await db.query(query, [packageId])).rows[0];
+};
 exports.getPackagesByCoachId = async (coachId) => {
   const query = `SELECT * FROM lifta_schema.package WHERE trainer_id = $1`;
   return (await db.query(query, [coachId])).rows;
@@ -21,6 +25,11 @@ exports.createPackage = async (...values) => {
       throw new AppError("You already have a package with this name", 400);
     }
   }
+};
+exports.updatePackage = async (...values) => {
+  const query =
+    "UPDATE lifta_schema.package SET  price = $1, duration = $2 WHERE package_id = $3 RETURNING *;";
+  return (await db.query(query, [...values])).rows[0];
 };
 
 exports.deletePackage = async (packageId) => {
