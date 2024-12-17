@@ -34,7 +34,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <ProtectedLoggedRoute>
-        <AssignMeal />
+        <LandingPage />
       </ProtectedLoggedRoute>
     ),
   },
@@ -50,7 +50,7 @@ const router = createBrowserRouter([
     path: "sign-up",
     element: (
       <ProtectedLoggedRoute>
-        <SignUpForm />
+        <SignUpForm isAdmin={0} />
       </ProtectedLoggedRoute>
     ),
   },
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <CoachesList />
+        <SignUpForm isAdmin={1} />
       </PrimeReactProvider>
     ),
   },
