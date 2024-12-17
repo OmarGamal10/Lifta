@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "../output.css";
 import { BsUpload } from "react-icons/bs";
 import ErrorMessage from "../errorMsg";
@@ -7,19 +7,45 @@ import useHttp from "../../hooks/useHTTP";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
-function ExerciseForm({ edit = false, idToEdit = 1 }) {
+function ExerciseForm({ edit = true, idToEdit = 2 }) {
   const navigate = useNavigate();
 
-  const { post, loading, error, data } = useHttp("http://localhost:3000");
+  const { post, get, patch, loading, error, data } = useHttp(
+    "http://localhost:3000"
+  );
   const [formData, setFormData] = useState({
     name: "",
     muscleGroup: "",
     description: "",
     gif: "",
   });
+
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
-
+  useEffect(() => {
+    if (edit) {
+      const fetchIngredient = async () => {
+        try {
+          const response = await get(`/exercises/${idToEdit}`, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          setFormData(() => {
+            const { musclegroup, ...rest } = response.data.exercise;
+            return {
+              ...rest,
+              muscleGroup: musclegroup,
+            };
+          });
+          console.log(response);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchIngredient();
+    }
+  }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name == "gif") {
@@ -65,38 +91,59 @@ function ExerciseForm({ edit = false, idToEdit = 1 }) {
       setErrors(newErrors);
       return;
     }
-    let gif;
-    if (formData.gif) {
-      gif = await handleImages(formData.gif);
-      if (gif == null) {
-        setErrors({ ...errors, gif: "Error uploading gif" });
-        return;
-      }
-      console.log(formData.gif);
-    }
-
-    const token = getTokenFromCookies();
-    const decodedToken = token ? jwtDecode(token) : null;
-    const userId = decodedToken ? decodedToken.user_id : null;
-    console.log(userId);
-    try {
-      const response = await post(
-        "/exercises",
-        {
-          ...formData,
-          gif,
-          trainer_id: userId,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+    if (!edit) {
+      let gif;
+      if (formData.gif) {
+        gif = await handleImages(formData.gif);
+        if (gif == null) {
+          setErrors({ ...errors, gif: "Error uploading gif" });
+          return;
         }
-      );
-      console.log(response);
-      navigate("/profile");
-    } catch (err) {
-      console.log(err);
+        console.log(formData.gif);
+      }
+
+      const token = getTokenFromCookies();
+      const decodedToken = token ? jwtDecode(token) : null;
+      const userId = decodedToken ? decodedToken.user_id : null;
+      console.log(userId);
+      try {
+        const response = await post(
+          "/exercises",
+          {
+            ...formData,
+            gif,
+            trainer_id: userId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+        navigate("/profile");
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        console.log(formData);
+        const response = await patch(
+          `/exercises/${idToEdit}`,
+          {
+            ...formData,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+        navigate("/profile");
+      } catch (err) {
+        console.log(err.response.data.message);
+      }
     }
   };
 

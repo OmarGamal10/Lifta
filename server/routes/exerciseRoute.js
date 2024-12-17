@@ -12,6 +12,13 @@ router.get("/", (req, res, next) => {
     return exerciseController.getExercisesWorkout(req, res, next);
 });
 
+router.get("/:exId", (req, res, next) => {
+  return exerciseController.getExercise(req, res, next);
+});
+
+router.patch("/:exId", convertCamelToSnake, (req, res, next) => {
+  return exerciseController.updateExercise(req, res, next);
+});
 router.post(
   "/",
   convertCamelToSnake,
