@@ -16,6 +16,12 @@ router.post(
   workoutController.addDoneWorkout
 );
 
+router.delete(
+  "/removeDoneWorkout",
+  convertCamelToSnake,
+  workoutController.removeDoneWorkout
+);
+
 router.get("/status", (req, res, next) => {
   return workoutController.getCurrentWorkoutStatus(req, res, next);
 });

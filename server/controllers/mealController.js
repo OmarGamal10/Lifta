@@ -157,6 +157,15 @@ const deleteMeal = async (req, res, next) => {
   });
 };
 
+const removeDoneMeal = async (req, res, next) => {
+  const { traineeId, type } = req.params;
+  await mealModel.removeDoneMeal(traineeId, type);
+  res.status(200).json({
+    status: "success",
+    message: "Meal is not done",
+  });
+};
+
 module.exports = {
   createMeal: catchAsync(createMeal),
   getMealsNutritionist: catchAsync(getMealsNutritionist),
@@ -169,4 +178,5 @@ module.exports = {
   assignMealTrainee: catchAsync(assignMealTrainee),
   getMealsTrainee: catchAsync(getMealsTrainee),
   removeMealFromDiet: catchAsync(removeMealFromDiet),
+  removeDoneMeal: catchAsync(removeDoneMeal),
 };

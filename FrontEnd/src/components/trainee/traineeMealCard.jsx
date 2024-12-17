@@ -20,7 +20,7 @@ export function TraineeMealCard(probs) {
   const [open, setOpen] = React.useState(0);
   const [isDone, setIsDone] = useState(false);
 
-  const { get: httpGet, post } = useHttp("http://localhost:3000");
+  const { get: httpGet, post, del } = useHttp("http://localhost:3000");
 
   const [ingredients, setIngredients] = useState([]);
 
@@ -61,17 +61,30 @@ export function TraineeMealCard(probs) {
   }, []);
 
   async function handleMarkAsDone() {
-    setIsDone(true);
-    probs.incrementDoneCount();
-    try {
-      const response = await post(`/users/${probs.userId}/currentMeals`, {
-        traineeId: probs.userId,
-        mealId: probs.mealId,
-        type: probs.type,
-      });
-      console.log(response);
-    } catch (err) {
-      console.error(err);
+    if (!isDone) {
+      setIsDone(true);
+      probs.incrementDoneCount();
+      try {
+        const response = await post(`/users/${probs.userId}/currentMeals`, {
+          traineeId: probs.userId,
+          mealId: probs.mealId,
+          type: probs.type,
+        });
+        console.log(response);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    else {
+      setIsDone(false);
+      try {
+        const response = await del(`/users/${probs.userId}/currentMeals/${probs.type}/removeDoneMeal`, {
+          data: {},
+        });
+        console.log(response);
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
 
@@ -106,7 +119,7 @@ export function TraineeMealCard(probs) {
             </div>
           </AccordionHeader>
           <AccordionBody className="pt-0 text-base font-normal px-4 flex flex-col gap-6">
-            {/* <img src={`${probs.picture}`} alt="" /> */}
+            <img src={`${probs.picture}`} alt="" className="w-64 h-64"/>
             <div>
               <h3 className="text-lg font-medium">Ingredients</h3>
               <Card className="h-fit w-[50%] px-4">
@@ -173,17 +186,13 @@ export function TraineeMealCard(probs) {
               {probs.fats} gm
             </div>
             <button
-              className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around
-         ${
-           isDone
-             ? "btn-disabled cursor-not-allowed bg-accent text-backGroundColor"
-             : "hover:bg-accent hover:text-backGroundColor"
-         } `}
-              onClick={handleMarkAsDone}
-            >
-              <span>{isDone ? "Done" : "Mark as done"}</span>
-              <span className="pi pi-check"></span>
-            </button>
+          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
+            justify-around hover:bg-accent hover:text-backGroundColor`}
+          onClick={handleMarkAsDone}
+        >
+          <span>{isDone ? "Mark as undone" : "Mark as done"}</span>
+          {!isDone ? <span className="pi pi-check"></span> : <></>}
+        </button>
           </AccordionBody>
         </Accordion>
       </div>
