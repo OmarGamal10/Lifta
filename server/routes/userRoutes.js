@@ -8,8 +8,10 @@ const ingredientRouter = require("./ingredientRoute");
 const exerciseRouter = require("./exerciseRoute");
 const reviewRouter = require("./reviewRoute");
 const certificateRouter = require("./certificateRoute");
+const clientsRouter = require("./clientsRoute");
 const workoutRouter = require("./workoutRoute");
 const mealRouter = require("./mealRoute");
+const adminController = require("../controllers/adminController");
 const traineeCurrentWorkoutRouter = require("./traineeCurrentWorkoutRoute");
 const traineeCurrentMealsRouter = require("./traineeCurrentMealsRoute");
 
@@ -23,6 +25,7 @@ router.get("/", async (req, res, next) => {
   });
 });
 
+//Admin routes
 router.get("/coaches", async (req, res, next) => {
   res.status(200).json({
     status: "success",
@@ -41,12 +44,24 @@ router.get("/trainees", async (req, res, next) => {
   });
 });
 
+router.get("/browse", async (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    data: {
+      coaches: await userModel.getAvailableCoaches(),
+    },
+  });
+});
+router.delete("/:userId", adminController.deleteUserByUserId);
+
 //auth routes
 router.post("/login", authController.login);
 router.post("/signup", convertToSnakeCase, authController.signup);
 router.get("/logout", authController.logout);
 router.get("/checkAuth", authController.checkAuth);
 router.get("/:userId", authController.getUserById);
+
+router.use("/:coachId/clients", clientsRouter);
 //coach packages
 router.use("/:coachId/packages", packageRouter);
 router.use("/:coachId/exercises", exerciseRouter);

@@ -12,6 +12,14 @@ router.get("/", (req, res, next) => {
     return ingredientController.getIngredientsMeal(req, res, next);
 });
 
+router.get("/:ingId", (req, res, next) => {
+  return ingredientController.getIngredient(req, res, next);
+});
+
+router.patch("/:ingId", (req, res, next) => {
+  return ingredientController.updateIngredient(req, res, next);
+});
+
 router.post(
   "/",
   convertCamelToSnake,

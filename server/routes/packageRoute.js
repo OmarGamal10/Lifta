@@ -12,6 +12,13 @@ router.get("/", (req, res, next) => {
     : packageController.getAllPackages(req, res, next);
 });
 
+router.get("/:pkgId", packageController.getPackage);
+router.patch(
+  "/:pkgId",
+  convertCamelToSnake,
+  sanitizeEmptyFields,
+  packageController.updatePackage
+);
 router.post(
   "/",
   convertCamelToSnake,

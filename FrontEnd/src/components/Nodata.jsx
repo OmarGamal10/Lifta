@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import Nodata from "../assets/Nodata.png"
 const NoDataDashboard = ({ header = "No Data Dashboard" }) => (
   <div className="flex gap-[40px] items-center flex-col size-full">
     {header !== "" ? (
@@ -15,7 +15,7 @@ const NoDataDashboard = ({ header = "No Data Dashboard" }) => (
 
       {/* Centered Image */}
       <img
-        src="src/assets/Nodata.png"
+        src={Nodata}
         alt="No Data"
         className="size-[500px] object-contain mb-3"
       />

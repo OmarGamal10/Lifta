@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../output.css"; // Adjust the path as needed
 import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import { jwtDecode } from "jwt-decode";
@@ -6,9 +6,11 @@ import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../../hooks/useHTTP";
 
-function Ingredient() {
+function Ingredient({ edit = false, idToEdit = 1 }) {
   const navigate = useNavigate();
-  const { post, loading, error, data } = useHttp("http://localhost:3000");
+  const { post, get, patch, loading, error, data } = useHttp(
+    "http://localhost:3000"
+  );
 
   const [formData, setFormData] = useState({
     name: "",
@@ -36,7 +38,26 @@ function Ingredient() {
       [name]: "",
     }));
   };
-
+  useEffect(() => {
+    if (edit) {
+      const fetchIngredient = async () => {
+        try {
+          const response = await get(`/ingredients/${idToEdit}`, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          setFormData(() => ({
+            ...response.data.ingredient,
+          }));
+          console.log(response);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchIngredient();
+    }
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
@@ -56,24 +77,43 @@ function Ingredient() {
     const decodedToken = token ? jwtDecode(token) : null;
     const userId = decodedToken ? decodedToken.user_id : null;
     console.log(userId);
-
-    try {
-      const response = await post(
-        "/ingredients",
-        {
-          ...formData,
-          trainer_id: userId,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+    if (!edit) {
+      try {
+        const response = await post(
+          "/ingredients",
+          {
+            ...formData,
+            trainer_id: userId,
           },
-        }
-      );
-      console.log(response);
-      navigate("/profile");
-    } catch (err) {
-      console.log(err);
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+        navigate("/profile");
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const response = await patch(
+          `/ingredients/${idToEdit}`,
+          {
+            ...formData,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+        navigate("/profile");
+      } catch (err) {
+        console.log(err.response.data.message);
+      }
     }
   };
 
@@ -82,7 +122,7 @@ function Ingredient() {
       name="ingForm"
       className="border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8  max-w-lg rounded-3xl relative"
     >
-      <h1 className="text-3xl font-bold">New Ingredient</h1>
+      <h1 className="text-3xl font-bold">{edit ? "Edit" : "New"} Ingredient</h1>
       <form
         onSubmit={handleSubmit}
         className=" py-6 px-10 w-full"
@@ -96,7 +136,7 @@ function Ingredient() {
             className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
             type="text"
             placeholder="Enter Name"
-            maxLength="15"
+            maxLength="30"
             onChange={handleChange}
             value={formData.name}
             autoComplete="off"
@@ -180,7 +220,7 @@ function Ingredient() {
               className=" bg-secondary w-full text-textColor text-sm rounded-xl py-4 border hover:border-secondary hover:bg-textColor hover:text-secondary"
               onClick={handleSubmit}
             >
-              Add Ingredient
+              {edit ? "Confirm Changes" : "Add Ingredient"}
             </button>
           </div>
         </div>

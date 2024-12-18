@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "../output.css";
 import { BsUpload } from "react-icons/bs";
 import ErrorMessage from "../errorMsg";
@@ -7,19 +7,45 @@ import useHttp from "../../hooks/useHTTP";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
-function ExerciseForm() {
+function ExerciseForm({ edit = true, idToEdit = 2 }) {
   const navigate = useNavigate();
 
-  const { post, loading, error, data } = useHttp("http://localhost:3000");
+  const { post, get, patch, loading, error, data } = useHttp(
+    "http://localhost:3000"
+  );
   const [formData, setFormData] = useState({
     name: "",
     muscleGroup: "",
     description: "",
     gif: "",
   });
+
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
-
+  useEffect(() => {
+    if (edit) {
+      const fetchIngredient = async () => {
+        try {
+          const response = await get(`/exercises/${idToEdit}`, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          setFormData(() => {
+            const { musclegroup, ...rest } = response.data.exercise;
+            return {
+              ...rest,
+              muscleGroup: musclegroup,
+            };
+          });
+          console.log(response);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchIngredient();
+    }
+  }, []);
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name == "gif") {
@@ -30,7 +56,10 @@ function ExerciseForm() {
           gif: file, // Update gif in the formData
         }));
       } else {
-        alert("Please select a valid GIF file.");
+        // setErrors((prevErrors) => ({
+        //   ...prevErrors,
+        //   [name]: "Please select a valid GIF file.",
+        // }));
       }
     } else
       setFormData((prevData) => ({
@@ -53,7 +82,7 @@ function ExerciseForm() {
     const newErrors = {};
 
     Object.keys(formData).forEach((key) => {
-      if (!formData[key]) {
+      if (!formData[key] && key != "gif") {
         newErrors[key] = `${key.replace(/([A-Z])/g, " $1")} is required.`;
       }
     });
@@ -62,35 +91,59 @@ function ExerciseForm() {
       setErrors(newErrors);
       return;
     }
-
-    const gif = await handleImages(formData.gif);
-    if (gif == null) {
-      setErrors({ ...errors, gif: "Error uploading gif" });
-      return;
-    }
-    console.log(formData.gif);
-    const token = getTokenFromCookies();
-    const decodedToken = token ? jwtDecode(token) : null;
-    const userId = decodedToken ? decodedToken.user_id : null;
-    console.log(userId);
-    try {
-      const response = await post(
-        "/exercises",
-        {
-          ...formData,
-          gif,
-          trainer_id: userId,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+    if (!edit) {
+      let gif;
+      if (formData.gif) {
+        gif = await handleImages(formData.gif);
+        if (gif == null) {
+          setErrors({ ...errors, gif: "Error uploading gif" });
+          return;
         }
-      );
-      console.log(response);
-      navigate("/profile");
-    } catch (err) {
-      console.log(err);
+        console.log(formData.gif);
+      }
+
+      const token = getTokenFromCookies();
+      const decodedToken = token ? jwtDecode(token) : null;
+      const userId = decodedToken ? decodedToken.user_id : null;
+      console.log(userId);
+      try {
+        const response = await post(
+          "/exercises",
+          {
+            ...formData,
+            gif,
+            trainer_id: userId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+        navigate("/profile");
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        console.log(formData);
+        const response = await patch(
+          `/exercises/${idToEdit}`,
+          {
+            ...formData,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+        navigate("/profile");
+      } catch (err) {
+        console.log(err.response.data.message);
+      }
     }
   };
 
@@ -100,7 +153,7 @@ function ExerciseForm() {
         name="exerciseForm"
         className="border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8 min-w-lg max-w-lg rounded-3xl relative"
       >
-        <h1 className="text-3xl font-bold">New Exercise</h1>
+        <h1 className="text-3xl font-bold">{edit ? "Edit" : "New"} Exercise</h1>
         <form
           onSubmit={handleSubmit}
           className="py-6 px-10 w-full"
@@ -141,29 +194,33 @@ function ExerciseForm() {
             />
             {errors.muscleGroup && <ErrorMessage error={errors.muscleGroup} />}
           </div>
-
-          <div className="mb-6">
-            <button
-              type="button"
-              className="w-1/2 bg-primary text-sm px-3 rounded-xl py-4 flex flex-row justify-center gap-2 align-middle hover:text-textColor"
-              onClick={handleUploadButtonClick}
-            >
-              <span>
-                <BsUpload size={25} />
-              </span>
-              Upload Gif
-            </button>
-            <input
-              type="file"
-              name="gif"
-              accept="image/gif"
-              ref={fileInputRef}
-              style={{ display: "none" }}
-              onChange={handleChange}
-            />
-          </div>
-          {errors.gif && <ErrorMessage error={errors.gif} />}
-
+          {edit ? (
+            ""
+          ) : (
+            <>
+              <div className="mb-6">
+                <button
+                  type="button"
+                  className="w-1/2 bg-primary text-sm px-3 rounded-xl py-4 flex flex-row justify-center gap-2 align-middle hover:text-textColor"
+                  onClick={handleUploadButtonClick}
+                >
+                  <span>
+                    <BsUpload size={25} />
+                  </span>
+                  Upload Gif
+                </button>
+                <input
+                  type="file"
+                  name="gif"
+                  accept="image/gif"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
+                  onChange={handleChange}
+                />
+              </div>
+              {errors.gif && <ErrorMessage error={errors.gif} />}
+            </>
+          )}
           <div className="mb-6">
             <h6 className="text-xs text-left text-backGroundColor mb-2">
               Description
@@ -186,7 +243,7 @@ function ExerciseForm() {
                 type="submit"
                 className="bg-secondary w-full text-textColor text-sm rounded-xl py-4 border hover:border-secondary hover:bg-textColor hover:text-secondary"
               >
-                Add Exercise
+                {edit ? "Confirm Changes" : "Add Exercise"}
               </button>
             </div>
           </div>
