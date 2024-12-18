@@ -20,7 +20,7 @@ const app = express();
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (origin && /^http:\/\/localhost:\d+$/.test(origin)) {
+      if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
         callback(null, true); // Allow requests from localhost with any port
       } else {
         callback(new Error("Not allowed by CORS"));
