@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
@@ -13,13 +14,33 @@ import LandingPage from "./components/landingPage.jsx";
 import Banned from "./pages/Banned.jsx";
 import NotFound from "./pages/Notfound.jsx";
 import BrowseCoaches from "./pages/BrowseCoaches.jsx";
-import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
-import Tailwind from "primereact/passthrough/tailwind";
-import "primeicons/primeicons.css";
-import { PackageDashboard } from "./components/packageDashboard.jsx";
 import Footer from "./components/Footer.jsx";
 import NavBar from "./components/Navbar.jsx";
 import BrowseProtectedRoute from "./BrowseProtectedRoute.jsx";
+import { TraineeExerciseCard } from "./components/trainee/traineeExerciseCard.jsx";
+import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
+import Tailwind from "primereact/passthrough/tailwind";
+import "primeicons/primeicons.css";
+import { TraineeCurrentWrokout } from "./components/trainee/traineCurrentWorkout.jsx";
+import { TraineeMealCard } from "./components/trainee/traineeMealCard.jsx";
+import { TraineeCurrentMeals } from "./components/trainee/traineeCurrentMeals.jsx";
+import { PackageDashboard } from "./components/packageDashboard.jsx";
+import IngredientForm from "./components/coach/IngredientForm.jsx";
+import IngredientCard from "./components/coach/ingredientCard.jsx";
+import WorkoutCard from "./components/coach/workoutCard.jsx";
+import PackageForm from "./components/coach/packageForm.jsx";
+import ExerciseForm from "./components/coach/exerciseForm.jsx";
+import CreateWorkout from "./components/coach/createWorkout.jsx";
+import CreateMeal from "./components/coach/createMeal.jsx";
+import AssignWorkout from "./components/coach/assignWorkout.jsx";
+import AssignMeal from "./components/coach/assignMeal.jsx";
+import Meal from "./components/coach/mealCard.jsx";
+import { PackageCard } from "./components/packageCard.jsx";
+import { View } from "lucide-react";
+import { TraineesList } from "./components/admin/traineesList.jsx";
+import { CoachesList } from "./components/admin/coachesList.jsx";
+import { AdminStatistics } from "./components/admin/adminStatistics.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -42,7 +63,7 @@ const router = createBrowserRouter([
     path: "sign-up",
     element: (
       <ProtectedLoggedRoute>
-        <SignUpForm />
+        <SignUpForm isAdmin={0} />
       </ProtectedLoggedRoute>
     ),
   },
@@ -73,6 +94,13 @@ const router = createBrowserRouter([
           <Footer />
           </div>
         </BrowseProtectedRoute>
+    )
+  },
+  {  
+    path: "test",
+    element: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <AdminStatistics />
       </PrimeReactProvider>
     ),
   },

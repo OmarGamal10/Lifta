@@ -34,6 +34,10 @@ const createPackage = async (req, res, next) => {
   if (isNaN(Number(duration)) || Number(duration) <= 0) {
     return next(new AppError("Please provide a valid duration", 400));
   }
+
+  if (isNaN(Number(price)) || Number(price) <= 0) {
+    return next(new AppError("Please provide a valid price", 400));
+  }
   const package = await packageModel.createPackage(
     name,
     price,
@@ -50,11 +54,20 @@ const createPackage = async (req, res, next) => {
     },
   });
 };
+const deletePackage = async (req, res, next) => {
+  const { package_id } = req.body;
+  await packageModel.deletePackage(package_id);
+  res.status(200).json({
+    status: "success",
+    message: "Package deleted successfully",
+  });
+};
 
 module.exports = {
   getAllPackages: catchAsync(getAllPackages),
   getPackagesCoach: catchAsync(getPackagesCoach),
   createPackage: catchAsync(createPackage),
+  deletePackage: catchAsync(deletePackage),
 };
 
 // /packages

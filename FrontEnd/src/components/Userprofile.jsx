@@ -14,6 +14,9 @@ import { PrimeReactProvider } from "primereact/api";
 import Tailwind from "primereact/passthrough/tailwind";
 import { Package } from "lucide-react";
 import { PackageDashboard } from "./packageDashboard";
+import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
+import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
+
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -46,14 +49,19 @@ const UserProfile = ({ userId }) => {
   };
 
   const renderSideBar = () => {
-    if(userType === "Trainee") {
-      return <TraineeSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
-    }
-    else {
-      return <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
+    if (userType === "Trainee") {
+      return (
+        <TraineeSideBar
+          onSidebarClick={handleSidebarClick}
+          className="w-auto"
+        />
+      );
+    } else {
+      return (
+        <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
+      );
     }
 
-  }
   const components =  {
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
@@ -70,26 +78,33 @@ const UserProfile = ({ userId }) => {
         <SubReqDashboard user_id={userId}/>
     </PrimeReactProvider>
     ),
+    Workouts: (
+      <TraineeCurrentWrokout userId={userId} />
+    ),
+    Nutrition: (
+      <TraineeCurrentMeals userId={userId} />
+    ),
     Default: <NoDataDashboard header={activeSection + " Section"} />,
-  }
+  };
 
   // Components to render based on the active section
   const renderComponent = () => {
       return components[activeSection] || components.Default;
   };
+  
 
   return (
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
       <NavBar pref={"NotDefault"} />
       <ProfileSection userName={userName} userBio={userBio}/>
       <div className="h-[0.5px] bg-textspan "></div>
-      <div className="flex h-[960px] w-full">
+      <div className="flex h-[960px] w-full ml-4">
         {renderSideBar()}
         <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
         {/* Vertical Divider */}
         <div className="w-full">
           {/* Render Active Component */}
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center mr-4">
             {renderComponent()}
           </div>
         </div>

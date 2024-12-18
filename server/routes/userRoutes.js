@@ -9,6 +9,11 @@ const exerciseRouter = require("./exerciseRoute");
 const reviewRouter = require("./reviewRoute");
 const certificateRouter = require("./certificateRoute");
 const clientsRouter = require("./clientsRoute");
+const workoutRouter = require("./workoutRoute");
+const mealRouter = require("./mealRoute");
+const adminController = require("../controllers/adminController");
+const traineeCurrentWorkoutRouter = require("./traineeCurrentWorkoutRoute");
+const traineeCurrentMealsRouter = require("./traineeCurrentMealsRoute");
 
 //for testing without opening pgAdmin (getting all users)
 router.get("/", async (req, res, next) => {
@@ -20,6 +25,7 @@ router.get("/", async (req, res, next) => {
   });
 });
 
+//Admin routes
 router.get("/coaches", async (req, res, next) => {
   res.status(200).json({
     status: "success",
@@ -46,6 +52,8 @@ router.get("/browse", async (req, res, next) => {
     },
   });
 });
+router.delete("/:userId", adminController.deleteUserByUserId);
+
 //auth routes
 router.post("/login", authController.login);
 router.post("/signup", convertToSnakeCase, authController.signup);
@@ -60,6 +68,11 @@ router.use("/:coachId/exercises", exerciseRouter);
 router.use("/:coachId/ingredients", ingredientRouter);
 router.use("/:coachId/reviews", reviewRouter);
 router.use("/:coachId/certificates", certificateRouter);
+router.use("/:coachId/workouts", workoutRouter);
+router.use("/:nutritionistId/meals", mealRouter);
+
+router.use("/:traineeId/currentWorkout", traineeCurrentWorkoutRouter);
+router.use("/:traineeId/currentMeals", traineeCurrentMealsRouter);
 
 module.exports = router;
 

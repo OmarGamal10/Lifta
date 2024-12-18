@@ -16,6 +16,20 @@ const getExercisesCoach = async (req, res, next) => {
   });
 };
 
+const getExercisesWorkout = async (req, res, next) => {
+  const { workoutId } = req.params;
+  if (!workoutId || isNaN(workoutId)) {
+    return next(new AppError("Please provide a workout id", 400));
+  }
+  const exercises = await exerciseModel.getExercisesByWorkoutId(workoutId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      exercises,
+    },
+  });
+};
+
 const createExercise = async (req, res, next) => {
   const { name, muscle_group, gif, description, trainer_id } = req.body;
 
@@ -34,7 +48,18 @@ const createExercise = async (req, res, next) => {
   });
 };
 
+const deleteExercise = async (req, res, next) => {
+  const { exercise_id } = req.body;
+  await exerciseModel.deleteExercise(exercise_id);
+  res.status(200).json({
+    status: "success",
+    message: "Exercise deleted successfully",
+  });
+};
+
 module.exports = {
   getExercisesCoach: catchAsync(getExercisesCoach),
   createExercise: catchAsync(createExercise),
+  deleteExercise: catchAsync(deleteExercise),
+  getExercisesWorkout: catchAsync(getExercisesWorkout),
 };

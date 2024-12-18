@@ -80,8 +80,9 @@ const getPendingSubscriptionsByCoachId = async (req, res, next) => {
 };
 
 const getTraineeHasGymSubscription = async (req, res, next) => {
-  const { id:trainee_id } = req.params;
-  const hasGymSubscription = await subscriptionModel.getTraineeHasGymSubscription(trainee_id);
+  const { id: trainee_id } = req.params;
+  const hasGymSubscription =
+    await subscriptionModel.getTraineeHasGymSubscription(trainee_id);
   res.status(200).json({
     status: "success",
     data: {
@@ -91,12 +92,97 @@ const getTraineeHasGymSubscription = async (req, res, next) => {
 };
 
 const getTraineeHasNutritionSubscription = async (req, res, next) => {
-  const { id:trainee_id } = req.params;
-  const hasNutritionSubscription = await subscriptionModel.getTraineeHasNutritionSubscription(trainee_id);
+  const { id: trainee_id } = req.params;
+  const hasNutritionSubscription =
+    await subscriptionModel.getTraineeHasNutritionSubscription(trainee_id);
   res.status(200).json({
     status: "success",
     data: {
       hasNutritionSubscription,
+    },
+  });
+};
+
+const getConversations = async (req, res, next) => {
+  const id = req.params.id;
+  const type = req.params.type;
+  // i did this because maybe one trainee has more than one subscription for the same trainee
+
+  const rawConvos = await subscriptionModel.getTraineesWithActiveSubscription(
+    id,
+    type
+  );
+
+  const groupedConvos = rawConvos.reduce((acc, trainee) => {
+    if (trainee.status === "Active") {
+      const existingTrainee = acc.find(
+        (t) => t.user_id === trainee.user_id && t.status === "Active"
+      );
+      if (existingTrainee) {
+        existingTrainee.packages.push({
+          package_id: trainee.package_id,
+          name: trainee.name,
+          type: trainee.type,
+          subscription_id: trainee.subscription_id,
+          status: trainee.status,
+        });
+      } else {
+        acc.push({
+          ...trainee,
+          packages: [
+            {
+              package_id: trainee.package_id,
+              name: trainee.name,
+              type: trainee.type,
+              subscription_id: trainee.subscription_id,
+              status: trainee.status,
+            },
+          ],
+        });
+      }
+    } else {
+      acc.push({
+        ...trainee,
+        packages: [
+          {
+            package_id: trainee.package_id,
+            name: trainee.name,
+            type: trainee.type,
+            subscription_id: trainee.subscription_id,
+            status: trainee.status,
+          },
+        ],
+      });
+    }
+    return acc;
+  }, []);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      convos: groupedConvos,
+    },
+  });
+};
+
+const getSubscriptionsCountByPackageType = async (req, res, next) => {
+  const subscriptionsCount =
+    await subscriptionModel.getSubscriptionsCountByPackageType();
+  res.status(200).json({
+    status: "success",
+    data: {
+      subscriptionsCount,
+    },
+  });
+};
+
+const getActiveSubscriptionsCount = async (req, res, next) => {
+  const activeSubscriptionsCount =
+    await subscriptionModel.getActiveSubscriptionsCount();
+  res.status(200).json({
+    status: "success",
+    data: {
+      activeSubscriptionsCount,
     },
   });
 };
@@ -109,5 +195,10 @@ module.exports = {
     getPendingSubscriptionsByCoachId
   ),
   getTraineeHasGymSubscription: catchAsync(getTraineeHasGymSubscription),
-  getTraineeHasNutritionSubscription: catchAsync(getTraineeHasNutritionSubscription),
+  getTraineeHasNutritionSubscription: catchAsync(
+    getTraineeHasNutritionSubscription
+  ),
+  getConversations: catchAsync(getConversations),
+  getSubscriptionsCountByPackageType: catchAsync(getSubscriptionsCountByPackageType),
+  getActiveSubscriptionsCount: catchAsync(getActiveSubscriptionsCount),
 };

@@ -2,7 +2,7 @@ const db = require("../db");
 const AppError = require("../utils/AppError");
 
 exports.getExercisesByCoachId = async (coachId) => {
-  const query = `SELECT name,description,muscle_group AS muscleGroup, gif_path AS gif FROM lifta_schema.exercise WHERE trainer_id = $1`;
+  const query = `SELECT exercise_id AS id,name,description,muscle_group AS muscleGroup, gif_path AS gif FROM lifta_schema.exercise WHERE trainer_id = $1`;
   return (await db.query(query, [coachId])).rows;
 };
 
@@ -17,4 +17,14 @@ exports.createExercise = async (...values) => {
     }
     throw err;
   }
+};
+
+exports.deleteExercise = async (exerciseId) => {
+  const query = "DELETE FROM lifta_schema.exercise WHERE exercise_id = $1 ";
+  return (await db.query(query, [exerciseId])).rows;
+};
+
+exports.getExercisesByWorkoutId = async (workoutId) => {
+  const query = `SELECT e.exercise_id  , e.name,e.description,e.muscle_group AS muscleGroup, e.gif_path AS gif, we.sets, we.reps FROM lifta_schema.exercise e join lifta_schema.workout_exercise we on we.exercise_id =e.exercise_id WHERE we.workout_id = $1`;
+  return (await db.query(query, [workoutId])).rows;
 };

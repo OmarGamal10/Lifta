@@ -4,8 +4,10 @@ import Form1 from "./mainForm";
 import Form2Trainee from "./trainee/formTrainee";
 import Form2Coach from "./coach/formCoach";
 import UserTypeForm from "./userTypeForm";
+import AdminUserTypeForm from "./admin/adminUserTypeForm";
+import AdminForm from "./admin/adminForm";
 
-function SignUpForm() {
+function SignUpForm(probs) {
   const [userType, setUserType] = useState("");
   const [curForm, setCurForm] = useState(1);
   const [form1Data, setForm1Data] = useState({
@@ -16,8 +18,9 @@ function SignUpForm() {
     phoneNumber: "",
     bio: "",
     gender: "M",
-    birthdate: "",
+    birthDate: "",
     type: "",
+    photo: "",
   });
 
   const [traineeData, setTraineeData] = useState({
@@ -32,10 +35,19 @@ function SignUpForm() {
     experienceYears: "",
     clientLimit: "",
   });
+
+  const [adminData, setAdminData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
+
   const [certData, setCertData] = useState({
     title: "",
     dateIssued: "",
     description: "",
+    certificatePhoto: "",
   });
 
   return (
@@ -44,14 +56,28 @@ function SignUpForm() {
         ""
       ) : (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <UserTypeForm setType={setUserType} setFormData={setForm1Data} />
+          {probs.isAdmin == 0 ? (
+            <UserTypeForm setType={setUserType} setFormData={setForm1Data} />
+          ) : (
+            <AdminUserTypeForm
+              setType={setUserType}
+              setFormData={setForm1Data}
+            />
+          )}
         </div>
       )}
-      {curForm == 1 && (
+      {curForm == 1 && userType != "Admin" && (
         <Form1
           formData={form1Data}
           setFormData={setForm1Data}
           toNext={setCurForm}
+        />
+      )}
+
+      {curForm == 1 && userType == "Admin" && (
+        <AdminForm
+          formData={adminData}
+          setFormData={setAdminData}
         />
       )}
 

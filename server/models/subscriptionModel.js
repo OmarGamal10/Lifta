@@ -15,8 +15,7 @@ exports.getDurationBySubscriptionId = async (subscription_id) => {
 
 exports.createSubscription = async (trainee_id, package_id, status) => {
   const query = `INSERT INTO lifta_schema.subscription (trainee_id, package_id ,status) VALUES ($1, $2, $3) RETURNING *;`;
-  return (await db.query(query, [trainee_id, package_id, status]))
-    .rows[0];
+  return (await db.query(query, [trainee_id, package_id, status])).rows[0];
 };
 
 exports.subscriptionResponse = async (
@@ -46,6 +45,7 @@ exports.getTraineeHasGymSubscription = async (traineeId) => {
                  FROM lifta_schema.subscription
                  JOIN lifta_schema.package ON subscription.package_id = package.package_id
                  WHERE subscription.trainee_id = $1 AND type IN ('Gym', 'Both') AND status = 'Active';`;
+
   return (await db.query(query, [traineeId])).rows;
 };
 
@@ -86,3 +86,71 @@ exports.getTraineePackageTypeRequest = async (subscription_id) => {
     return {type, trainee_id};
 }
 
+exports.getTraineesWithActiveSubscription = async (Id, type) => {
+  const getTrainersQuery = `
+    SELECT 
+      users.first_name, 
+      users.last_name,
+      users.user_id,
+      package.package_id,
+      package.name, 
+      package.type,
+      subscription.subscription_id,
+      subscription.status,
+      (
+        SELECT content 
+        FROM lifta_schema.message 
+        WHERE 
+        (subscription_id = subscription.subscription_id)
+        AND (sender_id = users.user_id AND receiver_id = $1) 
+        OR (sender_id = $1 AND receiver_id = users.user_id) 
+        ORDER BY time DESC LIMIT 1
+      ) AS last_message
+    FROM lifta_schema.subscription 
+    JOIN lifta_schema.package ON subscription.package_id = package.package_id 
+    JOIN lifta_schema.users ON package.trainer_id = users.user_id
+    WHERE subscription.trainee_id = $1 AND subscription.status = 'Active' or subscription.status='Expired'
+    order by subscription.status, users.user_id; `;
+
+  const getTraineesQuery = `
+    SELECT 
+      users.first_name, 
+      users.last_name,
+      users.user_id,
+      package.package_id,
+      package.name, 
+      package.type,
+      subscription.subscription_id,
+      subscription.status,
+      (
+        SELECT content 
+        FROM lifta_schema.message 
+        WHERE 
+        (subscription_id = subscription.subscription_id)
+        AND (sender_id = users.user_id AND receiver_id = $1) 
+        OR (sender_id = $1 AND receiver_id = users.user_id) 
+        ORDER BY time DESC LIMIT 1
+      ) AS last_message
+    FROM lifta_schema.subscription 
+    JOIN lifta_schema.package ON subscription.package_id = package.package_id 
+    JOIN lifta_schema.users ON subscription.trainee_id = users.user_id
+    WHERE package.trainer_id = $1 AND subscription.status = 'Active' or subscription.status='Expired'
+    ORDER BY subscription.status , users.user_id;
+  `;
+
+  return type === "Trainer"
+    ? (await db.query(getTraineesQuery, [Id])).rows
+    : (await db.query(getTrainersQuery, [Id])).rows;
+};
+
+exports.getSubscriptionsCountByPackageType = async () => {
+  const query = `SELECT p.type, COUNT(s.subscription_id) AS subscriptions from lifta_schema.subscription s 
+RIGHT JOIN lifta_schema.package p ON p.package_id = s.package_id
+GROUP BY p.type;`;
+  return (await db.query(query)).rows;
+};
+
+exports.getActiveSubscriptionsCount = async () => {
+  const query = `SELECT COUNT(*) FROM lifta_schema.subscription WHERE status = 'Active';`;
+  return (await db.query(query)).rows;
+};
