@@ -61,7 +61,7 @@ const UserProfile = ({ userId }) => {
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
     }
-  }
+
   const components =  {
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>

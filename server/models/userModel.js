@@ -132,7 +132,6 @@ HAVING c.client_limit > COUNT(DISTINCT CASE WHEN t.coach_id = c.trainer_id OR t.
 `;
 
   return (await db.query(query)).rows;
-};
 exports.deleteUserByUserId = async (userId) => {
   const query = "DELETE FROM lifta_schema.users WHERE user_id = $1;";
   return (await db.query(query, [userId])).rows;

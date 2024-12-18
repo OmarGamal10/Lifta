@@ -94,7 +94,6 @@ const router = createBrowserRouter([
           <Footer />
           </div>
         </BrowseProtectedRoute>
-        </PrimeReactProvider>
     )
   },
   {  
