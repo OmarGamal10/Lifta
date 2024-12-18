@@ -69,6 +69,8 @@ exports.AddUser = async (values) => {
     }
     throw err;
   }
+
+  return id;
 };
 
 const addTrainee = async (values, id) => {
@@ -90,7 +92,46 @@ const addTrainer = async (values, id) => {
   await db.query(query, trainerValues);
   await db.query(query2, certification);
 };
+exports.assignToTrainer = async (s_id) => {
+  const query = `
+    UPDATE lifta_schema.trainee t
+    SET 
+        coach_id = CASE 
+            WHEN p.type IN ('Gym', 'Both') THEN p.trainer_id 
+            ELSE coach_id 
+        END,
+        nutritionist_id = CASE 
+            WHEN p.type IN ('Nutrition', 'Both') THEN p.trainer_id 
+            ELSE nutritionist_id 
+        END
+    FROM lifta_schema.subscription s
+    JOIN lifta_schema.package p
+    ON s.package_id = p.package_id
+    WHERE t.trainee_id = s.trainee_id
+    AND s.subscription_id = $1;`;
 
+  const value = [s_id];
+
+  await db.query(query, value);
+};
+
+exports.getAvailableCoaches = async () => {
+  const query = `SELECT c.trainer_id, 
+       u.first_name, 
+       u.last_name, 
+       c.experience_years, 
+       c.rating,
+	   COUNT(p.package_id) AS package_count
+FROM lifta_schema.trainer c
+JOIN lifta_schema.users u ON u.user_id = c.trainer_id
+JOIN lifta_schema.package p ON p.trainer_id = c.trainer_id
+LEFT JOIN lifta_schema.trainee t 
+    ON t.coach_id = c.trainer_id OR t.nutritionist_id = c.trainer_id
+GROUP BY c.trainer_id, u.first_name, u.last_name, c.experience_years, c.rating, c.client_limit
+HAVING c.client_limit > COUNT(DISTINCT CASE WHEN t.coach_id = c.trainer_id OR t.nutritionist_id = c.trainer_id THEN t.trainee_id END);
+`;
+
+  return (await db.query(query)).rows;
 exports.deleteUserByUserId = async (userId) => {
   const query = "DELETE FROM lifta_schema.users WHERE user_id = $1;";
   return (await db.query(query, [userId])).rows;
