@@ -58,7 +58,6 @@ function CreateMeal() {
 
       updateNutritionFacts(totalNutrition);
     };
-
     calculateTotalNutrition();
   }, [choosedIngredients]);
 

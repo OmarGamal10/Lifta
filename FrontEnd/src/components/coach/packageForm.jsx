@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../output.css";
 import ErrorMessage from "../errorMsg";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import useHttp from "../../hooks/useHTTP";
-function PackageForm() {
+function PackageForm({ edit = true, idToEdit = 11 }) {
   const navigate = useNavigate();
-  const { post, loading, error, data } = useHttp("http://localhost:3000");
+  const { post, get, patch, loading, error, data } = useHttp(
+    "http://localhost:3000"
+  );
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -16,6 +18,26 @@ function PackageForm() {
     type: [],
   });
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (edit) {
+      const fetchIngredient = async () => {
+        try {
+          const response = await get(`/packages/${idToEdit}`, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          setFormData((prev) => ({
+            ...response.data.package,
+          }));
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      fetchIngredient();
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -73,67 +95,97 @@ function PackageForm() {
       setErrors(newErrors);
       return;
     }
-
-    const token = getTokenFromCookies();
-    const decodedToken = token ? jwtDecode(token) : null;
-    const userId = decodedToken ? decodedToken.user_id : null;
-    console.log(userId);
-    const data = { ...formData };
-    if (data.type.length == 2) data.type = "Both";
-    else {
-      data.type = data.type[0];
-      data.type = data.type[0].toUpperCase() + data.type.slice(1);
-    }
-    console.log(formData);
-    try {
-      const response = await post(
-        "/packages",
-        {
-          ...data,
-          trainer_id: userId,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+    if (!edit) {
+      const token = getTokenFromCookies();
+      const decodedToken = token ? jwtDecode(token) : null;
+      const userId = decodedToken ? decodedToken.user_id : null;
+      console.log(userId);
+      const data = { ...formData };
+      if (data.type.length == 2) data.type = "Both";
+      else {
+        data.type = data.type[0];
+        data.type = data.type[0].toUpperCase() + data.type.slice(1);
+      }
+      console.log(formData);
+      try {
+        const response = await post(
+          "/packages",
+          {
+            ...data,
+            trainer_id: userId,
           },
-        }
-      );
-      console.log(response);
-      navigate("/profile");
-    } catch (err) {
-      console.log(err);
-      setErrors({ submit: err.response.data.message });
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+        navigate("/profile");
+      } catch (err) {
+        console.log(err);
+        setErrors({ submit: err.response.data.message });
+      }
+    } else {
+      try {
+        const response = await patch(
+          `/packages/${idToEdit}`,
+          {
+            ...formData,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+        navigate("/profile");
+      } catch (err) {
+        console.log(err.response.data.message);
+        setErrors({ submit: err.response.data.message });
+      }
     }
   };
 
   return (
     <div
       name="pkgForm"
-      className=" border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8  max-w-lg rounded-3xl relative"
+      className={` border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8  ${
+        edit ? "max-w-sm" : "max-w-lg"
+      } rounded-3xl relative`}
     >
-      <h1 className="text-3xl font-bold">New Package</h1>
+      <h1 className="text-3xl font-bold">{edit ? "Edit" : "New"} Package</h1>
       <form
         onSubmit={handleSubmit}
         className=" py-6 px-10 w-full"
         autoComplete="off"
       >
-        <div className=" mb-6">
-          <h6 className="text-xs text-left text-backGroundColor mb-2">Name</h6>
-          <input
-            id="name-input"
-            name="name"
-            className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
-            type="text"
-            placeholder="Enter Name"
-            maxLength="40"
-            onChange={handleChange}
-            value={formData.name}
-            autoComplete="off"
-          />
+        {edit ? null : (
+          <div className=" mb-6">
+            <h6 className="text-xs text-left text-backGroundColor mb-2">
+              Name
+            </h6>
+            <input
+              id="name-input"
+              name="name"
+              className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
+              type="text"
+              placeholder="Enter Name"
+              maxLength="40"
+              onChange={handleChange}
+              value={formData.name}
+              autoComplete="off"
+            />
 
-          {errors.name && <ErrorMessage error={errors.name} />}
-        </div>
-        <div className="flex flex-row justify-between space-x-12">
+            {errors.name && <ErrorMessage error={errors.name} />}
+          </div>
+        )}
+        <div
+          className={`flex flex-row ${
+            edit ? "justify-center" : "justify-between"
+          } space-x-12`}
+        >
           <div className="flex flex-col w-1/2">
             <div className=" mb-6">
               <h6 className="text-xs text-left text-backGroundColor mb-2">
@@ -172,78 +224,81 @@ function PackageForm() {
               {errors.duration && <ErrorMessage error={errors.duration} />}
             </div>
           </div>
-          <div className="flex flex-col w-1/2 mt-12">
-            <h6 className="text-xs text-left text-backGroundColor mb-2">
-              Type
-            </h6>
-            <div className="relative">
-              <div className="flex flex-col">
-                <div className="flex items-center mb-4">
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="type"
-                      value="gym"
-                      checked={formData.type.includes("gym")}
-                      onChange={handleChange}
-                      className="appearance-none w-5 h-5 border-2 border-gray-400 rounded-md 
+          {edit ? null : (
+            <div className="flex flex-col w-1/2 mt-12">
+              <h6 className="text-xs text-left text-backGroundColor mb-2">
+                Type
+              </h6>
+              <div className="relative">
+                <div className="flex flex-col">
+                  <div className="flex items-center mb-4">
+                    <label className="flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="type"
+                        value="gym"
+                        checked={formData.type.includes("gym")}
+                        onChange={handleChange}
+                        className="appearance-none w-5 h-5 border-2 border-gray-400 rounded-md 
                         checked:bg-secondary checked:border-secondary 
                         focus:outline-none focus:ring-2 focus:ring-secondary 
                         transition duration-200 ease-in-out"
-                    />
-                    <span className="ml-3 text-sm text-backGroundColor">
-                      Gym
-                    </span>
-                  </label>
-                </div>
-                <div className="flex items-center mb-4">
-                  <label className="flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      name="type"
-                      value="nutrition"
-                      checked={formData.type.includes("nutrition")}
-                      onChange={handleChange}
-                      className="appearance-none w-5 h-5 border-2 border-gray-400 rounded-md 
+                      />
+                      <span className="ml-3 text-sm text-backGroundColor">
+                        Gym
+                      </span>
+                    </label>
+                  </div>
+                  <div className="flex items-center mb-4">
+                    <label className="flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        name="type"
+                        value="nutrition"
+                        checked={formData.type.includes("nutrition")}
+                        onChange={handleChange}
+                        className="appearance-none w-5 h-5 border-2 border-gray-400 rounded-md 
                         checked:bg-secondary checked:border-secondary 
                         focus:outline-none focus:ring-2 focus:ring-secondary 
                         transition duration-200 ease-in-out"
-                    />
-                    <span className="ml-3 text-sm text-backGroundColor">
-                      Nutrition
-                    </span>
-                  </label>
+                      />
+                      <span className="ml-3 text-sm text-backGroundColor">
+                        Nutrition
+                      </span>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div className="absolute left-0 w-full">
-                {errors.type && <ErrorMessage error={errors.type} />}
+                <div className="absolute left-0 w-full">
+                  {errors.type && <ErrorMessage error={errors.type} />}
+                </div>
               </div>
             </div>
+          )}
+        </div>
+        {edit ? null : (
+          <div className=" ">
+            <h6 className="text-xs text-left text-backGroundColor mb-2">
+              Description
+            </h6>
+            <textarea
+              id="description"
+              name="description"
+              className="bg-textColor border px-4 w-full h-24 rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left resize-none"
+              placeholder="About Package"
+              maxLength="250"
+              onChange={handleChange}
+              value={formData.description}
+              autoComplete="off"
+            ></textarea>
           </div>
-        </div>
-        <div className=" ">
-          <h6 className="text-xs text-left text-backGroundColor mb-2">
-            Description
-          </h6>
-          <textarea
-            id="description"
-            name="description"
-            className="bg-textColor border px-4 w-full h-24 rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left resize-none"
-            placeholder="About Package"
-            maxLength="250"
-            onChange={handleChange}
-            value={formData.description}
-            autoComplete="off"
-          ></textarea>
-        </div>
+        )}
         {errors.description && <ErrorMessage error={errors.description} />}
-
         <div className="flex justify-center mt-6">
           <button
             type="submit"
             className=" w-1/2 bg-secondary text-textColor text-sm px-3 rounded-xl  py-4 flex flex-row justify-center gap-2 align-middle border hover:border-secondary hover:bg-textColor hover:text-secondary"
           >
-            Add Package
+            {edit ? "Confirm Changes" : "  Add Package"}
           </button>
         </div>
         {errors.submit && <ErrorMessage error={errors.submit} />}

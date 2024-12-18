@@ -3,6 +3,7 @@ import { React } from "react";
 import IngForm from "./components/coach/IngredientForm.jsx";
 import PkgForm from "./components/coach/packageForm.jsx";
 import ExerciseForm from "./components/coach/exerciseForm.jsx";
+
 import UserProfile from "./components/Userprofile.jsx"
 import Form from "./components/mainForm";
 import FormTrainee from "./components/trainee/formTrainee";
@@ -23,13 +24,14 @@ import { SubscriptionRequestCard } from "./components/coach/subscriptionRequestC
 import { SubReqDashboard } from "./components/coach/subReqDashboard.jsx";
 import { TraineesList } from "./components/admin/traineesList.jsx";
 import { CoachesList } from "./components/admin/coachesList.jsx";
+import BrowseCoaches from "./pages/BrowseCoaches.jsx";
 import ChatLayout from "./components/chat/ChatLayout.jsx";
 
 function App() {
   return (
     <div>
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <PackageDashboard />
+        <LandingPage />
       </PrimeReactProvider>
     </div>
   );

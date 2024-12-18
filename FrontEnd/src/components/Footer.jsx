@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { TbSalad } from "react-icons/tb";
 import { GiBiceps } from "react-icons/gi";
 import { GiWeightLiftingUp } from "react-icons/gi";
+import footerBackground from "../assets/FooterImage.png"
 
 const Footer = () => {
   return (
@@ -47,10 +48,9 @@ const Footer = () => {
       <div
         className="w-full h-72 bg-cover bg-center flex items-center justify-center"
         style={{
-          backgroundImage: "url('src/assets/FooterImage.png')",
+          backgroundImage:`url(${footerBackground})`,
         }}
       >
-        {/* You can add more content here if needed */}
       </div>
     </footer>
   );
