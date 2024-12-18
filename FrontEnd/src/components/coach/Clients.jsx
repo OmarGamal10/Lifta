@@ -11,7 +11,7 @@ const Clients = ({ userId }) => {
   const clientsPerPage = 4;
 
   const { get } = useHttp("http://localhost:3000");
-
+  const { patch } = useHttp("http://localhost:3000");
   useEffect(() => {
     const loadClients = async () => {
       setLoading(true); // Show loader when API call starts
@@ -34,6 +34,21 @@ const Clients = ({ userId }) => {
   const currentClients = clients.slice(indexOfFirstClient, indexOfLastClient);
 
   const handleRemove = (trainee_id, package_id) => {
+    
+    const RemoveClient = async () => {
+      setLoading(true); // Show loader when API call starts
+      try {
+        const response = await patch(`/users/${userId}/clients/${trainee_id}/${package_id}`, {
+          data: {},
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false); // Hide loader after API call finishes
+      }
+    }
+    
+    RemoveClient();
     setClients(
       clients.filter(
         (client) => client.trainee_id !== trainee_id || client.package_id !== package_id
