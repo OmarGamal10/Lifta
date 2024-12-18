@@ -16,6 +16,21 @@ const getExercisesCoach = async (req, res, next) => {
   });
 };
 
+const getExercise = async (req, res, next) => {
+  const { exId } = req.params;
+  if (!exId || isNaN(exId)) {
+    return next(new AppError("Please provide a exercise id", 400));
+  }
+  const exercise = await exerciseModel.getExerciseById(exId);
+  console.log(exercise);
+  res.status(200).json({
+    status: "success",
+    data: {
+      exercise,
+    },
+  });
+};
+
 const getExercisesWorkout = async (req, res, next) => {
   const { workoutId } = req.params;
   if (!workoutId || isNaN(workoutId)) {
@@ -48,6 +63,28 @@ const createExercise = async (req, res, next) => {
   });
 };
 
+const updateExercise = async (req, res, next) => {
+  const { exId } = req.params;
+  const { name, muscle_group, description } = req.body;
+
+  if (!exId || isNaN(exId)) {
+    return next(new AppError("Please provide a exercise id", 400));
+  }
+
+  const exercise = await exerciseModel.updateExercise(
+    name,
+    muscle_group,
+    description,
+    exId
+  );
+
+  res.status(200).json({
+    status: "success",
+    message: "Exercise updated successfully",
+    data: { exercise },
+  });
+};
+
 const deleteExercise = async (req, res, next) => {
   const { exercise_id } = req.body;
   await exerciseModel.deleteExercise(exercise_id);
@@ -62,4 +99,6 @@ module.exports = {
   createExercise: catchAsync(createExercise),
   deleteExercise: catchAsync(deleteExercise),
   getExercisesWorkout: catchAsync(getExercisesWorkout),
+  getExercise: catchAsync(getExercise),
+  updateExercise: catchAsync(updateExercise),
 };
