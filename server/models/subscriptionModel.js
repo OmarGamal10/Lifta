@@ -43,7 +43,7 @@ exports.getTraineeHasGymSubscription = async (traineeId) => {
   const query = `SELECT 1
                 FROM lifta_schema.subscription
                 JOIN lifta_schema.package ON subscription.package_id = package.package_id
-                WHERE subscription.trainee_id = $1 AND type = 'Gym' AND (status = 'Pending' OR status = 'Active');`;
+                WHERE subscription.trainee_id = $1 AND (type = 'Gym' OR type = 'Both') AND (status = 'Pending' OR status = 'Active');`;
   return (await db.query(query, [traineeId])).rows;
 };
 
@@ -51,7 +51,7 @@ exports.getTraineeHasNutritionSubscription = async (traineeId) => {
   const query = `SELECT 1
                 FROM lifta_schema.subscription
                 JOIN lifta_schema.package ON subscription.package_id = package.package_id
-                WHERE subscription.trainee_id = $1 AND type = 'Nutrition' AND (status = 'Pending' OR status = 'Active');`;
+                WHERE subscription.trainee_id = $1 AND (type = 'Nutrition' OR type = 'Both') AND (status = 'Pending' OR status = 'Active');`;
   return (await db.query(query, [traineeId])).rows;
 };
 
@@ -110,4 +110,16 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
   return type === "Trainer"
     ? (await db.query(getTraineesQuery, [Id])).rows
     : (await db.query(getTrainersQuery, [Id])).rows;
+};
+
+exports.getSubscriptionsCountByPackageType = async () => {
+  const query = `SELECT p.type, COUNT(s.subscription_id) AS subscriptions from lifta_schema.subscription s 
+RIGHT JOIN lifta_schema.package p ON p.package_id = s.package_id
+GROUP BY p.type;`;
+  return (await db.query(query)).rows;
+};
+
+exports.getActiveSubscriptionsCount = async () => {
+  const query = `SELECT COUNT(*) FROM lifta_schema.subscription WHERE status = 'Active';`;
+  return (await db.query(query)).rows;
 };
