@@ -13,7 +13,6 @@ import ProfileSection from "./components/Profilesection.jsx";
 import LandingPage from "./components/landingPage.jsx";
 import Banned from "./pages/Banned.jsx";
 import NotFound from "./pages/Notfound.jsx";
-
 import { TraineeExerciseCard } from "./components/trainee/traineeExerciseCard.jsx";
 import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
 import Tailwind from "primereact/passthrough/tailwind";
@@ -34,6 +33,9 @@ import AssignMeal from "./components/coach/assignMeal.jsx";
 import Meal from "./components/coach/mealCard.jsx";
 import { PackageCard } from "./components/packageCard.jsx";
 import { View } from "lucide-react";
+import { TraineesList } from "./components/admin/traineesList.jsx";
+import { CoachesList } from "./components/admin/coachesList.jsx";
+import { AdminStatistics } from "./components/admin/adminStatistics.jsx";
 
 const router = createBrowserRouter([
   {
@@ -56,7 +58,7 @@ const router = createBrowserRouter([
     path: "sign-up",
     element: (
       <ProtectedLoggedRoute>
-        <SignUpForm />
+        <SignUpForm isAdmin={0} />
       </ProtectedLoggedRoute>
     ),
   },
@@ -72,9 +74,7 @@ const router = createBrowserRouter([
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <ProtectedRoute>
-          <TraineeCurrentWrokout />
-        </ProtectedRoute>
+        <AdminStatistics />
       </PrimeReactProvider>
     ),
   },
