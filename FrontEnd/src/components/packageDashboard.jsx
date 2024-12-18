@@ -12,57 +12,90 @@ export function PackageDashboard() {
   const [packages, setPackages] = useState([]);
   const [hasGymSub, setHasGymSub] = useState(false);
   const [hasNutSub, setHasNutSub] = useState(false);
-  const [who, setWho] = useState();
+  const [who, setWho] = useState(0);
   const [traineeId, setTraineeId] = useState("");
 
   const { coach_id } = useParams(); // Get the coachId from URL params
 
   useEffect(() => {
-    
-    const fetchData = async () => {
+    const getCookie = (name) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    };
+  
+    const decodeJwt = (token) => {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    };
+  
+    const fetchPackages = async (coachId) => {
       try {
-        const res = await httpGet("/users/checkAuth");
-        const coachId = (res.userType === "Trainer")? res.userId: coach_id;
-        const traineeId = (res.userType === "Trainer")? null: res.userId;
-        if(res.userType === "Trainer") setWho(0);
-        else setWho(1);
         const response = await httpGet(`/users/${coachId}/packages`, {
           headers: { "Cache-Control": "no-cache" },
         });
         console.log(response);
         setPackages(response.data.packages);
       } catch (err) {
-        console.log(err);
-      }
-
-      if (who === "Trainer" && traineeId) {
-        try {
-          const gymResponse = await httpGet(
-            `/subscriptions/hasGymSubscription/${traineeId}`,
-            { headers: { "Cache-Control": "no-cache" } }
-          );
-          console.log(gymResponse.data);
-          setHasGymSub(gymResponse.data.hasGymSubscription.length === 1);
-        } catch (err) {
-          console.log(err);
-        }
-
-        try {
-          const nutritionResponse = await httpGet(
-            `/subscriptions/hasNutritionSubscription/${traineeId}`,
-            { headers: { "Cache-Control": "no-cache" } }
-          );
-          console.log(nutritionResponse.data);
-          setHasNutSub(nutritionResponse.data.hasNutritionSubscription.length === 1);
-        } catch (err) {
-          console.log(err);
-        }
+        console.error("Error fetching packages:", err);
       }
     };
-
+  
+    const fetchSubscriptions = async (traineeId) => {
+      try {
+        const gymResponse = await httpGet(
+          `/subscriptions/hasGymSubscription/${traineeId}`,
+          { headers: { "Cache-Control": "no-cache" } }
+        );
+        console.log(gymResponse.data);
+        setHasGymSub(gymResponse.data.hasGymSubscription.length === 1);
+  
+        const nutritionResponse = await httpGet(
+          `/subscriptions/hasNutritionSubscription/${traineeId}`,
+          { headers: { "Cache-Control": "no-cache" } }
+        );
+        console.log(nutritionResponse.data);
+        setHasNutSub(nutritionResponse.data.hasNutritionSubscription.length === 1);
+      } catch (err) {
+        console.error("Error fetching subscriptions:", err);
+      }
+    };
+  
+    const fetchData = async () => {
+      try {
+        const jwtToken = getCookie("jwt");
+        if (!jwtToken) {
+          throw new Error("JWT token not found");
+        }
+  
+        const decoded = decodeJwt(jwtToken);
+        const isTrainer = decoded.type === 'Trainer';
+        const coachId = isTrainer ? decoded.user_id : coach_id;
+        const traineeId = isTrainer ? null : decoded.user_id;
+  
+        setWho(isTrainer ? 0 : 1);
+  
+        await fetchPackages(coachId);
+  
+        if (!isTrainer && traineeId) {
+          await fetchSubscriptions(traineeId);
+        }
+      } catch (err) {
+        console.error("Error during fetchData:", err);
+      }
+    };
+  
     fetchData();
-  }, []); // Add dependencies to avoid stale closure
-
+  }, [hasGymSub, hasNutSub]);  //To be corrected
+  
   if (loading) {
     return <Loader />;
   }
