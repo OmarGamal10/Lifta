@@ -1,5 +1,6 @@
 const { get } = require("lodash");
 const db = require("../db");
+const packageModel = require("./packageModel");
 const AppError = require("../utils/AppError");
 
 exports.getAllSubscriptions = async () => {
@@ -44,14 +45,44 @@ exports.getTraineeHasGymSubscription = async (traineeId) => {
   const query = `SELECT 1
                  FROM lifta_schema.subscription
                  JOIN lifta_schema.package ON subscription.package_id = package.package_id
-                 WHERE subscription.trainee_id = $1 AND type = 'Gym' AND (status = 'Pending' OR status = 'Active');`;
+                 WHERE subscription.trainee_id = $1 AND type IN ('Gym', 'Both') AND status = 'Active';`;
   return (await db.query(query, [traineeId])).rows;
 };
 
 exports.getTraineeHasNutritionSubscription = async (traineeId) => {
   const query = `SELECT 1
                  FROM lifta_schema.subscription
-                 JOIN lifta_schema.package ON subscription.package_id = package.package_id
-                 WHERE subscription.trainee_id = $1 AND type = 'Nutrition' AND (status = 'Pending' OR status = 'Active');`;
+                 JOIN lifta_schema.package
+                 ON subscription.package_id = package.package_id
+                 WHERE subscription.trainee_id = $1
+                 AND type IN ('Nutrition', 'Both')
+                 AND status = 'Active';`;
   return (await db.query(query, [traineeId])).rows;
 };
+exports.deleteAllPendingRequests = async (subscription_id) => {
+  // Retrieve the type and trainee_id associated with the subscription
+  const { type, trainee_id } = await this.getTraineePackageTypeRequest(subscription_id);
+  const query1 = `SELECT package_id FROM lifta_schema.package WHERE type IN ('Both', $1);`;
+  const packages = (await db.query(query1, [type])).rows.map(row => row.package_id); // Extract package_ids
+
+  // Query to delete subscriptions
+  const query = `
+    DELETE FROM lifta_schema.subscription
+    WHERE status = 'Pending' AND trainee_id = $1 AND package_id = ANY($2::int[]);
+  `;
+  await db.query(query, [trainee_id, packages]);
+};
+
+
+exports.getTraineePackageTypeRequest = async (subscription_id) => {
+  const query1 = `SELECT s.trainee_id, p1.type
+   FROM lifta_schema.subscription s 
+   JOIN lifta_schema.package p1 
+   ON s.package_id = p1.package_id 
+   WHERE s.subscription_id = $1;`;
+  const result1 = await db.query(query1, [subscription_id]);
+    const type = result1.rows[0].type;
+    const trainee_id = result1.rows[0].trainee_id;
+    return {type, trainee_id};
+}
+
