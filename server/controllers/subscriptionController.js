@@ -159,6 +159,28 @@ const getConversations = async (req, res, next) => {
   });
 };
 
+const getSubscriptionsCountByPackageType = async (req, res, next) => {
+  const subscriptionsCount =
+    await subscriptionModel.getSubscriptionsCountByPackageType();
+  res.status(200).json({
+    status: "success",
+    data: {
+      subscriptionsCount,
+    },
+  });
+};
+
+const getActiveSubscriptionsCount = async (req, res, next) => {
+  const activeSubscriptionsCount =
+    await subscriptionModel.getActiveSubscriptionsCount();
+  res.status(200).json({
+    status: "success",
+    data: {
+      activeSubscriptionsCount,
+    },
+  });
+};
+
 module.exports = {
   getAllSubscriptions: catchAsync(getAllSubscriptions),
   createInitialSubscription: catchAsync(createInitialSubscription),
@@ -171,4 +193,6 @@ module.exports = {
     getTraineeHasNutritionSubscription
   ),
   getConversations: catchAsync(getConversations),
+  getSubscriptionsCountByPackageType: catchAsync(getSubscriptionsCountByPackageType),
+  getActiveSubscriptionsCount: catchAsync(getActiveSubscriptionsCount),
 };

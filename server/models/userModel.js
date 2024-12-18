@@ -7,14 +7,18 @@ exports.getAllUsers = async () => {
 };
 
 exports.getAllTrainees = async () => {
-  const query =
-    "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainee ON user_id = trainee_id";
+  const query = `SELECT u.user_id,u.first_name, u.last_name,u.email,u.phone_number,u.gender,t.height,t.weight,t.workout_preferences, COUNT(s.subscription_id) as subscriptions FROM lifta_schema.users u
+JOIN lifta_schema.trainee t ON user_id = trainee_id
+LEFT JOIN lifta_schema.subscription s ON s.trainee_id = t.trainee_id GROUP BY u.user_id,t.trainee_id;`;
   return (await db.query(query)).rows;
 };
 
 exports.getAllCoaches = async () => {
-  const query =
-    "SELECT * FROM lifta_schema.users INNER JOIN lifta_schema.trainer ON user_id = trainer_id";
+  const query = `SELECT u.user_id,u.first_name, u.last_name,u.email,u.phone_number,u.gender,t.experience_years,t.rating, COUNT(s.subscription_id) as subscriptions FROM lifta_schema.users u
+JOIN lifta_schema.trainer t ON user_id = trainer_id
+LEFT JOIN lifta_schema.package p ON p.trainer_id = t.trainer_id
+LEFT JOIN lifta_schema.subscription s ON p.package_id = s.package_id
+GROUP BY u.user_id,t.trainer_id`;
   return (await db.query(query)).rows;
 };
 
@@ -85,4 +89,9 @@ const addTrainer = async (values, id) => {
     "INSERT INTO lifta_schema.certificate (trainer_id, title,photo,description,date_issued) VALUES ($1, $2, $3, $4, $5)";
   await db.query(query, trainerValues);
   await db.query(query2, certification);
+};
+
+exports.deleteUserByUserId = async (userId) => {
+  const query = "DELETE FROM lifta_schema.users WHERE user_id = $1;";
+  return (await db.query(query, [userId])).rows;
 };
