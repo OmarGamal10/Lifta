@@ -17,6 +17,14 @@ const getAllClients = async (req, res, next) => {
         });
 };
 
+const removeClient = async (req, res, next) => {
+    const { traineeId, packageId } = req.params;
+    const dummy = await coach.removeClient(traineeId, packageId);
+    res.status(200).json({
+        status: "success",
+    })
+}
 module.exports = {
     getAllClients: catchAsync(getAllClients),
+   removeClient: catchAsync(removeClient),
 };

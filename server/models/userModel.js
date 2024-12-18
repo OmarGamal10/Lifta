@@ -87,7 +87,7 @@ exports.assignToTrainer = async (s_id) => {
     WHERE t.trainee_id = s.trainee_id
     AND s.subscription_id = $1;`;
 
-  const value = s_id;
+  const value = [s_id];
 
   await db.query(query, value);
 };
