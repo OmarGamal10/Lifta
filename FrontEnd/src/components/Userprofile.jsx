@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
 import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
-
+import Exercises from "./coach/Exercises";
 const UserProfile = ({ userId }) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
@@ -57,16 +57,20 @@ const UserProfile = ({ userId }) => {
   };
   // Components to render based on the active section
   const renderComponent = () => {
-    if (activeSection == "Workouts") {
-      return <TraineeCurrentWrokout userId={userId} />;
-    }
-    if (activeSection == "Nutrition") {
-      return <TraineeCurrentMeals userId={userId} />;
-    }
-    if (activeSection) {
-      return <NoDataDashboard header={`${activeSection}` + " Section"} />;
-    } else {
-      return <NoDataDashboard header="No Data Dashboard" />;
+    if (userType == "Trainee") {
+      if (activeSection == "Workouts") {
+        return <TraineeCurrentWrokout userId={userId} />;
+      }
+      if (activeSection == "Nutrition") {
+        return <TraineeCurrentMeals userId={userId} />;
+      }
+      if (activeSection) {
+        return <NoDataDashboard header={`${activeSection}` + " Section"} />;
+      } else {
+        return <NoDataDashboard header="No Data Dashboard" />;
+      }
+    } else if (userType == "Trainer") {
+      if (activeSection == "Exercises") return <Exercises userId={userId} />;
     }
   };
 

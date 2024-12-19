@@ -29,7 +29,9 @@ router.post(
 router.delete("/", convertCamelToSnake, (req, res, next) => {
   if (req.params.workoutId)
     return workoutController.removeExerciseFromWorkout(req, res, next);
-  else return exerciseController.deleteExercise(req, res, next);
+  else {
+    return exerciseController.deleteExercise(req, res, next);
+  }
 });
 
 module.exports = router;

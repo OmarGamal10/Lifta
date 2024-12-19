@@ -1,15 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import "../output.css";
 import { BsUpload } from "react-icons/bs";
+import { BsX } from "react-icons/bs";
+
 import ErrorMessage from "../errorMsg";
 import handleImages from "../../freqUsedFuncs/handleImages";
 import useHttp from "../../hooks/useHTTP";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
-function ExerciseForm({ edit = true, idToEdit = 2 }) {
-  const navigate = useNavigate();
-
+function ExerciseForm({
+  setExercises,
+  setView,
+  edit = false,
+  idToEdit,
+  userId,
+}) {
   const { post, get, patch, loading, error, data } = useHttp(
     "http://localhost:3000"
   );
@@ -102,10 +108,6 @@ function ExerciseForm({ edit = true, idToEdit = 2 }) {
         console.log(formData.gif);
       }
 
-      const token = getTokenFromCookies();
-      const decodedToken = token ? jwtDecode(token) : null;
-      const userId = decodedToken ? decodedToken.user_id : null;
-      console.log(userId);
       try {
         const response = await post(
           "/exercises",
@@ -121,7 +123,17 @@ function ExerciseForm({ edit = true, idToEdit = 2 }) {
           }
         );
         console.log(response);
-        navigate("/profile");
+        setExercises((prev) => [
+          ...prev,
+          {
+            id: response.data.exercise.exercise_id,
+            name: response.data.exercise.name,
+            description: response.data.exercise.description,
+            musclegroup: response.data.exercise.muscle_group,
+            gif: response.data.exercise.gif_path,
+          },
+        ]);
+        setView(false);
       } catch (err) {
         console.log(err);
       }
@@ -140,19 +152,50 @@ function ExerciseForm({ edit = true, idToEdit = 2 }) {
           }
         );
         console.log(response);
-        navigate("/profile");
+
+        setExercises((prev) =>
+          prev.map((exercise) =>
+            exercise.id === idToEdit
+              ? {
+                  id: response.data.exercise[0].exercise_id,
+                  name: response.data.exercise[0].name,
+                  description: response.data.exercise[0].description,
+                  musclegroup: response.data.exercise[0].muscle_group,
+                  gif: response.data.exercise[0].gif_path,
+                }
+              : exercise
+          )
+        );
+
+        setView(false);
       } catch (err) {
-        console.log(err.response.data.message);
+        console.log(err);
       }
     }
+  };
+
+  const handleClose = (e) => {
+    setFormData({
+      name: "",
+      muscleGroup: "",
+      description: "",
+      gif: "",
+    });
+    setView(false);
   };
 
   return (
     <div>
       <div
         name="exerciseForm"
-        className="border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8 min-w-lg max-w-lg rounded-3xl relative"
+        className=" border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8 w-[500px] rounded-3xl relative"
       >
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-secondary hover:text-primary transition-colors duration-200"
+        >
+          <BsX size={30} />
+        </button>
         <h1 className="text-3xl font-bold">{edit ? "Edit" : "New"} Exercise</h1>
         <form
           onSubmit={handleSubmit}
