@@ -33,6 +33,7 @@ export function TraineeCurrentWrokout(probs) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(probs.userId);
         const response = await httpGet(
           `/users/${probs.userId}/currentWorkout`,
           {

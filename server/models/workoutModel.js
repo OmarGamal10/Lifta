@@ -56,9 +56,9 @@ and day = (select(TRIM(TO_CHAR(current_date,'Day'))::varchar)));`;
   return (await db.query(query, [traineeId])).rows;
 };
 
-exports.addToWorkoutLog = async (trainee_id, workout_id) => {
+exports.addtoWorkoutLog = async (trainee_id, workout_id) => {
   try {
-    const query = `INSERT INTO lifta_schema.workout_log VALUES ($1, $2, current_date, false);`;
+    const query = `INSERT INTO lifta_schema.workout_log VALUES ($1, $2, current_date, true);`;
     const values = [trainee_id, workout_id];
 
     return await db.query(query, values);

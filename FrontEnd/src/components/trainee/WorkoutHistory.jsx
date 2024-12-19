@@ -28,7 +28,7 @@ const WorkoutHistory = ({ userId }) => {
     fetchWorkouts();
   }, [fetchWorkouts]);
 
-  if (!userId) return null; // Don't render without userId
+  if (!userId) return null;
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error loading workouts</div>;
 
