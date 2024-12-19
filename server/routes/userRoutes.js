@@ -59,6 +59,7 @@ router.patch("/:userId/unban", adminController.unbanUser);
 //auth routes
 router.post("/login", authController.login);
 router.post("/signup", convertToSnakeCase, authController.signup);
+router.post("/createAccount", convertToSnakeCase, authController.createAccount);
 router.get("/logout", authController.logout);
 router.get("/checkAuth", authController.checkAuth);
 router.get("/:userId", authController.getUserById);

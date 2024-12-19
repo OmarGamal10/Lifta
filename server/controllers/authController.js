@@ -188,6 +188,87 @@ const signup = async (req, res, next) => {
   });
 };
 
+//Create Account for Admin only
+
+const createAccount = async (req, res, next) => {
+  const {
+    email,
+    first_name,
+    last_name,
+    password,
+    gender,
+    bio,
+    phone_number,
+    type,
+    photo,
+    birth_date,
+  } = req.body;
+
+  let food_allergies,
+    workout_preferences,
+    weight,
+    height,
+    goal,
+    experience_years,
+    client_limit,
+    title,
+    certificate_photo,
+    description,
+    date_issued;
+  if (type === "Trainee") {
+    ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
+  } else if(type === "Trainer") {
+    ({
+      experience_years,
+      client_limit,
+      title,
+      certificate_photo,
+      description,
+      date_issued,
+    } = req.body);
+  }
+
+  if (!validator.isEmail(email))
+    return next(new AppError("Please enter a valid Email", 400));
+
+  const passwordHashed = await hashPassword(password);
+  const values = [
+    email,
+    first_name,
+    last_name,
+    passwordHashed,
+    gender,
+    bio,
+    phone_number,
+    type,
+    photo,
+    birth_date,
+  ];
+
+  if (type === "Trainee") {
+    values.push(food_allergies, weight, height, goal, workout_preferences);
+  }
+  else if (type === "Trainer") {
+    values.push(
+      experience_years,
+      client_limit,
+      title,
+      certificate_photo,
+      description,
+      date_issued
+    );
+  }
+ 
+  const userId = await userModel.AddUser(values);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      userId,
+    },
+  });
+};
+
 // Log-out => Reset Cookie
 
 const logout = (req, res) => {
@@ -200,5 +281,6 @@ module.exports = {
   checkAuth,
   login: catchAsync(login),
   signup: catchAsync(signup),
+  createAccount: catchAsync(createAccount),
   logout,
 };

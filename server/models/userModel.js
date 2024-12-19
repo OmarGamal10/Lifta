@@ -42,6 +42,7 @@ exports.SelectTraineeOrTrainerById = async (id, type) => {
 };
 
 exports.AddUser = async (values) => {
+  let id;
   try {
     const type = values[7]; // Get type from the values array
     const userValues = values.slice(0, 10); // Extract first 10 values for user
@@ -54,11 +55,11 @@ exports.AddUser = async (values) => {
       RETURNING user_id;
     `;
 
-    const id = (await db.query(query, userValues)).rows[0].user_id;
+    id = (await db.query(query, userValues)).rows[0].user_id;
 
     if (type === "Trainee") {
       await addTrainee(rest, id);
-    } else {
+    } else if (type === "Trainer") {
       await addTrainer(rest, id);
     }
   } catch (err) {

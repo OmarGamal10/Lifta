@@ -16,6 +16,7 @@ function FormCoach({
   setCurForm,
   certData,
   setCertData,
+  isAdmin,
 }) {
   const [viewCertForm, setViewCert] = useState(false);
   const navigate = useNavigate();
@@ -53,29 +54,55 @@ function FormCoach({
       setErrors(newErrors);
       return;
     }
-    try {
-      console.log("hi");
-      const response = await post(
-        "/users/signup",
-        {
-          ...userData,
-          ...formData,
-          ...certData,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+    if (!isAdmin) {
+      try {
+        console.log(formData);
+        console.log(userData);
+        console.log(isAdmin);
+        const response = await post(
+          "/users/signup",
+          {
+            ...userData,
+            ...formData,
+            ...certData,
           },
-        }
-      );
-      console.log(response);
-    } catch (err) {
-      setErrors((prev) => {
-        return { ...prev, postError: err.response.data.message };
-      });
-      console.log(err);
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+      } catch (err) {
+        setErrors((prev) => {
+          return { ...prev, postError: err.response.data.message };
+        });
+        console.log(err);
+      }
+      navigate("/profile");
+    } else {
+      try {
+        const response = await post(
+          "/users/createAccount",
+          {
+            ...userData,
+            ...formData,
+            ...certData,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+      } catch (err) {
+        setErrors((prev) => {
+          return { ...prev, postError: err.response.data.message };
+        });
+        console.log(err);
+      }
     }
-    navigate("/profile");
   };
   const handleAdd = (e) => {
     e.preventDefault();
