@@ -16,7 +16,7 @@ import { Package } from "lucide-react";
 import { PackageDashboard } from "./packageDashboard";
 import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
-
+import Loader from "./Loader";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -24,7 +24,8 @@ const UserProfile = ({ userId }) => {
   const [userName, setUserName] = useState("");
   const [userType, setUserType] = useState("");
   const [userBio, setUserBio] = useState("");
-
+  const [coachRating, setCoachRating] = useState(0);
+  const [Loading, setLoading ] = useState(true);
   const { get } = useHttp("http://localhost:3000");
 
   useEffect(() => {
@@ -34,9 +35,11 @@ const UserProfile = ({ userId }) => {
         // Assuming response.body has these values
         setUserName(response.userName);
         setUserType(response.userType);
-        setUserBio(response.userBio);
+        setUserBio(response.userBio); 
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -94,9 +97,10 @@ const UserProfile = ({ userId }) => {
   
 
   return (
+    <div className="w-full"> {Loading ? <Loader /> : 
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
       <NavBar pref={"NotDefault"} />
-      <ProfileSection userName={userName} userBio={userBio}/>
+      <ProfileSection userName={userName} userBio={userBio} userType={userType} userId={userId}/>
       <div className="h-[0.5px] bg-textspan "></div>
       <div className="flex h-[960px] w-full ml-4">
         {renderSideBar()}
@@ -110,6 +114,8 @@ const UserProfile = ({ userId }) => {
         </div>
       </div>
       <Footer />
+    </div>
+    }
     </div>
   );
 };
