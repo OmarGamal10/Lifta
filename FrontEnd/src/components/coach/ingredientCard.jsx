@@ -22,7 +22,7 @@ function Ingredient({
   };
   return (
     <div className="border-2 flex flex-col text-center bg-backGroundColor border-secondary w-full max-w-64 min-w-64 bord rounded-2xl p-4">
-      <h3 className=" text-textColor font-bold text-2xl mb-8">{name}</h3>
+      <h3 className=" text-textColor font-bold text-2xl mb-5">{name}</h3>
       <div className="flex flex-row justify-between mb-5">
         <div>
           <h6 className="text-textColor text-xl">Carbs</h6>
