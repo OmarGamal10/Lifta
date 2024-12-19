@@ -40,6 +40,7 @@ import { View } from "lucide-react";
 import { TraineesList } from "./components/admin/traineesList.jsx";
 import { CoachesList } from "./components/admin/coachesList.jsx";
 import { AdminStatistics } from "./components/admin/adminStatistics.jsx";
+import { ReviewModalForm } from "./components/trainee/reviewModalForm.jsx";
 
 
 const router = createBrowserRouter([
@@ -101,7 +102,7 @@ const router = createBrowserRouter([
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <AdminStatistics />
+        <ReviewModalForm />
       </PrimeReactProvider>
     ),
   },
