@@ -101,11 +101,11 @@ export function TraineeCurrentWrokout(probs) {
         </div>
         <button
           className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around
-           ${
-             isDone
-               ? "btn-disabled cursor-not-allowed bg-accent text-backGroundColor"
-               : "hover:bg-accent hover:text-backGroundColor"
-           } `}
+          ${
+            isDone
+              ? "btn-disabled cursor-not-allowed bg-accent text-backGroundColor"
+              : "hover:bg-accent hover:text-backGroundColor"
+          } `}
           onClick={handleMarkAsDone}
         >
           <span>{isDone ? "Done" : "Mark as done"}</span>

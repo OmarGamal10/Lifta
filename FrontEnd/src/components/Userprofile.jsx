@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import NavBar from "./Navbar";
 import ProfileSection from "./Profilesection";
@@ -10,6 +11,7 @@ import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
 import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
+import WorkoutHistory from "./trainee/WorkoutHistory";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -62,6 +64,9 @@ const UserProfile = ({ userId }) => {
     }
     if (activeSection == "Nutrition") {
       return <TraineeCurrentMeals userId={userId} />;
+    }
+    if (activeSection == "Workout history") {
+      return <WorkoutHistory userId={userId} />;
     }
     if (activeSection) {
       return <NoDataDashboard header={`${activeSection}` + " Section"} />;

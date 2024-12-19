@@ -56,12 +56,20 @@ const assignWorkoutTrainee = async (req, res, next) => {
   if (!workout_id || isNaN(workout_id)) {
     return next(new AppError("Please provide a workout id", 400));
   }
-
+  const newWorkout = {
+    new: true,
+  };
   const workout = await workoutModel.assignWorkoutToTrainee(
     trainee_id,
     workout_id,
-    day
+    day,
+    newWorkout
   );
+  if (newWorkout.new) {
+    workout.new = true;
+  } else {
+    workout.new = false;
+  }
   res.status(201).json({
     status: "success",
     data: {
@@ -82,12 +90,12 @@ const getWorkoutsTrainee = async (req, res, next) => {
       workouts,
     },
   });
-};  
+};
 
-const addDoneWorkout = async (req, res, next) => {
+const addtoWorkoutLog = async (req, res, next) => {
   const { trainee_id, workout_id } = req.body;
 
-  await workoutModel.addDoneWorkout(trainee_id, workout_id);
+  await workoutModel.addtoWorkoutLog(trainee_id, workout_id);
   res.status(201).json({
     status: "success",
     message: "Good Job!",
@@ -105,7 +113,7 @@ const getCurrentWorkoutStatus = async (req, res, next) => {
     data: {
       isDone,
     },
-   });
+  });
 };
 
 const deleteWorkout = async (req, res, next) => {
@@ -137,15 +145,40 @@ const removeWorkoutFromSchedule = async (req, res, next) => {
   });
 };
 
+const getWorkoutLog = async (req, res, next) => {
+  const { traineeId } = req.params;
+  if (!traineeId || isNaN(traineeId)) {
+    return next(new AppError("Please provide a trainee id", 400));
+  }
+  const workoutLog = await workoutModel.getWorkoutLog(traineeId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      workoutLog,
+    },
+  });
+};
+
+const markWorkoutAsDone = async (req, res, next) => {
+  const { trainee_id, date } = req.body;
+  await workoutModel.markWorkoutAsDone(trainee_id, workout_id, date);
+  res.status(200).json({
+    status: "success",
+    message: "Workout marked as done",
+  });
+};
+
 module.exports = {
   createWorkout: catchAsync(createWorkout),
   getWorkoutsCoach: catchAsync(getWorkoutsCoach),
   getCurrentWorkoutByTraineeId: catchAsync(getCurrentWorkoutByTraineeId),
-  addDoneWorkout: catchAsync(addDoneWorkout),
+  addtoWorkoutLog: catchAsync(addtoWorkoutLog),
   getCurrentWorkoutStatus: catchAsync(getCurrentWorkoutStatus),
   deleteWorkout: catchAsync(deleteWorkout),
   removeExerciseFromWorkout: catchAsync(removeExerciseFromWorkout),
   assignWorkoutTrainee: catchAsync(assignWorkoutTrainee),
   getWorkoutsTrainee: catchAsync(getWorkoutsTrainee),
   removeWorkoutFromSchedule: catchAsync(removeWorkoutFromSchedule),
+  getWorkoutLog: catchAsync(getWorkoutLog),
+  markWorkoutAsDone: catchAsync(markWorkoutAsDone),
 };

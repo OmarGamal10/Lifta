@@ -56,30 +56,41 @@ and day = (select(TRIM(TO_CHAR(current_date,'Day'))::varchar)));`;
   return (await db.query(query, [traineeId])).rows;
 };
 
-exports.addDoneWorkout = async (trainee_id, workout_id) => {
+exports.addToWorkoutLog = async (trainee_id, workout_id) => {
   try {
-    const query = `INSERT INTO lifta_schema.workout_log VALUES ($1, $2, current_date, true);`;
+    const query = `INSERT INTO lifta_schema.workout_log VALUES ($1, $2, current_date, false);`;
     const values = [trainee_id, workout_id];
 
     return await db.query(query, values);
   } catch (err) {
     if (err.code === "23505") {
       throw new AppError("You already have a workout log in this date", 400);
-      }
+    }
     throw err;
   }
 };
 
-exports.assignWorkoutToTrainee = async (trainee_id, workout_id, day) => {
-  try {
-    const query = `INSERT INTO lifta_schema.workouts_schedule (workout_id,trainee_id,day) VALUES ($1,$2,$3) RETURNING * `;
-    return (await db.query(query, [workout_id, trainee_id, day])).rows;
-  } catch (err) {
-    if (err.code === "23505") {
-      throw new AppError("Trainee already have a workout on this day", 400);
-      }
-    throw err;
+exports.assignWorkoutToTrainee = async (
+  trainee_id,
+  workout_id,
+  day,
+  newWorkout
+) => {
+  const existingWorkout = await db.query(
+    `SELECT * FROM lifta_schema.workouts_schedule WHERE trainee_id = $1 AND day = $2`,
+    [trainee_id, day]
+  );
+  let query;
+  if (existingWorkout.rows.length > 0) {
+    query = `UPDATE lifta_schema.workouts_schedule SET workout_id = $1 WHERE trainee_id = $2 AND day = $3 RETURNING *`;
+    console.log("updating an existing workout for the day");
+    newWorkout.new = false;
+  } else {
+    query = `INSERT INTO lifta_schema.workouts_schedule (workout_id, trainee_id, day) VALUES ($1, $2, $3) RETURNING *`;
+    console.log("inserting a new workout for the day");
+    newWorkout.new = true;
   }
+  return (await db.query(query, [workout_id, trainee_id, day])).rows[0];
 };
 
 exports.getCurrentWorkoutStatus = async (trainee_id) => {
@@ -87,7 +98,7 @@ exports.getCurrentWorkoutStatus = async (trainee_id) => {
     WHERE trainee_id = $1 AND date = current_date;`;
 
   return await db.query(query, [trainee_id]);
- };
+};
 
 exports.getWorkoutsByTraineeId = async (trainee_id) => {
   const query = `SELECT w.workout_id ,w.name,w._note AS note ,ws.day from lifta_schema.workout w 
@@ -109,4 +120,25 @@ exports.removeExerciseFromWorkout = async (workoutId, exerciseId) => {
 exports.deleteWorkout = async (workoutId) => {
   const query = "DELETE FROM lifta_schema.workout WHERE workout_id = $1 ";
   return (await db.query(query, [workoutId])).rows;
+};
+
+exports.getWorkoutLog = async (traineeId) => {
+  const query = ` SELECT l.trainee_id, w.workout_id, w.name, w._note, l.date, l."isDone", u.first_name, u.last_name,
+                  json_agg(json_build_object('name', e.name, 'description', e.description, 'id',  e.exercise_id, 'musclegroup',  e.muscle_group, 'sets', we.sets, 'reps', we.reps)) AS exercises
+                  FROM lifta_schema.workout_log l
+                  JOIN lifta_schema.workout w ON w.workout_id = l.workout_id
+                  JOIN lifta_schema.workout_exercise we ON we.workout_id = w.workout_id
+                  JOIN lifta_schema.exercise e ON e.exercise_id = we.exercise_id
+                  JOIN lifta_schema.users u ON u.user_id = w.trainer_id
+                  WHERE trainee_id = $1
+                  GROUP BY l.trainee_id, w.workout_id, l.date, u.first_name, u.last_name
+                  ORDER BY date DESC;`;
+  //not necessary to group by workout_id because we have only one workout per day, but for future use if we ever need it
+  return (await db.query(query, [traineeId])).rows;
+};
+
+exports.markWorkoutAsDone = async (trainee_id, workout_id, date) => {
+  const query = `UPDATE lifta_schema.workout_log SET "isDone" = true WHERE trainee_id = $1 AND workout_id = $2 AND date = $3`;
+  return await db.query(query, [trainee_id, workout_id, date]);
+  // same here workout id is not necessary but for future use if we ever need it (multiple workouts per date)
 };

@@ -66,13 +66,16 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
       package.type,
       subscription.subscription_id,
       subscription.status,
+      subscription.end_date,
       (
         SELECT content 
         FROM lifta_schema.message 
         WHERE 
         (subscription_id = subscription.subscription_id)
-        AND (sender_id = users.user_id AND receiver_id = $1) 
-        OR (sender_id = $1 AND receiver_id = users.user_id) 
+        AND (
+          (sender_id = users.user_id AND receiver_id = $1) 
+          OR (sender_id = $1 AND receiver_id = users.user_id)
+            ) 
         ORDER BY time DESC LIMIT 1
       ) AS last_message
     FROM lifta_schema.subscription 
@@ -91,13 +94,16 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
       package.type,
       subscription.subscription_id,
       subscription.status,
+      subscription.end_date,
       (
         SELECT content 
         FROM lifta_schema.message 
         WHERE 
         (subscription_id = subscription.subscription_id)
-        AND (sender_id = users.user_id AND receiver_id = $1) 
-        OR (sender_id = $1 AND receiver_id = users.user_id) 
+        AND (
+          (sender_id = users.user_id AND receiver_id = $1) 
+          OR (sender_id = $1 AND receiver_id = users.user_id)
+        )
         ORDER BY time DESC LIMIT 1
       ) AS last_message
     FROM lifta_schema.subscription 

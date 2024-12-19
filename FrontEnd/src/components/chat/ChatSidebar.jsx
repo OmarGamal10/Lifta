@@ -71,7 +71,11 @@ const ChatSidebar = ({ onChatSelect, activeChat, id, type }) => {
                   <span className="w-3 h-3 bg-secondary rounded-full mr-2 mt-1 "></span>
                   {activeChat?.subscription_id === chat.subscription_id &&
                   activeChat.last_message
-                    ? activeChat.last_message
+                    ? activeChat.last_message?.length > 20
+                      ? activeChat.last_message.substring(0, 20) + "..."
+                      : activeChat.last_message
+                    : chat.last_message?.length > 20
+                    ? chat.last_message.substring(0, 20) + "..."
                     : chat.last_message}
                 </p>
               </div>

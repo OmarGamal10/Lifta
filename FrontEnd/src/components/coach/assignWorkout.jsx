@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useMemo, useEffect } from "react";
 import Workout from "./workoutCard";
 import ErrorMessage from "../errorMsg";
@@ -8,7 +9,7 @@ import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../../hooks/useHTTP";
 
-function AssignWorkout({ trainee_id = 89 }) {
+function AssignWorkout({ trainee_id = 97 }) {
   const { get, post, loading, error, data } = useHttp("http://localhost:3000");
 
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ function AssignWorkout({ trainee_id = 89 }) {
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [workouts, setworkouts] = useState([]);
+  const [newWorkout, setNewWorkout] = useState(null);
+  const [lastSelectdDay, setLastSelectedDay] = useState(null);
 
   const days = [
     "Sunday",
@@ -129,6 +132,9 @@ function AssignWorkout({ trainee_id = 89 }) {
           },
         }
       );
+      setLastSelectedDay(formData.day);
+      console.log(response.data.workout);
+      setNewWorkout(response.data.workout.new);
       setSelectedWorkout(null);
       setFormData({
         workoutId: "",
@@ -136,7 +142,6 @@ function AssignWorkout({ trainee_id = 89 }) {
       });
       setErrors({});
       console.log(response);
-      navigate("/profile");
     } catch (err) {
       console.log(err.response.data.message);
       errors.workoutId = err.response.data.message;
@@ -150,7 +155,6 @@ function AssignWorkout({ trainee_id = 89 }) {
       day: "Sunday",
     });
     setErrors({});
-    navigate("/profile");
   };
 
   const paginatedWorkouts = useMemo(() => {
@@ -240,7 +244,6 @@ function AssignWorkout({ trainee_id = 89 }) {
             >
               Cancel
             </button>
-
             <button
               type="button"
               onClick={() => handleSubmit(true)}
@@ -248,6 +251,18 @@ function AssignWorkout({ trainee_id = 89 }) {
             >
               Assign Workout
             </button>
+          </div>
+          <div className="mt-4">
+            {newWorkout !== null && (
+              <div className="mt-2 text-center">
+                <span className={`text-sm font-semibold text-accent`}>
+                  {newWorkout
+                    ? "New Workout assigned for this trainee on " +
+                      lastSelectdDay
+                    : `Updated Workout for this trainee on ${lastSelectdDay}`}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       ) : (

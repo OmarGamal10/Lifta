@@ -13,7 +13,7 @@ router.post(
   "/",
   convertCamelToSnake,
   sanitizeEmptyFields,
-  workoutController.addDoneWorkout
+  workoutController.addtoWorkoutLog
 );
 
 router.get("/status", (req, res, next) => {
