@@ -11,6 +11,7 @@ import useHttp from "../hooks/useHTTP";
 import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
 import Exercises from "./coach/Exercises";
+import Ingredients from "./coach/Ingredients";
 const UserProfile = ({ userId }) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
@@ -24,7 +25,6 @@ const UserProfile = ({ userId }) => {
     const getUser = async () => {
       try {
         const response = await get(`/users/${userId}`);
-        // Assuming response.body has these values
         setUserName(response.userName);
         setUserType(response.userType);
         setUserBio(response.userBio);
@@ -49,7 +49,7 @@ const UserProfile = ({ userId }) => {
           className="w-auto"
         />
       );
-    } else {
+    } else if (userType === "Trainer") {
       return (
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
@@ -71,6 +71,8 @@ const UserProfile = ({ userId }) => {
       }
     } else if (userType == "Trainer") {
       if (activeSection == "Exercises") return <Exercises userId={userId} />;
+      if (activeSection == "Ingredients")
+        return <Ingredients userId={userId} />;
     }
   };
 

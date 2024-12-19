@@ -3,7 +3,23 @@ import { React } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 
-function Ingredient({ name, fat, protein, carb, calories, readOnly = false }) {
+function Ingredient({
+  id,
+  name,
+  fat,
+  protein,
+  carb,
+  calories,
+  readOnly = false,
+  setIdToEdit,
+  setEditView,
+  handleDelete,
+}) {
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    setIdToEdit(id);
+    setEditView(true);
+  };
   return (
     <div className="border-2 flex flex-col text-center bg-backGroundColor border-secondary w-full max-w-64 min-w-64 bord rounded-2xl p-4">
       <h3 className=" text-textColor font-bold text-2xl mb-8">{name}</h3>
@@ -27,10 +43,19 @@ function Ingredient({ name, fat, protein, carb, calories, readOnly = false }) {
       </div>
       {readOnly || (
         <div className="flex flex-row justify-center gap-24">
-          <button className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor">
+          <button
+            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(id);
+            }}
+          >
             <FaRegTrashAlt size={20} />
           </button>
-          <button className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor">
+          <button
+            onClick={handleEdit}
+            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor"
+          >
             <CiEdit size={20} />
           </button>
         </div>
