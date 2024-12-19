@@ -23,6 +23,11 @@ GROUP BY u.user_id,t.trainer_id`;
   return (await db.query(query)).rows;
 };
 
+exports.getAllAdmins = async () => {
+  const query = `SELECT user_id,first_name, last_name,email,phone_number,gender,is_banned FROM lifta_schema.users WHERE type = 'Admin'`;
+  return (await db.query(query)).rows;
+};
+
 exports.SelectUserById = async (Id) => {
   const query = "SELECT * FROM lifta_schema.users WHERE user_id = $1";
   const values = [Id];

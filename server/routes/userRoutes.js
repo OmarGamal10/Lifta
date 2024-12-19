@@ -44,6 +44,15 @@ router.get("/trainees", async (req, res, next) => {
   });
 });
 
+router.get("/admins", async (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    data: {
+      admins: await userModel.getAllAdmins(),
+    },
+  });
+});
+
 router.get("/browse", async (req, res, next) => {
   res.status(200).json({
     status: "success",
