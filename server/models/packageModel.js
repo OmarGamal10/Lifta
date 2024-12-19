@@ -36,3 +36,20 @@ exports.deletePackage = async (packageId) => {
   const query = "DELETE FROM lifta_schema.package WHERE package_id = $1 ";
   return (await db.query(query, [packageId])).rows;
 };
+
+
+exports.getTopFivePackages = async () => {
+  const query = `SELECT p.package_id,p.name,p.type,p.trainer_id, COUNT(s.subscription_id) as subscriptions
+FROM lifta_schema.package p
+LEFT JOIN lifta_schema.subscription s ON s.package_id = p.package_id
+GROUP BY p.package_id
+HAVING COUNT(s.subscription_id) > 0
+ORDER BY COUNT(s.subscription_id) DESC
+LIMIT 5;`;
+  return (await db.query(query)).rows;
+};
+
+exports.getAvgPrice = async () => {
+  const query = `SELECT ROUND(AVG(price)::numeric, 3) AS averagePrice FROM lifta_schema.package;`;
+  return (await db.query(query)).rows;
+};

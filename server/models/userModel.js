@@ -14,10 +14,11 @@ LEFT JOIN lifta_schema.subscription s ON s.trainee_id = t.trainee_id GROUP BY u.
 };
 
 exports.getAllCoaches = async () => {
-  const query = `SELECT u.user_id,u.first_name, u.last_name,u.email,u.phone_number,u.gender,u.is_banned,t.experience_years,t.rating, COUNT(s.subscription_id) as subscriptions FROM lifta_schema.users u
+  const query = `SELECT u.user_id,u.first_name, u.last_name,u.email,u.phone_number,u.gender,u.is_banned,t.experience_years,ROUND(AVG(r.stars)::numeric, 3) AS rating, COUNT(s.subscription_id) as subscriptions FROM lifta_schema.users u
 JOIN lifta_schema.trainer t ON user_id = trainer_id
 LEFT JOIN lifta_schema.package p ON p.trainer_id = t.trainer_id
 LEFT JOIN lifta_schema.subscription s ON p.package_id = s.package_id
+LEFT JOIN lifta_schema.review r ON r.trainer_id = t.trainer_id
 GROUP BY u.user_id,t.trainer_id`;
   return (await db.query(query)).rows;
 };
