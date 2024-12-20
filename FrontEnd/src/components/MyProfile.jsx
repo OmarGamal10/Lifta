@@ -65,11 +65,7 @@ const MyProfile = ({ userId }) => {
       value.length > 2
     )
       return;
-      if (
-        ([id] == "weight" || [id] == "height") &&
-        value.length > 3
-      )
-        return;
+      if ((id == "weight" || id == "height") && value.length > 3 || parseInt(value, 10) <= 0) return;
     setFormData({ ...formData, [id]: value });
     setErrors((prev) => {
       const { [id]: _, ...rest } = prev; // Destructure to exclude the key
