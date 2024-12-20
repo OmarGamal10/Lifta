@@ -10,6 +10,14 @@ router.get(
   subscriptionController.getPendingSubscriptionsByCoachId
 );
 router.get("/:type/conversations/:id", subscriptionController.getConversations);
+router.get(
+  "/memberships/trainee/:traineeId",
+  subscriptionController.getMemberships
+);
+router.get(
+  "/memberships/trainee/:traineeId/trainer/:trainerId",
+  subscriptionController.getMemberships
+);
 router.post(
   "/",
   convertCamelCase,

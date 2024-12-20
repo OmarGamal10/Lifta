@@ -159,6 +159,57 @@ const getConversations = async (req, res, next) => {
   });
 };
 
+const getMemberships = async (req, res, next) => {
+  const { traineeId, trainerId } = req.params;
+  const rawMemberships = await subscriptionModel.getMemberships(
+    traineeId,
+    trainerId
+  );
+  const groupedByTrainer = [];
+  //group them by trainer id, each trainer id with the name and email has array of subscriptions, each sub has the start and end dates, status and the package info
+  rawMemberships.forEach((membership) => {
+    const existingTrainer = groupedByTrainer.find(
+      (t) => t.trainer_id === membership.trainer_id
+    );
+    if (existingTrainer) {
+      existingTrainer.subscriptions.push({
+        name: membership.name,
+        type: membership.type,
+        description: membership.description,
+        start_date: membership.start_date,
+        end_date: membership.end_date,
+        status: membership.status,
+        price: membership.price,
+      });
+    } else {
+      groupedByTrainer.push({
+        trainer_id: membership.trainer_id,
+        trainer_name: membership.trainer_name,
+        first_name: membership.first_name,
+        last_name: membership.last_name,
+        email: membership.email,
+        subscriptions: [
+          {
+            name: membership.name,
+            type: membership.type,
+            description: membership.description,
+            start_date: membership.start_date,
+            end_date: membership.end_date,
+            status: membership.status,
+            price: membership.price,
+          },
+        ],
+      });
+    }
+  });
+  res.status(200).json({
+    status: "success",
+    data: {
+      memberships: groupedByTrainer,
+    },
+  });
+};
+
 module.exports = {
   getAllSubscriptions: catchAsync(getAllSubscriptions),
   createInitialSubscription: catchAsync(createInitialSubscription),
@@ -171,4 +222,5 @@ module.exports = {
     getTraineeHasNutritionSubscription
   ),
   getConversations: catchAsync(getConversations),
+  getMemberships: catchAsync(getMemberships),
 };

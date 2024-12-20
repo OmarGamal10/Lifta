@@ -10,6 +10,7 @@ const ChatSidebar = ({ onChatSelect, activeChat, id, type }) => {
       const response = await get(`subscriptions/${type}/conversations/${id}`);
       if (response.data && response.data.convos) {
         setChats(response.data.convos);
+        console.log(response.data.convos);
       } else {
         setChats([]);
       }

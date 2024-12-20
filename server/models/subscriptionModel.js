@@ -58,6 +58,7 @@ exports.getTraineeHasNutritionSubscription = async (traineeId) => {
 exports.getTraineesWithActiveSubscription = async (Id, type) => {
   const getTrainersQuery = `
     SELECT 
+      DISTINCT ON (users.user_id, subscription.status, package.package_id)
       users.first_name, 
       users.last_name,
       users.user_id,
@@ -86,6 +87,7 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
 
   const getTraineesQuery = `
     SELECT 
+      DISTINCT ON (users.user_id, subscription.status, package.package_id)
       users.first_name, 
       users.last_name,
       users.user_id,
@@ -116,4 +118,17 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
   return type === "Trainer"
     ? (await db.query(getTraineesQuery, [Id])).rows
     : (await db.query(getTrainersQuery, [Id])).rows;
+};
+
+exports.getMemberships = async (traineeId, trainerId) => {
+  const query = `SELECT package.name, package.type, package.description, subscription.start_date, subscription.end_date, subscription.status,
+                u.email, package.trainer_id, package.price, u.first_name || ' ' || u.last_name AS trainer_name
+                FROM lifta_schema.subscription
+                JOIN lifta_schema.package ON subscription.package_id = package.package_id
+                JOIN lifta_schema.users u ON package.trainer_id = u.user_id
+                WHERE subscription.trainee_id = $1
+                ${trainerId ? "AND package.trainer_id = $2" : ""};`;
+  return (
+    await db.query(query, trainerId ? [traineeId, trainerId] : [traineeId])
+  ).rows;
 };

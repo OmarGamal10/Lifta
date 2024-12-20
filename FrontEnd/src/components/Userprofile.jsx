@@ -13,6 +13,7 @@ import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
 import WorkoutHistory from "./trainee/WorkoutHistory";
 import NutritionHistory from "./trainee/NutritionHistory";
+import Memberships from "./trainee/Memberships";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -72,6 +73,9 @@ const UserProfile = ({ userId }) => {
     }
     if (activeSection == "Workout history") {
       return <WorkoutHistory userId={userId} />;
+    }
+    if (activeSection == "Memberships") {
+      return <Memberships userId={userId} />;
     }
     if (activeSection) {
       return <NoDataDashboard header={`${activeSection}` + " Section"} />;
