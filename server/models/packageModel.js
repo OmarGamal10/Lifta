@@ -35,6 +35,7 @@ exports.toggleActiveState = async (pkgId, state) => {
   const query =
     "UPDATE lifta_schema.package SET is_active=$1 WHERE package_id=$2";
   return (await db.query(query, [state, pkgId])).rows[0];
+  //Validation will be added
 };
 
 exports.deletePackage = async (packageId) => {
