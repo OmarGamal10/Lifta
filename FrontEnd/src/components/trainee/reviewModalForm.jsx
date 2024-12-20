@@ -53,12 +53,10 @@ export function ReviewModalForm(probs) {
       return;
     }
 
-    // const token = getTokenFromCookies();
-    // const decodedToken = token ? jwtDecode(token) : null;
-    // const userId = decodedToken ? decodedToken.user_id : null;
-    // console.log(userId);
+    const token = getTokenFromCookies();
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken ? decodedToken.user_id : null;
     const content = formData.content;
-    console.log(content);
 
     if (probs.isEdit) {
       const reviewId = probs.reviewId;
@@ -82,8 +80,7 @@ export function ReviewModalForm(probs) {
     }
     else {
       const trainerId = probs.trainerId;
-      const traineeId = probs.traineeId;
-      
+      const traineeId = userId;
       try {
         const response = await post(
           "/reviews",
@@ -104,7 +101,8 @@ export function ReviewModalForm(probs) {
         console.log(err);
       }
     }
-
+    setFormData({ content: "" });
+    setStars(0);
     probs.handleCloseModal();
   };
 
@@ -152,7 +150,7 @@ export function ReviewModalForm(probs) {
               }}
             />
           </div>
-          <div className="w-1/2 mt-10">
+        <div className="w-1/2 mt-10">      
             <button
               type="submit"
               className=" border-secondary w-full text-secondary text-sm rounded-xl py-4 border-2 hover:bg-secondary hover:text-textColor font-medium  active:ring active:ring-secondary/50"
