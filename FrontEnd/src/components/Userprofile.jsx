@@ -16,12 +16,13 @@ import { Package } from "lucide-react";
 import { PackageDashboard } from "./packageDashboard";
 import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
-
+import Loader from "./Loader";
 import Exercises from "./coach/Exercises";
 import Ingredients from "./coach/Ingredients";
 import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
+
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -29,6 +30,8 @@ const UserProfile = ({ userId }) => {
   const [userName, setUserName] = useState("");
   const [userType, setUserType] = useState("");
   const [userBio, setUserBio] = useState("");
+  const [coachRating, setCoachRating] = useState(0);
+  const [Loading, setLoading ] = useState(true);
   const [userProfile, setUserProfile] = useState("");
   const { get } = useHttp("http://localhost:3000");
 
@@ -43,6 +46,8 @@ const UserProfile = ({ userId }) => {
         setUserProfile(response.userPhoto);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -67,8 +72,12 @@ const UserProfile = ({ userId }) => {
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
     }
-  };
-  const components = {
+
+  }
+  const components =  {
+    "My Profile": (
+      <MyProfile userId={userId} />
+    ),
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <Clients userId={userId} />
@@ -111,23 +120,31 @@ const UserProfile = ({ userId }) => {
       if (activeSection == "Meals") return <Meals userId={userId} />;
     }
     if (activeSection == "Packages") {
-      return <Packages userId={userId} />;
+      return (
+        <PrimeReactProvider value={{ pt: Tailwind }}>
+          <Packages userId={userId} />
+        </PrimeReactProvider>
+      );
     }
 
     return components[activeSection] || components.Default;
   };
 
   return (
+    <div className="w-full"> {Loading ? <Loader /> : 
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
+
       <NavBar pref={"NotDefault"} />
       <ProfileSection
         userName={userName}
         userBio={userBio}
         userProfile={userProfile}
+        userId={userId}
+        userType={userType}
       />
 
       <div className="h-[0.5px] bg-textspan "></div>
-      <div className="flex h-[960px] w-full ml-4">
+      <div className="flex min-h-[960px] w-full ml-4">
         {renderSideBar()}
         <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
         {/* Vertical Divider */}
@@ -139,6 +156,8 @@ const UserProfile = ({ userId }) => {
         </div>
       </div>
       <Footer />
+    </div>
+    }
     </div>
   );
 };

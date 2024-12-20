@@ -12,24 +12,36 @@ import { TraineeExerciseCard } from "./traineeExerciseCard";
 export function TraineeCurrentWrokout(probs) {
   const [isDone, setIsDone] = useState(false);
 
-  const { get: httpGet, post } = useHttp("http://localhost:3000");
+  const { get: httpGet, post, del } = useHttp("http://localhost:3000");
 
   const [workout, setWorkout] = useState({});
   const [exercises, setExercises] = useState([]);
 
   async function handleMarkAsDone() {
-    setIsDone(true);
-    try {
-      const response = await post(`/users/${probs.userId}/currentWorkout`, {
-        traineeId: probs.userId,
-        workoutId: workout.workout_id,
-      });
-      console.log(response);
-    } catch (err) {
-      console.error(err);
+    if (!isDone) {
+      setIsDone(true);
+      try {
+        const response = await post(`/users/${probs.userId}/currentWorkout`, {
+          traineeId: probs.userId,
+          workoutId: workout.workout_id,
+        });
+        console.log(response);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    else {
+      setIsDone(false);
+      try {
+        const response = await del(`/users/${probs.userId}/currentWorkout/removeDoneWorkout`, {
+          data: {},
+        });
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -96,20 +108,17 @@ export function TraineeCurrentWrokout(probs) {
               sets={exercise.sets}
               reps={exercise.reps}
               muscle={exercise.musclegroup}
+              gif={exercise.gif}
             />
           ))}
         </div>
         <button
-          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around
-           ${
-             isDone
-               ? "btn-disabled cursor-not-allowed bg-accent text-backGroundColor"
-               : "hover:bg-accent hover:text-backGroundColor"
-           } `}
+          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
+            justify-around hover:bg-accent hover:text-backGroundColor`}
           onClick={handleMarkAsDone}
         >
-          <span>{isDone ? "Done" : "Mark as done"}</span>
-          <span className="pi pi-check"></span>
+          <span>{isDone ? "Mark as undone" : "Mark as done"}</span>
+          {!isDone ? <span className="pi pi-check"></span> : <></>}
         </button>
       </div>
     );

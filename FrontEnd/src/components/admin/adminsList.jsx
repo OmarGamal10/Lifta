@@ -4,7 +4,7 @@ import useHttp from "../../hooks/useHTTP";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
-export function TraineesList() {
+export function AdminsList() {
   const {
     get: httpGet,
     post,
@@ -14,19 +14,19 @@ export function TraineesList() {
     patch,
   } = useHttp("http://localhost:3000");
 
+  const [admins, setAdmins] = useState([]);
+
   const fetchData = async () => {
     try {
-      const response = await httpGet("/users/trainees", {
+      const response = await httpGet("/users/admins", {
         headers: { "Cache-Control": "no-cache" },
       });
-      console.log(response);
-      setTrainees(response.data.trainees);
+      console.log(response.data.admins);
+      setAdmins(response.data.admins);
     } catch (err) {
       console.log(err);
     }
   };
-
-  const [trainees, setTrainees] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -43,7 +43,6 @@ export function TraineesList() {
 
       fetchData();
       handleCloseModal();
-
     } catch (err) {
       console.log(err);
     }
@@ -107,7 +106,7 @@ export function TraineesList() {
   return (
     <div>
       <DataTable
-        value={trainees}
+        value={admins}
         paginator
         rows={10}
         onRowClick={onRowClick}
@@ -126,6 +125,7 @@ export function TraineesList() {
           filterMenuClassName="bg-secondary text-textColor"
           filterPlaceholder="Search..."
           headerClassName="bg-secondary"
+          filterHeaderClassName="flex items-center space-x-2"
           style={{ minWidth: "150px" }}
         />
         <Column
@@ -136,7 +136,7 @@ export function TraineesList() {
           filterMenuClassName="bg-secondary text-textColor"
           filterPlaceholder="Search..."
           headerClassName="bg-secondary"
-          style={{ minWidth: "150px" }}
+          style={{ minWidth: "145px" }}
         />
         <Column
           field="first_name"
@@ -178,34 +178,6 @@ export function TraineesList() {
           headerClassName="bg-secondary"
           style={{ minWidth: "150px" }}
         />
-        <Column
-          field="workout_preferences"
-          filterField="workout_preferences"
-          header="Workout Preferences"
-          headerClassName="bg-secondary"
-          filter
-          filterMenuClassName="bg-secondary text-textColor"
-          filterPlaceholder="Search"
-          style={{ minWidth: "140px" }}
-        />
-        <Column
-          field="height"
-          header="Height"
-          sortable
-          headerClassName="bg-secondary"
-        />
-        <Column
-          field="weight"
-          header="Weight"
-          sortable
-          headerClassName="bg-secondary"
-        />
-        <Column
-          field="subscriptions"
-          header="Subscriptions"
-          sortable
-          headerClassName="bg-secondary"
-        />
       </DataTable>
 
       <dialog
@@ -230,12 +202,6 @@ export function TraineesList() {
               </div>
               <div>
                 <strong>Email:</strong> {selectedUser.email}
-              </div>
-              <div>
-                <strong>Coach ID:</strong> {selectedUser.coach_id}
-              </div>
-              <div>
-                <strong>Nutritionist ID:</strong> {selectedUser.nutritionist_id}
               </div>
             </div>
             <div className="flex justify-center gap-8 mt-12">

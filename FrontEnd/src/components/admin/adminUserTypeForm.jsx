@@ -9,7 +9,7 @@ function AdminUserTypeForm({ setType, setFormData }) {
     setType(e.target.name);
     setFormData((prevData) => ({
       ...prevData,
-      type: e.target.name === "Coach" ? "Trainer" : (e.target.name == "Trainee" ? "Trainee" : "Admin"),
+      type: e.target.name === "Coach" ? "Trainer" : (e.target.name === "Trainee" ? "Trainee" : "Admin"),
     }));
   };
 

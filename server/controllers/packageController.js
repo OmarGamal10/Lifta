@@ -111,6 +111,26 @@ const deletePackage = async (req, res, next) => {
   });
 };
 
+const getTopFivePackages = async (req, res, next) => {
+  const packages = await packageModel.getTopFivePackages();
+  res.status(200).json({
+    status: "success",
+    data: {
+      packages,
+    },
+  });
+};
+
+const getAvgPrice = async (req, res, next) => {
+  const average = await packageModel.getAvgPrice();
+  res.status(200).json({
+    status: "success",
+    data: {
+      average,
+    },
+  });
+};
+
 module.exports = {
   getAllPackages: catchAsync(getAllPackages),
   getPackagesCoach: catchAsync(getPackagesCoach),
@@ -118,6 +138,8 @@ module.exports = {
   deletePackage: catchAsync(deletePackage),
   getPackage: catchAsync(getPackage),
   updatePackage: catchAsync(updatePackage),
+  getTopFivePackages: catchAsync(getTopFivePackages),
+  getAvgPrice: catchAsync(getAvgPrice),
   toggleActiveState: catchAsync(toggleActiveState),
 };
 
