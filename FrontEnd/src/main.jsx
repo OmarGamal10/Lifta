@@ -79,6 +79,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "createMeal",
+    element: (
+      <ProtectedRoute>
+        <CreateMeal />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
