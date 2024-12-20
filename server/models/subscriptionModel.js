@@ -61,9 +61,12 @@ exports.getTraineeHasNutritionSubscription = async (traineeId) => {
 };
 exports.deleteAllPendingRequests = async (subscription_id) => {
   // Retrieve the type and trainee_id associated with the subscription
-  const { type, trainee_id } = await this.getTraineePackageTypeRequest(subscription_id);
+  const { type, trainee_id } =
+    await this.getTraineePackageTypeRequest(subscription_id);
   const query1 = `SELECT package_id FROM lifta_schema.package WHERE type IN ('Both', $1);`;
-  const packages = (await db.query(query1, [type])).rows.map(row => row.package_id); // Extract package_ids
+  const packages = (await db.query(query1, [type])).rows.map(
+    (row) => row.package_id
+  ); // Extract package_ids
 
   // Query to delete subscriptions
   const query = `
@@ -73,7 +76,6 @@ exports.deleteAllPendingRequests = async (subscription_id) => {
   await db.query(query, [trainee_id, packages]);
 };
 
-
 exports.getTraineePackageTypeRequest = async (subscription_id) => {
   const query1 = `SELECT s.trainee_id, p1.type
    FROM lifta_schema.subscription s 
@@ -81,14 +83,15 @@ exports.getTraineePackageTypeRequest = async (subscription_id) => {
    ON s.package_id = p1.package_id 
    WHERE s.subscription_id = $1;`;
   const result1 = await db.query(query1, [subscription_id]);
-    const type = result1.rows[0].type;
-    const trainee_id = result1.rows[0].trainee_id;
-    return {type, trainee_id};
-}
+  const type = result1.rows[0].type;
+  const trainee_id = result1.rows[0].trainee_id;
+  return { type, trainee_id };
+};
 
 exports.getTraineesWithActiveSubscription = async (Id, type) => {
   const getTrainersQuery = `
     SELECT 
+      DISTINCT ON (users.user_id, subscription.status, package.package_id)
       users.first_name, 
       users.last_name,
       users.user_id,
@@ -97,13 +100,16 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
       package.type,
       subscription.subscription_id,
       subscription.status,
+      subscription.end_date,
       (
         SELECT content 
         FROM lifta_schema.message 
         WHERE 
         (subscription_id = subscription.subscription_id)
-        AND (sender_id = users.user_id AND receiver_id = $1) 
-        OR (sender_id = $1 AND receiver_id = users.user_id) 
+        AND (
+          (sender_id = users.user_id AND receiver_id = $1) 
+          OR (sender_id = $1 AND receiver_id = users.user_id)
+            ) 
         ORDER BY time DESC LIMIT 1
       ) AS last_message
     FROM lifta_schema.subscription 
@@ -114,6 +120,7 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
 
   const getTraineesQuery = `
     SELECT 
+      DISTINCT ON (users.user_id, subscription.status, package.package_id)
       users.first_name, 
       users.last_name,
       users.user_id,
@@ -122,13 +129,16 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
       package.type,
       subscription.subscription_id,
       subscription.status,
+      subscription.end_date,
       (
         SELECT content 
         FROM lifta_schema.message 
         WHERE 
         (subscription_id = subscription.subscription_id)
-        AND (sender_id = users.user_id AND receiver_id = $1) 
-        OR (sender_id = $1 AND receiver_id = users.user_id) 
+        AND (
+          (sender_id = users.user_id AND receiver_id = $1) 
+          OR (sender_id = $1 AND receiver_id = users.user_id)
+        )
         ORDER BY time DESC LIMIT 1
       ) AS last_message
     FROM lifta_schema.subscription 
@@ -141,6 +151,19 @@ exports.getTraineesWithActiveSubscription = async (Id, type) => {
   return type === "Trainer"
     ? (await db.query(getTraineesQuery, [Id])).rows
     : (await db.query(getTrainersQuery, [Id])).rows;
+};
+
+exports.getMemberships = async (traineeId, trainerId) => {
+  const query = `SELECT package.name, package.type, package.description, subscription.start_date, subscription.end_date, subscription.status,
+                u.email, package.trainer_id, package.price, u.first_name || ' ' || u.last_name AS trainer_name
+                FROM lifta_schema.subscription
+                JOIN lifta_schema.package ON subscription.package_id = package.package_id
+                JOIN lifta_schema.users u ON package.trainer_id = u.user_id
+                WHERE subscription.trainee_id = $1
+                ${trainerId ? "AND package.trainer_id = $2" : ""};`;
+  return (
+    await db.query(query, trainerId ? [traineeId, trainerId] : [traineeId])
+  ).rows;
 };
 
 exports.getSubscriptionsCountByPackageType = async () => {

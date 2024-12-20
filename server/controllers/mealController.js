@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const mealModel = require("../models/mealModel");
+const { raw } = require("express");
 
 const createMeal = async (req, res, next) => {
   const { name, nutritionist_id, ingredients, picture } = req.body;
@@ -101,7 +102,7 @@ const getCurrentMealsByTraineeId = async (req, res, next) => {
 };
 
 const addDoneMeal = async (req, res, next) => {
-  const { trainee_id, meal_id , type} = req.body;
+  const { trainee_id, meal_id, type } = req.body;
 
   await mealModel.addDoneMeal(trainee_id, meal_id, type);
   res.status(201).json({
@@ -123,8 +124,8 @@ const getCurrentMealStatusByType = async (req, res, next) => {
     data: {
       isDone,
     },
-   });
-};  
+  });
+};
 
 const removeIngredientFromMeal = async (req, res, next) => {
   const { ingredient_id } = req.body;
@@ -157,6 +158,64 @@ const deleteMeal = async (req, res, next) => {
   });
 };
 
+const getMealLog = async (req, res, next) => {
+  const { traineeId, trainerId } = req.params;
+  if (!traineeId || isNaN(traineeId)) {
+    return next(new AppError("Please provide a trainee id", 400));
+  }
+
+  const rawMeals = await mealModel.getMealLog(traineeId, trainerId);
+  const groupedByDate = {}; // date groups, every date has array of meals of that day, where each meal has type , name, total nutrients and array of ingredients
+  // i want also if the meal id is the same and the type is different , each of them should be in a different group in the same date
+  rawMeals.forEach((meal) => {
+    if (!groupedByDate[new Date(meal.date).toISOString()]) {
+      groupedByDate[new Date(meal.date).toISOString()] = [];
+    }
+    // check if meal already exists in the date group
+    let meall = groupedByDate[new Date(meal.date).toISOString()].find(
+      (m) => m.meal_id === meal.meal_id && m.type === meal.type
+    );
+    if (!meall) {
+      meall = {
+        meal_id: meal.meal_id,
+        nutritionist_name: meal.nutritionist_name,
+        name: meal.meal_name,
+        isDone: meal.isDone,
+        type: meal.type,
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fats: 0,
+        ingredients: [],
+      };
+      groupedByDate[new Date(meal.date).toISOString()].push(meall);
+    }
+    meall.calories += (meal.calories_serving * meal.ingredient_quantity) / 100;
+    meall.protein += (meal.protein * meal.ingredient_quantity) / 100;
+    meall.carbs += (meal.carb * meal.ingredient_quantity) / 100;
+    meall.fats += (meal.fat * meal.ingredient_quantity) / 100;
+    meall.ingredients.push(
+      `${meal.ingredient_quantity}g ${meal.ingredient_name}`
+    );
+  });
+
+  //sort by date
+  const groupedByDateSorted = Object.keys(groupedByDate).sort((a, b) => {
+    return new Date(b) - new Date(a);
+  });
+  const groupedByDateSortedObj = {};
+  groupedByDateSorted.forEach((date) => {
+    groupedByDateSortedObj[date] = groupedByDate[date];
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      meals: groupedByDateSortedObj,
+    },
+  });
+};
+
 const removeDoneMeal = async (req, res, next) => {
   const { traineeId, type } = req.params;
   await mealModel.removeDoneMeal(traineeId, type);
@@ -178,5 +237,6 @@ module.exports = {
   assignMealTrainee: catchAsync(assignMealTrainee),
   getMealsTrainee: catchAsync(getMealsTrainee),
   removeMealFromDiet: catchAsync(removeMealFromDiet),
+  getMealLog: catchAsync(getMealLog),
   removeDoneMeal: catchAsync(removeDoneMeal),
 };

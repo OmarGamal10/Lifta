@@ -104,7 +104,9 @@ const router = createBrowserRouter([
     path: "browse",
     element: (
       <BrowseProtectedRoute>
-        <BrowseCoaches />
+        <PrimeReactProvider value={{ pt: Tailwind }}>
+          <BrowseCoaches />
+        </PrimeReactProvider>
       </BrowseProtectedRoute>
     ),
   },

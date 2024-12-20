@@ -11,9 +11,14 @@ router.get("/", (req, res, next) => {
   return workoutController.getWorkoutsCoach(req, res, next);
 });
 
-
 router.get("/trainee/:traineeId", workoutController.getWorkoutsTrainee);
+router.get("/log/:traineeId", workoutController.getWorkoutLog);
+router.get(
+  "/log/:traineeId/trainer/:trainerId",
+  workoutController.getWorkoutLog
+);
 router.post("/trainee", workoutController.assignWorkoutTrainee);
+router.patch("/trainee", workoutController.markWorkoutAsDone);
 
 router.post(
   "/",

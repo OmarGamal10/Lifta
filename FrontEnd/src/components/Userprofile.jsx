@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import NavBar from "./Navbar";
 import ProfileSection from "./Profilesection";
 import { SubReqDashboard } from "./coach/subReqDashboard";
 import CoachSideBar from "./coach/Sidebar";
 import TraineeSideBar from "./trainee/Sidebar";
-import AdminSideBar from "./admin/Sidebar"
+import AdminSideBar from "./admin/Sidebar";
 import MyProfile from "./MyProfile";
 import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
@@ -23,6 +24,8 @@ import Ingredients from "./coach/Ingredients";
 import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
+import NutritionHistory from "./trainee/NutritionHistory";
+import WorkoutHistory from "./trainee/WorkoutHistory";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -74,12 +77,13 @@ const UserProfile = ({ userId }) => {
     } else {
       return (
         <AdminSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
-      )
+      );
     }
   };
   const components = {
 
-    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />,
+
+    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <Clients userId={userId} />
@@ -109,7 +113,15 @@ const UserProfile = ({ userId }) => {
       if (activeSection == "Nutrition") {
         return <TraineeCurrentMeals userId={userId} />;
       }
-
+      if (activeSection == "Nutrition History") {
+        return <NutritionHistory userId={userId} />;
+      }
+      if (activeSection == "Workout history") {
+        return <WorkoutHistory userId={userId} />;
+      }
+      if (activeSection == "Memberships") {
+        return <Memberships userId={userId} />;
+      }
     } else if (userType == "Trainer") {
       if (activeSection == "Exercises") return <Exercises userId={userId} />;
       if (activeSection == "Ingredients")

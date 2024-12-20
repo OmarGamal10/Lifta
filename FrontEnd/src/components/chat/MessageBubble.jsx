@@ -10,13 +10,13 @@ const MessageBubble = ({ message, isOwn }) => {
     <div className={`flex mb-3 ${isOwn ? "justify-end" : "justify-start"}`}>
       <div className={`flex flex-col max-w-[70%]`}>
         <div
-          className={`p-2.5 rounded-lg ${
+          className={`p-2.5 rounded-lg break-words overflow-hidden ${
             isOwn
               ? "bg-accent rounded-tr-none"
               : "bg-secondary text-gray-800 rounded-tl-none"
           }`}
         >
-          <p className="text-md font-semibold leading-normal">
+          <p className="text-md font-semibold leading-normal whitespace-pre-wrap break-words">
             {message.content}
           </p>
         </div>
