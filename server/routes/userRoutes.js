@@ -53,23 +53,26 @@ router.get("/admins", async (req, res, next) => {
   });
 });
 
-router.get("/browse", async (req, res, next) => {
+router.get("/browse/:traineeId", async (req, res, next) => {
+  const { traineeId } = req.params;
   res.status(200).json({
     status: "success",
     data: {
-      coaches: await userModel.getAvailableCoaches(),
+      coaches: await userModel.getAvailableCoaches(traineeId),
     },
   });
 });
+
 router.get("/:userId/details", async (req, res, next) => {
   const { userId } = req.params;
   res.status(200).json({
     status: "success",
     data: {
       details: await userModel.getDetails(userId),
-    }
-  })
+    },
+  });
 });
+
 router.patch("/:userId/details", authController.updateUser);
 
 router.delete("/:userId", adminController.deleteUserByUserId);

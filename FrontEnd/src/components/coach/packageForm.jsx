@@ -133,7 +133,7 @@ function PackageForm({
             duration: response.data.package.duration,
             type: response.data.package.type,
             price: response.data.package.price,
-            isActive: response.data.package.is_active,
+            is_active: response.data.package.is_active,
           },
         ]);
         setView(false);

@@ -56,31 +56,62 @@ export function ReviewModalForm(probs) {
     const token = getTokenFromCookies();
     const decodedToken = token ? jwtDecode(token) : null;
     const userId = decodedToken ? decodedToken.user_id : null;
-    console.log(userId);
     const content = formData.content;
-    const trainerId = 70;
-    const traineeId = 89;
-    console.log(content);
-    try {
-      const response = await post(
-        "/reviews",
-        {
-          trainerId,
-          traineeId,
-          content,
-          stars,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+
+    if (probs.isEdit) {
+      const reviewId = probs.reviewId;
+      try {
+        const response = await patch(
+          `/reviews/${probs.reviewId}`,
+          {
+            content,
+            stars,
           },
-        }
-      );
-      console.log(response);
-    } catch (err) {
-      console.log(err);
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
     }
+    else {
+      const trainerId = probs.trainerId;
+      const traineeId = userId;
+      try {
+        const response = await post(
+          "/reviews",
+          {
+            trainerId,
+            traineeId,
+            content,
+            stars,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setFormData({ content: "" });
+    setStars(0);
+    probs.handleCloseModal();
   };
+
+  useEffect(() => {
+    if (probs.isEdit) {
+      setFormData({ content: probs.content });
+      setStars(probs.stars);      
+    }
+  }, [probs]);
 
   return (
     
@@ -119,7 +150,7 @@ export function ReviewModalForm(probs) {
               }}
             />
           </div>
-          <div className="w-1/2 mt-10">
+        <div className="w-1/2 mt-10">      
             <button
               type="submit"
               className=" border-secondary w-full text-secondary text-sm rounded-xl py-4 border-2 hover:bg-secondary hover:text-textColor font-medium  active:ring active:ring-secondary/50"

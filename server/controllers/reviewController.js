@@ -30,7 +30,6 @@ const getReviewsTrainee = async (req, res, next) => {
   });
 };
 
-
 const getCoachRate = async (req, res, next) => {
   const { coachId } = req.params;
   if (!coachId || isNaN(coachId)) {
@@ -65,9 +64,55 @@ const createReview = async (req, res, next) => {
   });
 };
 
+const deleteReview = async (req, res, next) => {
+  const { reviewId } = req.params;
+  if (!reviewId || isNaN(reviewId)) {
+    return next(new AppError("Please provide a review id", 400));
+  }
+  await reviewModel.deleteReview(reviewId);
+  res.status(200).json({
+    status: "success",
+    message: "Review deleted successfully",
+  });
+};
+
+const updateReview = async (req, res, next) => {
+  const { reviewId } = req.params;
+  const { content, stars } = req.body;
+
+  if (!reviewId || isNaN(reviewId)) {
+    return next(new AppError("Please provide a review id", 400));
+  }
+
+  const review = await reviewModel.updateReview(reviewId, content, stars);
+
+  res.status(200).json({
+    status: "success",
+    message: "Review updated successfully",
+    data: { review },
+  });
+};
+
+const getReviewByReviewId = async (req, res, next) => {
+  const { reviewId } = req.params;
+  if (!reviewId || isNaN(reviewId)) {
+    return next(new AppError("Please provide a review id", 400));
+  }
+  const review = await reviewModel.getReviewsByReviewId(reviewId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      review
+    },
+  });
+};
+
 module.exports = {
   getReviewsCoach: catchAsync(getReviewsCoach),
   createReview: catchAsync(createReview),
   getCoachRate: catchAsync(getCoachRate),
   getReviewsTrainee: catchAsync(getReviewsTrainee),
+  deleteReview: catchAsync(deleteReview),
+  updateReview: catchAsync(updateReview),
+  getReviewByReviewId: catchAsync(getReviewByReviewId),
 };

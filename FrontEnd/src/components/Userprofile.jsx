@@ -5,6 +5,7 @@ import ProfileSection from "./Profilesection";
 import { SubReqDashboard } from "./coach/subReqDashboard";
 import CoachSideBar from "./coach/Sidebar";
 import TraineeSideBar from "./trainee/Sidebar";
+import AdminSideBar from "./admin/Sidebar";
 import MyProfile from "./MyProfile";
 import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
@@ -23,10 +24,6 @@ import Ingredients from "./coach/Ingredients";
 import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
-
-import WorkoutHistory from "./trainee/WorkoutHistory";
-import NutritionHistory from "./trainee/NutritionHistory";
-import Memberships from "./trainee/Memberships";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -75,6 +72,10 @@ const UserProfile = ({ userId }) => {
       return (
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
+    } else {
+      return (
+        <AdminSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
+      );
     }
   };
   const components = {
@@ -116,11 +117,6 @@ const UserProfile = ({ userId }) => {
       }
       if (activeSection == "Memberships") {
         return <Memberships userId={userId} />;
-      }
-      if (activeSection) {
-        return <NoDataDashboard header={`${activeSection}` + " Section"} />;
-      } else {
-        return <NoDataDashboard header="No Data Dashboard" />;
       }
     } else if (userType == "Trainer") {
       if (activeSection == "Exercises") return <Exercises userId={userId} />;

@@ -10,21 +10,24 @@ import ExerciseForm from "./exerciseForm";
 import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
 import { use } from "react";
+import Loader from "../Loader"; // Import your Loader component
+
 function Exercises({ userId }) {
   const navigate = useNavigate();
 
-  const { get, post, del, loading, error, data } = useHttp(
-    "http://localhost:3000"
-  );
+  const { get, post, del, error, data } = useHttp("http://localhost:3000");
   const [curPage, setCurPage] = useState(1);
   const [exercises, setExercises] = useState([]);
   const totalPages = Math.ceil(exercises.length / 5);
   const [addExerciseView, setAddExerciseView] = useState(false);
   const [editExerciseView, setEditExerciseView] = useState(false);
   const [idToEdit, setIdToEdit] = useState(null);
+  const [loading, setLoading] = useState(true); // State to track loading
+
   /////////////////////////////////////////
   useEffect(() => {
     const fetchExercises = async () => {
+      setLoading(true);
       try {
         const response = await get(`/users/${userId}/exercises`, {
           headers: {
@@ -45,6 +48,8 @@ function Exercises({ userId }) {
       } catch (err) {
         console.error("Error fetching exercises:", err);
         setExercises([]);
+      } finally {
+        setLoading(false); // Hide loader after API call finishes
       }
     };
 
@@ -80,7 +85,7 @@ function Exercises({ userId }) {
     setCurPage((prevPage) => Math.min(totalPages, prevPage + 1));
   };
 
-  return (
+  const renderExercise = () => (
     <>
       {editExerciseView && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -162,6 +167,9 @@ function Exercises({ userId }) {
         )}
       </div>
     </>
+  );
+  return (
+    <div className="w-full">{loading ? <Loader /> : renderExercise()}</div>
   );
 }
 export default Exercises;
