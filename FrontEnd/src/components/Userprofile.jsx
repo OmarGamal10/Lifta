@@ -26,6 +26,7 @@ import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
 import NutritionHistory from "./trainee/NutritionHistory";
 import WorkoutHistory from "./trainee/WorkoutHistory";
+import Memberships from "./trainee/Memberships";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -81,9 +82,7 @@ const UserProfile = ({ userId }) => {
     }
   };
   const components = {
-
-
-    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />
+    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />,
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <Clients userId={userId} />
