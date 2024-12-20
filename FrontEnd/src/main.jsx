@@ -41,14 +41,18 @@ import { TraineesList } from "./components/admin/traineesList.jsx";
 import { CoachesList } from "./components/admin/coachesList.jsx";
 import { AdminStatistics } from "./components/admin/adminStatistics.jsx";
 
+import Exercises from "./components/coach/Exercises.jsx";
+
+
+
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      // <ProtectedLoggedRoute>
-      <PackageForm />
-      // </ProtectedLoggedRoute>
+      <ProtectedLoggedRoute>
+        <LandingPage />
+      </ProtectedLoggedRoute>
     ),
   },
   {
@@ -76,6 +80,24 @@ const router = createBrowserRouter([
     ),
   },
   {
+
+    path: "createWorkout",
+    element: (
+      <ProtectedRoute>
+        <CreateWorkout />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "createMeal",
+    element: (
+      <ProtectedRoute>
+        <CreateMeal />
+      </ProtectedRoute>
+    ),
+  },
+  {
+
     path: "browse",
     element: (
       <BrowseProtectedRoute>
@@ -98,6 +120,7 @@ const router = createBrowserRouter([
     )
   },
   {  
+
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
@@ -105,6 +128,7 @@ const router = createBrowserRouter([
       </PrimeReactProvider>
     ),
   },
+
   {
     path: "*",
     element: <NotFound />,

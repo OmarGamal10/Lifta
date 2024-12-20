@@ -36,7 +36,7 @@ exports.updateIngredient = async (...values) => {
   const query = `
   UPDATE lifta_schema.ingredient 
   SET name=$1, protein=$2, carb=$3, fat=$4, calories_serving=$5 
-  WHERE ingredient_id=$6
+  WHERE ingredient_id=$6 RETURNING *;
 `;
   return (await db.query(query, values)).rows;
 };

@@ -79,8 +79,8 @@ const useHttp = (baseURL = "") => {
   );
 
   const del = useCallback(
-    (endpoint, config = {}) => {
-      return request("delete", endpoint, null, config);
+    (endpoint, data, config = {}) => {
+      return request("delete", endpoint, data, config);
     },
     [request]
   );

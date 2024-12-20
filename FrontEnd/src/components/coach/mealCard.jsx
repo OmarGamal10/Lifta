@@ -3,7 +3,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import "../../style/output.css";
 
-function Meal({ name, photo, facts, view }) {
+function Meal({ id, name, photo, facts, view, handleDelete }) {
   const handleImageError = (e) => {
     e.target.src =
       "./src/assets/help-this-image-couldnt-be-loaded-error-and-i-need-that-v0-71omzkrcy1la1.webp";
@@ -51,7 +51,10 @@ function Meal({ name, photo, facts, view }) {
         ""
       ) : (
         <div className="flex flex-row justify-center gap-16">
-          <button className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor">
+          <button
+            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor"
+            onClick={(e) => handleDelete(id)}
+          >
             <FaRegTrashAlt size={20} />
           </button>
           <button className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor">
