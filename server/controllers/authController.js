@@ -188,6 +188,69 @@ const signup = async (req, res, next) => {
   });
 };
 
+const updateUser = async (req, res, next) => {
+  const {userId} = req.params;
+  const {
+    email,
+    first_name,
+    last_name,
+    password,
+    oldPassword,
+    newPassword,
+    bio,
+    phone_number,
+    type,
+    photo,
+  } = req.body;
+
+  let food_allergies,
+    workout_preferences,
+    weight,
+    height,
+    goal,
+    experience_years,
+    client_limit;
+  if (type === "Trainee") {
+    ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
+  } else {
+    ({
+      experience_years,
+      client_limit
+    } = req.body);
+  }
+
+  if (!validator.isEmail(email))
+    return next(new AppError("Please enter a valid Email", 400));
+
+  if (oldPassword && !(await validatePassword(oldPassword, password)))
+    return next(new AppError("Incorrect password", 401));
+  const passwordHashed = (oldPassword)? await hashPassword(newPassword): password;
+  const values = [
+    email,
+    first_name,
+    last_name,
+    passwordHashed,
+    bio,
+    phone_number,
+    photo,
+    type,
+    userId
+  ];
+  type === "Trainee"
+    ? values.push(food_allergies, weight, height, goal, workout_preferences)
+    : values.push(
+        experience_years,
+        client_limit,
+      );
+
+  const user = await userModel.updateUser(values);
+
+  res.status(200).json({
+    status: "success",
+    user: user,
+  });
+}
+
 // Log-out => Reset Cookie
 
 const logout = (req, res) => {
@@ -200,5 +263,6 @@ module.exports = {
   checkAuth,
   login: catchAsync(login),
   signup: catchAsync(signup),
+  updateUser: catchAsync(updateUser),
   logout,
 };

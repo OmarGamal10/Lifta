@@ -66,6 +66,9 @@ const UserProfile = ({ userId }) => {
     }
   }
   const components =  {
+    "My Profile": (
+      <MyProfile userId={userId} />
+    ),
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
     <Clients userId={userId} />
@@ -102,7 +105,7 @@ const UserProfile = ({ userId }) => {
       <NavBar pref={"NotDefault"} />
       <ProfileSection userName={userName} userBio={userBio} userType={userType} userId={userId}/>
       <div className="h-[0.5px] bg-textspan "></div>
-      <div className="flex h-[960px] w-full ml-4">
+      <div className="flex min-h-[960px] w-full ml-4">
         {renderSideBar()}
         <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
         {/* Vertical Divider */}
