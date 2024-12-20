@@ -1,5 +1,5 @@
 const db = require("../db");
-const router = require("express").Router();
+const router = require("express").Router({ mergeParams: true });
 const authController = require("../controllers/authController");
 const userModel = require("../models/userModel");
 const convertToSnakeCase = require("../middlewares/camelToSnakeMiddleware");
@@ -61,6 +61,17 @@ router.get("/browse", async (req, res, next) => {
     },
   });
 });
+router.get("/:userId/details", async (req, res, next) => {
+  const { userId } = req.params;
+  res.status(200).json({
+    status: "success",
+    data: {
+      details: await userModel.getDetails(userId),
+    }
+  })
+});
+router.patch("/:userId/details", authController.updateUser);
+
 router.delete("/:userId", adminController.deleteUserByUserId);
 router.patch("/:userId/ban", adminController.banUser);
 router.patch("/:userId/unban", adminController.unbanUser);
