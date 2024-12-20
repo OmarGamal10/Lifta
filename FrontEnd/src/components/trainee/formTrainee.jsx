@@ -6,7 +6,7 @@ import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import useHttp from "../../hooks/useHTTP";
 import { useNavigate } from "react-router-dom";
 
-function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
+function FormTrainee({ formData, traineeData, setTraineeData, setCurForm, isAdmin}) {
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
@@ -49,25 +49,46 @@ function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
       return;
     }
 
-    try {
-      console.log(traineeData);
-      const response = await post(
-        "/users/signup",
-        {
-          ...formData,
-          ...traineeData,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+    if (!isAdmin) {
+      try {
+        console.log(traineeData);
+        const response = await post(
+          "/users/signup",
+          {
+            ...formData,
+            ...traineeData,
           },
-        }
-      );
-      navigate("/profile");
-    } catch (err) {
-      console.log(err);
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        navigate("/profile");
+      } catch (err) {
+        console.log(err);
+      }
+      //console.log("Form submitted successfully:", traineeData);
     }
-    //console.log("Form submitted successfully:", traineeData);
+    else {
+      try {
+        console.log(traineeData);
+        const response = await post(
+          "/users/createAccount",
+          {
+            ...formData,
+            ...traineeData,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   return (
@@ -245,9 +266,9 @@ function FormTrainee({ formData, traineeData, setTraineeData, setCurForm }) {
             </button>
             <button
               type="submit"
-              className="bg-secondary border px-[100px] rounded-lg border-secondary py-4 text-sm text-backGroundColor hover:border-primary hover:text-primary"
+              className="bg-secondary border w-5/12 rounded-lg border-secondary py-4 text-sm text-backGroundColor hover:border-primary hover:text-primary"
             >
-              Sign up
+              Create Account
             </button>
           </div>
         </form>

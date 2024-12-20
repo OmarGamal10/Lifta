@@ -1,5 +1,5 @@
 const db = require("../db");
-const router = require("express").Router();
+const router = require("express").Router({ mergeParams: true });
 const authController = require("../controllers/authController");
 const userModel = require("../models/userModel");
 const convertToSnakeCase = require("../middlewares/camelToSnakeMiddleware");
@@ -44,6 +44,15 @@ router.get("/trainees", async (req, res, next) => {
   });
 });
 
+router.get("/admins", async (req, res, next) => {
+  res.status(200).json({
+    status: "success",
+    data: {
+      admins: await userModel.getAllAdmins(),
+    },
+  });
+});
+
 router.get("/browse", async (req, res, next) => {
   res.status(200).json({
     status: "success",
@@ -52,11 +61,25 @@ router.get("/browse", async (req, res, next) => {
     },
   });
 });
+router.get("/:userId/details", async (req, res, next) => {
+  const { userId } = req.params;
+  res.status(200).json({
+    status: "success",
+    data: {
+      details: await userModel.getDetails(userId),
+    }
+  })
+});
+router.patch("/:userId/details", authController.updateUser);
+
 router.delete("/:userId", adminController.deleteUserByUserId);
+router.patch("/:userId/ban", adminController.banUser);
+router.patch("/:userId/unban", adminController.unbanUser);
 
 //auth routes
 router.post("/login", authController.login);
 router.post("/signup", convertToSnakeCase, authController.signup);
+router.post("/createAccount", convertToSnakeCase, authController.createAccount);
 router.get("/logout", authController.logout);
 router.get("/checkAuth", authController.checkAuth);
 router.get("/:userId", authController.getUserById);

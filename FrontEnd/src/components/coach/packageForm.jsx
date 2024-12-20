@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
 import "../output.css";
 import ErrorMessage from "../errorMsg";
+import { BsX } from "react-icons/bs";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import useHttp from "../../hooks/useHTTP";
-function PackageForm({ edit = true, idToEdit = 11 }) {
+function PackageForm({
+  userId,
+  edit = false,
+  idToEdit = 11,
+  setPackages,
+  setView,
+}) {
   const navigate = useNavigate();
   const { post, get, patch, loading, error, data } = useHttp(
     "http://localhost:3000"
@@ -96,10 +103,6 @@ function PackageForm({ edit = true, idToEdit = 11 }) {
       return;
     }
     if (!edit) {
-      const token = getTokenFromCookies();
-      const decodedToken = token ? jwtDecode(token) : null;
-      const userId = decodedToken ? decodedToken.user_id : null;
-      console.log(userId);
       const data = { ...formData };
       if (data.type.length == 2) data.type = "Both";
       else {
@@ -121,7 +124,19 @@ function PackageForm({ edit = true, idToEdit = 11 }) {
           }
         );
         console.log(response);
-        navigate("/profile");
+        setPackages((prev) => [
+          ...prev,
+          {
+            package_id: response.data.package.package_id,
+            name: response.data.package.name,
+            description: response.data.package.description,
+            duration: response.data.package.duration,
+            type: response.data.package.type,
+            price: response.data.package.price,
+            isActive: response.data.package.is_active,
+          },
+        ]);
+        setView(false);
       } catch (err) {
         console.log(err);
         setErrors({ submit: err.response.data.message });
@@ -140,12 +155,38 @@ function PackageForm({ edit = true, idToEdit = 11 }) {
           }
         );
         console.log(response);
-        navigate("/profile");
+        setPackages((prev) =>
+          prev.map((pkg) =>
+            pkg.package_id === idToEdit
+              ? {
+                  package_id: response.data.package.package_id,
+                  name: response.data.package.name,
+                  description: response.data.package.description,
+                  duration: response.data.package.duration,
+                  type: response.data.package.type,
+                  price: response.data.package.price,
+                  isActive: response.data.package.is_active,
+                }
+              : pkg
+          )
+        );
+
+        setView(false);
       } catch (err) {
         console.log(err.response.data.message);
         setErrors({ submit: err.response.data.message });
       }
     }
+  };
+  const handleClose = (e) => {
+    setFormData({
+      name: "",
+      price: "",
+      duration: "",
+      description: "",
+      type: [],
+    });
+    setView(false);
   };
 
   return (
@@ -155,6 +196,12 @@ function PackageForm({ edit = true, idToEdit = 11 }) {
         edit ? "max-w-sm" : "max-w-lg"
       } rounded-3xl relative`}
     >
+      <button
+        onClick={handleClose}
+        className="absolute top-4 right-4 text-secondary hover:text-primary transition-colors duration-200"
+      >
+        <BsX size={30} />
+      </button>
       <h1 className="text-3xl font-bold">{edit ? "Edit" : "New"} Package</h1>
       <form
         onSubmit={handleSubmit}

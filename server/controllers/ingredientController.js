@@ -111,6 +111,9 @@ const updateIngredient = async (req, res, next) => {
 
 const deleteIngredient = async (req, res, next) => {
   const { ingredient_id } = req.body;
+  console.log(ingredient_id);
+  if (!ingredient_id || isNaN(ingredient_id))
+    return next(new AppError("Please provide a ingredient id", 400));
   await ingredientModel.deleteIngredient(ingredient_id);
   res.status(200).json({
     status: "success",
