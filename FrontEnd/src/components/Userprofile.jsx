@@ -4,6 +4,7 @@ import ProfileSection from "./Profilesection";
 import { SubReqDashboard } from "./coach/subReqDashboard";
 import CoachSideBar from "./coach/Sidebar";
 import TraineeSideBar from "./trainee/Sidebar";
+import AdminSideBar from "./admin/Sidebar"
 import MyProfile from "./MyProfile";
 import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
@@ -23,7 +24,6 @@ import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
 
-
 const UserProfile = ({ userId }) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
@@ -31,7 +31,7 @@ const UserProfile = ({ userId }) => {
   const [userType, setUserType] = useState("");
   const [userBio, setUserBio] = useState("");
   const [coachRating, setCoachRating] = useState(0);
-  const [Loading, setLoading ] = useState(true);
+  const [Loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState("");
   const { get } = useHttp("http://localhost:3000");
 
@@ -71,13 +71,14 @@ const UserProfile = ({ userId }) => {
       return (
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
+    } else {
+      return (
+        <AdminSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
+      )
     }
-
-  }
-  const components =  {
-    "My Profile": (
-      <MyProfile userId={userId} />
-    ),
+  };
+  const components = {
+    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />,
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <Clients userId={userId} />
@@ -107,11 +108,7 @@ const UserProfile = ({ userId }) => {
       if (activeSection == "Nutrition") {
         return <TraineeCurrentMeals userId={userId} />;
       }
-      if (activeSection) {
-        return <NoDataDashboard header={`${activeSection}` + " Section"} />;
-      } else {
-        return <NoDataDashboard header="No Data Dashboard" />;
-      }
+
     } else if (userType == "Trainer") {
       if (activeSection == "Exercises") return <Exercises userId={userId} />;
       if (activeSection == "Ingredients")
