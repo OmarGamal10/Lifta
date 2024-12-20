@@ -23,6 +23,10 @@ import Ingredients from "./coach/Ingredients";
 import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
+import { TraineesList } from "./admin/traineesList";
+import { CoachesList } from "./admin/coachesList";
+import { AdminsList } from "./admin/adminsList";
+import { AdminStatistics } from "./admin/adminStatistics";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -102,30 +106,43 @@ const UserProfile = ({ userId }) => {
   // Components to render based on the active section
   const renderComponent = () => {
     if (userType == "Trainee") {
-      if (activeSection == "Workouts") {
-        return <TraineeCurrentWrokout userId={userId} />;
+      switch (activeSection) {
+        case "Workouts":
+          return <TraineeCurrentWrokout userId={userId} />;
+        case "Nutrition": 
+          return <TraineeCurrentMeals userId={userId} />;
+        default:
+          return <NoDataDashboard header={activeSection + " Section"} />;
       }
-      if (activeSection == "Nutrition") {
-        return <TraineeCurrentMeals userId={userId} />;
-      }
-
     } else if (userType == "Trainer") {
-      if (activeSection == "Exercises") return <Exercises userId={userId} />;
-      if (activeSection == "Ingredients")
-        return <Ingredients userId={userId} />;
-      if (activeSection == "Workouts") return <Workouts userId={userId} />;
-      if (activeSection == "Meals") return <Meals userId={userId} />;
+      switch (activeSection) {
+        case "Exercises":
+          return <Exercises userId={userId} />;
+        case "Ingredients":
+          return <Ingredients userId={userId} />;
+        case "Workouts":
+          return <Workouts userId={userId} />;
+        case "Meals":
+          return <Meals userId={userId} />;
+        default:
+          return <NoDataDashboard header={activeSection + " Section"} />;
+      }
+    } else {
+      switch (activeSection) {
+        case "Trainees":
+          return <TraineesList />;
+        case "Coaches": 
+          return <CoachesList />;
+        case "Admins": 
+          return <AdminsList />;
+        case "Statistics": 
+          return <AdminStatistics />;
+        
+        default:
+          return <NoDataDashboard header={activeSection + " Section"} />;
     }
-    if (activeSection == "Packages") {
-      return (
-        <PrimeReactProvider value={{ pt: Tailwind }}>
-          <Packages userId={userId} />
-        </PrimeReactProvider>
-      );
-    }
-
-    return components[activeSection] || components.Default;
   };
+}
 
   return (
     <div className="w-full"> {Loading ? <Loader /> : 
