@@ -23,7 +23,6 @@ import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
 
-
 const UserProfile = ({ userId }) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
@@ -31,7 +30,7 @@ const UserProfile = ({ userId }) => {
   const [userType, setUserType] = useState("");
   const [userBio, setUserBio] = useState("");
   const [coachRating, setCoachRating] = useState(0);
-  const [Loading, setLoading ] = useState(true);
+  const [Loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState("");
   const { get } = useHttp("http://localhost:3000");
 
@@ -72,12 +71,9 @@ const UserProfile = ({ userId }) => {
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
     }
-
-  }
-  const components =  {
-    "My Profile": (
-      <MyProfile userId={userId} />
-    ),
+  };
+  const components = {
+    "My Profile": <MyProfile userId={userId} />,
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <Clients userId={userId} />
@@ -118,46 +114,56 @@ const UserProfile = ({ userId }) => {
         return <Ingredients userId={userId} />;
       if (activeSection == "Workouts") return <Workouts userId={userId} />;
       if (activeSection == "Meals") return <Meals userId={userId} />;
-    }
-    if (activeSection == "Packages") {
-      return (
-        <PrimeReactProvider value={{ pt: Tailwind }}>
-          <Packages userId={userId} />
-        </PrimeReactProvider>
-      );
+      if (activeSection == "Packages") {
+        return (
+          <PrimeReactProvider value={{ pt: Tailwind }}>
+            <Packages userId={userId} />
+          </PrimeReactProvider>
+        );
+      }
+      if (activeSection == "Clients") {
+        return (
+          <PrimeReactProvider value={{ pt: Tailwind }}>
+            <Clients userId={userId} />
+          </PrimeReactProvider>
+        );
+      }
     }
 
     return components[activeSection] || components.Default;
   };
 
   return (
-    <div className="w-full"> {Loading ? <Loader /> : 
-    <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
+    <div className="w-full">
+      {" "}
+      {Loading ? (
+        <Loader />
+      ) : (
+        <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
+          <NavBar pref={"NotDefault"} />
+          <ProfileSection
+            userName={userName}
+            userBio={userBio}
+            userProfile={userProfile}
+            userId={userId}
+            userType={userType}
+          />
 
-      <NavBar pref={"NotDefault"} />
-      <ProfileSection
-        userName={userName}
-        userBio={userBio}
-        userProfile={userProfile}
-        userId={userId}
-        userType={userType}
-      />
-
-      <div className="h-[0.5px] bg-textspan "></div>
-      <div className="flex min-h-[960px] w-full ml-4">
-        {renderSideBar()}
-        <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
-        {/* Vertical Divider */}
-        <div className="w-full">
-          {/* Render Active Component */}
-          <div className="flex justify-center items-center mr-4">
-            {renderComponent()}
+          <div className="h-[0.5px] bg-textspan "></div>
+          <div className="flex min-h-[960px] w-full ml-4">
+            {renderSideBar()}
+            <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
+            {/* Vertical Divider */}
+            <div className="w-full">
+              {/* Render Active Component */}
+              <div className="flex justify-center items-center mr-4">
+                {renderComponent()}
+              </div>
+            </div>
           </div>
+          <Footer />
         </div>
-      </div>
-      <Footer />
-    </div>
-    }
+      )}
     </div>
   );
 };

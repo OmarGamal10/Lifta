@@ -18,6 +18,7 @@ const Clients = ({ userId }) => {
       try {
         const response = await get(`/users/${userId}/clients`);
         setClients(response.data.clients);
+        console.log("API Response: ", response);
       } catch (err) {
         console.error(err);
       } finally {
@@ -34,24 +35,27 @@ const Clients = ({ userId }) => {
   const currentClients = clients.slice(indexOfFirstClient, indexOfLastClient);
 
   const handleRemove = (trainee_id, package_id) => {
-    
     const RemoveClient = async () => {
       setLoading(true); // Show loader when API call starts
       try {
-        const response = await patch(`/users/${userId}/clients/${trainee_id}/${package_id}`, {
-          data: {},
-        });
+        const response = await patch(
+          `/users/${userId}/clients/${trainee_id}/${package_id}`,
+          {
+            data: {},
+          }
+        );
       } catch (err) {
         console.error(err);
       } finally {
         setLoading(false); // Hide loader after API call finishes
       }
-    }
-    
+    };
+
     RemoveClient();
     setClients(
       clients.filter(
-        (client) => client.trainee_id !== trainee_id || client.package_id !== package_id
+        (client) =>
+          client.trainee_id !== trainee_id || client.package_id !== package_id
       )
     );
   };
@@ -82,7 +86,7 @@ const Clients = ({ userId }) => {
         <div className="flex flex-wrap gap-6 justify-center">
           {currentClients.map((client) => (
             <div
-            key={`${client.package_id}_${client.trainee_id}`}
+              key={`${client.package_id}_${client.trainee_id}`}
               onClick={() => viewClient(client.trainee_id)}
               className="bg-backGroundColor border-2 border-secondary p-6 rounded-lg text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer flex flex-col"
             >

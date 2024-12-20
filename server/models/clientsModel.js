@@ -15,7 +15,6 @@ WHERE s.status = 'Active'
   return (await db.query(query, [coachId])).rows;
 };
 
-
 exports.removeClient = async (trainee_id, package_id) => {
   console.log(trainee_id, package_id);
   // First Detecting type of the package
@@ -42,4 +41,4 @@ exports.removeClient = async (trainee_id, package_id) => {
   WHERE trainee_id = $2;`; // Removed package_id from WHERE condition, as it's not needed
 
   await db.query(query3, [type, trainee_id]);
-}
+};

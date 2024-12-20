@@ -110,7 +110,7 @@ function Meals({ userId }) {
           <div className="flex items-center justify-center min-w-64 max-w-64 min-h-64 h-[280px]">
             <button
               onClick={() => navigate("/createMeal")}
-              className="text-primary hover:text-secondary"
+              className="text-primary hover:text-secondary transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-lg transform"
             >
               <IoIosAddCircleOutline size={100} />
             </button>
