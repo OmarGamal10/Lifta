@@ -19,16 +19,11 @@ export function PackageCard(probs) {
     if (
       (probs.type == "Gym" && probs.hasGymSub) ||
       (probs.type == "Nutrition" && probs.hasNutSub)
-    )
-      if (
-        (probs.type === "Gym" && probs.hasGymSub) ||
-        (probs.type === "Nutrition" && probs.hasNutSub) ||
-        (probs.type === "Both" && (probs.hasGymSub || probs.hasNutSub))
-      ) {
-        setSubscribeEnabled(false);
-      } else {
-        setSubscribeEnabled(true);
-      }
+    ) {
+      setSubscribeEnabled(false);
+    } else {
+      setSubscribeEnabled(true);
+    }
   }, []);
 
   function handleToggle() {
