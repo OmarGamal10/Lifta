@@ -35,7 +35,7 @@ function CertForm({ formData, setFormData, setViewCert }) {
         newErrors[key] = `${key.replace(/([A-Z])/g, " $1")} is required.`;
       }
     });
-
+    console.log(newErrors);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;

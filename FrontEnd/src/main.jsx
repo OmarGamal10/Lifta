@@ -40,20 +40,26 @@ import { View } from "lucide-react";
 import { TraineesList } from "./components/admin/traineesList.jsx";
 import { CoachesList } from "./components/admin/coachesList.jsx";
 import { AdminStatistics } from "./components/admin/adminStatistics.jsx";
+
 import { ReviewModalForm } from "./components/trainee/reviewModalForm.jsx";
 import { CoachReviewCard } from "./components/coach/coachReviewCard.jsx";
 import { CoachReviewDashboard } from "./components/coach/coachReviewDashboard.jsx";
 import { TraineeReviewCard } from "./components/trainee/traineeReviewCard.jsx";
 import { TraineeReviewDashboard } from "./components/trainee/traineeReviewDashboard.jsx";
 
+import AdminUserTypeForm from "./components/admin/adminUserTypeForm.jsx";
+import { AdminsList } from "./components/admin/adminsList.jsx";
+import Exercises from "./components/coach/Exercises.jsx";
+
+
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      // <ProtectedLoggedRoute>
-      <PackageForm />
-      // </ProtectedLoggedRoute>
+      <ProtectedLoggedRoute>
+        <LandingPage />
+      </ProtectedLoggedRoute>
     ),
   },
   {
@@ -81,6 +87,24 @@ const router = createBrowserRouter([
     ),
   },
   {
+
+    path: "createWorkout",
+    element: (
+      <ProtectedRoute>
+        <CreateWorkout />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "createMeal",
+    element: (
+      <ProtectedRoute>
+        <CreateMeal />
+      </ProtectedRoute>
+    ),
+  },
+  {
+
     path: "browse",
     element: (
       <BrowseProtectedRoute>
@@ -103,13 +127,20 @@ const router = createBrowserRouter([
     )
   },
   {  
+
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
+
         <TraineeReviewDashboard />
       </PrimeReactProvider>
+
+        < AdminsList />
+        </PrimeReactProvider>
+
     ),
   },
+
   {
     path: "*",
     element: <NotFound />,
