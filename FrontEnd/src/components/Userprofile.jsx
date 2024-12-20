@@ -27,6 +27,7 @@ import { TraineesList } from "./admin/traineesList";
 import { CoachesList } from "./admin/coachesList";
 import { AdminsList } from "./admin/adminsList";
 import { AdminStatistics } from "./admin/adminStatistics";
+import SignUpForm from "./signUpForm";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -137,7 +138,8 @@ const UserProfile = ({ userId }) => {
           return <AdminsList />;
         case "Statistics": 
           return <AdminStatistics />;
-        
+        case "Add User": 
+          return <SignUpForm isAdmin={1} />;
         default:
           return <NoDataDashboard header={activeSection + " Section"} />;
     }
