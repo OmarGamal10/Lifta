@@ -136,6 +136,9 @@ function Packages({ userId }) {
           addPackageView || editPackageView ? "opacity-50" : ""
         } `}
       >
+        <h2 className="py-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
+          Packages
+        </h2>
         <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 pb-5 pr-10">
           {packages.slice((curPage - 1) * 5, curPage * 5).map((_package) => (
             <div key={_package.package_id} className="cursor-pointer">

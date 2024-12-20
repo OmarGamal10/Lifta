@@ -107,10 +107,13 @@ function Exercises({ userId }) {
         </div>
       )}
       <div
-        className={`w-full flex flex-col min-h-screen justify-center px-12 py-3 ${
+        className={`w-full flex flex-col min-h-screen justify-center px-10 py-3 ${
           addExerciseView || editExerciseView ? "opacity-50" : ""
         } `}
       >
+        <h2 className="py-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
+          Exercises
+        </h2>
         <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 pb-5 pr-10">
           {exercises.slice((curPage - 1) * 5, curPage * 5).map((exercise) => (
             <div key={exercise.id} className="cursor-pointer">

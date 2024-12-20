@@ -88,6 +88,9 @@ function Workouts({ userId }) {
           className={`w-full flex flex-col min-h-screen justify-center px-12 py-3 
         } `}
         >
+          <h2 className="py-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
+            Workouts
+          </h2>
           <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 pb-5 pr-10">
             {workouts.slice((curPage - 1) * 5, curPage * 5).map((workout) => (
               <div key={workout.id} className="cursor-pointer">
