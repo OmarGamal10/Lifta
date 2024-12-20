@@ -34,6 +34,7 @@ import {TraineeReviewDashboard} from "./trainee/traineeReviewDashboard"
 import CertificatesDashboard from './coach/Certificatesdashboard'
 import NutritionHistory from "./trainee/NutritionHistory";
 import WorkoutHistory from "./trainee/WorkoutHistory";
+import Memberships from "./trainee/Memberships";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -98,11 +99,11 @@ const UserProfile = ({ userId }) => {
         case "Nutrition": 
           return <TraineeCurrentMeals userId={userId} />;
         case "Memberships": 
-          return <TraineeCurrentMeals userId={userId} />;
+          return <Memberships userId={userId} />;
         case "Workout history": 
-          return <TraineeCurrentMeals userId={userId} />;
+          return <WorkoutHistory userId={userId} />;
         case "Nutrition History": 
-          return <TraineeCurrentMeals userId={userId} />;
+          return <NutritionHistory userId={userId} />;
         case "Reviews": 
           return (
             <PrimeReactProvider value={{pt: Tailwind}}>
