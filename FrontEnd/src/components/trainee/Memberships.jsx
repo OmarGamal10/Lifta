@@ -21,7 +21,7 @@ const Memberships = ({ userId, view = true }) => {
       let response;
       if (view)
         response = await get(`/subscriptions/memberships/trainee/${userId}`);
-      //else response = await get(`/subscriptions/memberships/trainee/${userId}/trainee/${trainerId}`); //trainerId da el trainer el by3ml visit ya magdy
+      //else response = await get(`/subscriptions/memberships/trainee/${userId}/trainer/${trainerId}`); //trainerId da el trainer el by3ml visit ya magdy
       setMemberships(response.data.memberships);
       console.log(response.data.memberships);
     } catch (err) {
@@ -146,11 +146,7 @@ const Memberships = ({ userId, view = true }) => {
                           {new Date(subscription.end_date).toLocaleDateString()}
                         </span>
                         <span
-                          className={`px-3 py-1 rounded-full text-sm ${
-                            subscription.status === "Active"
-                              ? "bg-green-500/20 text-green-500"
-                              : "bg-red-500/20 text-red-500"
-                          }`}
+                          className={`px-3 py-1 rounded-full text-sm text-accent bg-secondary/20 `}
                         >
                           {subscription.status}
                         </span>
@@ -164,7 +160,11 @@ const Memberships = ({ userId, view = true }) => {
                               {subscription.name}
                             </h3>
                             <p className="text-sm text-accent rounded-full bg-secondary/20 px-2 py-1 inline-block mt-1">
-                              {subscription.type}
+                              {subscription.type === "Both"
+                                ? "Gym & Nutrition"
+                                : subscription.type === "Gym"
+                                ? "Gym"
+                                : "Nutrition"}
                             </p>
                           </div>
                           <span className="text-lg text-accent">
