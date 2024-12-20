@@ -165,3 +165,8 @@ exports.getMealLog = async (traineeId, trainerId) => {
     await db.query(query, trainerId ? [traineeId, trainerId] : [traineeId])
   ).rows;
 };
+
+exports.removeDoneMeal = async (trainee_id, type) => {
+  const query = `DELETE FROM lifta_schema.meal_log WHERE trainee_id = $1 AND type = $2 AND date = current_date;`;
+  return await db.query(query, [trainee_id, type]).rows;
+};

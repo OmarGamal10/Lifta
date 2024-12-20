@@ -12,6 +12,23 @@ router.get("/", (req, res, next) => {
     : packageController.getAllPackages(req, res, next);
 });
 
+router.get("/topFive", packageController.getTopFivePackages);
+router.get("/averagePrice", packageController.getAvgPrice);
+
+router.get("/:pkgId", packageController.getPackage);
+router.patch(
+  "/:pkgId",
+  convertCamelToSnake,
+  sanitizeEmptyFields,
+  packageController.updatePackage
+);
+
+router.patch(
+  "/:pkgId/activate",
+  convertCamelToSnake,
+  sanitizeEmptyFields,
+  packageController.toggleActiveState
+);
 router.post(
   "/",
   convertCamelToSnake,

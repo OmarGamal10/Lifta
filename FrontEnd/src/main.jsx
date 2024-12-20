@@ -13,7 +13,10 @@ import ProfileSection from "./components/Profilesection.jsx";
 import LandingPage from "./components/landingPage.jsx";
 import Banned from "./pages/Banned.jsx";
 import NotFound from "./pages/Notfound.jsx";
-
+import BrowseCoaches from "./pages/BrowseCoaches.jsx";
+import Footer from "./components/Footer.jsx";
+import NavBar from "./components/Navbar.jsx";
+import BrowseProtectedRoute from "./BrowseProtectedRoute.jsx";
 import { TraineeExerciseCard } from "./components/trainee/traineeExerciseCard.jsx";
 import { PrimeReactProvider, PrimeReactContext } from "primereact/api";
 import Tailwind from "primereact/passthrough/tailwind";
@@ -34,6 +37,21 @@ import AssignMeal from "./components/coach/assignMeal.jsx";
 import Meal from "./components/coach/mealCard.jsx";
 import { PackageCard } from "./components/packageCard.jsx";
 import { View } from "lucide-react";
+import { TraineesList } from "./components/admin/traineesList.jsx";
+import { CoachesList } from "./components/admin/coachesList.jsx";
+import { AdminStatistics } from "./components/admin/adminStatistics.jsx";
+
+import { ReviewModalForm } from "./components/trainee/reviewModalForm.jsx";
+import { CoachReviewCard } from "./components/coach/coachReviewCard.jsx";
+import { CoachReviewDashboard } from "./components/coach/coachReviewDashboard.jsx";
+import { TraineeReviewCard } from "./components/trainee/traineeReviewCard.jsx";
+import { TraineeReviewDashboard } from "./components/trainee/traineeReviewDashboard.jsx";
+
+import AdminUserTypeForm from "./components/admin/adminUserTypeForm.jsx";
+import { AdminsList } from "./components/admin/adminsList.jsx";
+import Exercises from "./components/coach/Exercises.jsx";
+
+
 
 const router = createBrowserRouter([
   {
@@ -56,7 +74,7 @@ const router = createBrowserRouter([
     path: "sign-up",
     element: (
       <ProtectedLoggedRoute>
-        <SignUpForm />
+        <SignUpForm isAdmin={0} />
       </ProtectedLoggedRoute>
     ),
   },
@@ -69,15 +87,60 @@ const router = createBrowserRouter([
     ),
   },
   {
+
+    path: "createWorkout",
+    element: (
+      <ProtectedRoute>
+        <CreateWorkout />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "createMeal",
+    element: (
+      <ProtectedRoute>
+        <CreateMeal />
+      </ProtectedRoute>
+    ),
+  },
+  {
+
+    path: "browse",
+    element: (
+      <BrowseProtectedRoute>
+        <BrowseCoaches />
+      </BrowseProtectedRoute>
+    ),
+  },
+  {
+    path: "browse/:coach_id/packages",
+    element: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <BrowseProtectedRoute>
+        <div>
+          <NavBar pref="NotDefault" />
+          <PackageDashboard />
+          <Footer />
+          </div>
+        </BrowseProtectedRoute>
+        </PrimeReactProvider>
+    )
+  },
+  {  
+
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <ProtectedRoute>
-          <AssignMeal />
-        </ProtectedRoute>
+
+        <TraineeReviewDashboard />
       </PrimeReactProvider>
+
+        < AdminsList />
+        </PrimeReactProvider>
+
     ),
   },
+
   {
     path: "*",
     element: <NotFound />,

@@ -4,14 +4,17 @@ import "./output.css"; // Adjust the path as needed
 import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
 import handleImages from "../freqUsedFuncs/handleImages";
 import { useNavigate } from "react-router-dom";
+import useHttp from "../hooks/useHTTP";
 
-function Form({ formData, setFormData, toNext }) {
+function Form({ formData, setFormData, toNext, type }) {
   const navigate = useNavigate();
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showPassword, setPassState] = useState(false);
   const [errors, setErrors] = useState({});
   const fileInputRef = useRef(null);
+
+  const { post, loading, error, data } = useHttp("http://localhost:3000");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,7 +30,7 @@ function Form({ formData, setFormData, toNext }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -41,7 +44,27 @@ function Form({ formData, setFormData, toNext }) {
       setErrors(newErrors);
       return;
     }
-    toNext(2);
+
+    if (type === "Admin") {
+      try {
+        console.log(formData);
+        const response = await post(
+          "/users/signup",
+          {
+            ...formData,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      toNext(2);
+    }
   };
 
   const handleGenderSelect = (gender) => {
@@ -331,7 +354,7 @@ function Form({ formData, setFormData, toNext }) {
               className="bg-secondary border w-5/12 rounded-lg border-secondary py-4 text-sm text-backGroundColor hover:border-primary hover:text-primary"
               onClick={handleSubmit}
             >
-              Next
+              {(type == "Admin") ? "Create Account" : "Next"}
             </button>
           </div>
         </form>

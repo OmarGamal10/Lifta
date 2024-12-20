@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Exercise from "./exerciseCard";
 import ErrorMessage from "../errorMsg";
-import exercises from "./testData";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";

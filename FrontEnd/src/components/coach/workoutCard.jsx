@@ -3,7 +3,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import "../../style/output.css";
 
-function Workout({ name, note, view }) {
+function Workout({ id, name, note, view, handleDelete }) {
   return (
     <div
       className={`
@@ -22,7 +22,12 @@ function Workout({ name, note, view }) {
         ""
       ) : (
         <div className="flex flex-row justify-center gap-16">
-          <button className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor">
+          <button
+            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor"
+            onClick={() => {
+              handleDelete(id);
+            }}
+          >
             <FaRegTrashAlt size={20} />
           </button>
           <button className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor">

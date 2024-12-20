@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import useHttp from "./hooks/useHTTP";
+import Loader from "./components/Loader";
 
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -28,7 +29,7 @@ const ProtectedRoute = ({ children }) => {
 
   // Handle loading or redirect state
   if (isAuthenticated === null) {
-    return <div>Loading...</div>; // Or a spinner/loading component
+    return <Loader />
   }
 
   if (isAuthenticated === false) {

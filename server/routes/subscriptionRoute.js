@@ -38,4 +38,13 @@ router.get(
   subscriptionController.getTraineeHasNutritionSubscription
 );
 
+router.get(
+  "/subscriptionsCountByPackageType",
+  subscriptionController.getSubscriptionsCountByPackageType
+);
+router.get(
+  "/activeSubscriptionsCount",
+  subscriptionController.getActiveSubscriptionsCount
+);
+
 module.exports = router;

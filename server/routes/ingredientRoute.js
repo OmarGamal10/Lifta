@@ -12,6 +12,14 @@ router.get("/", (req, res, next) => {
     return ingredientController.getIngredientsMeal(req, res, next);
 });
 
+router.get("/:ingId", (req, res, next) => {
+  return ingredientController.getIngredient(req, res, next);
+});
+
+router.patch("/:ingId", (req, res, next) => {
+  return ingredientController.updateIngredient(req, res, next);
+});
+
 router.post(
   "/",
   convertCamelToSnake,
@@ -22,7 +30,7 @@ router.post(
 router.delete("/", convertCamelToSnake, (req, res, next) => {
   if (req.params.mealId)
     return mealController.removeIngredientFromMeal(req, res, next);
-  else ingredientController.deleteIngredient;
+  else ingredientController.deleteIngredient(req, res, next);
 });
 
 module.exports = router;

@@ -56,7 +56,7 @@ function LoginForm() {
       navigate("/profile");
       console.log(response);
     } catch (error) {
-      console.error(error);
+      errors.response = error.response.data.message;
     }
   };
 
@@ -134,6 +134,7 @@ function LoginForm() {
               </Link>
             </span>
           </div>
+          {errors.response && <ErrorMessage error={errors.response} />}
         </form>
       </div>
     </div>

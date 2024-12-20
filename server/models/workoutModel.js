@@ -70,6 +70,16 @@ exports.addtoWorkoutLog = async (trainee_id, workout_id) => {
   }
 };
 
+exports.assignWorkoutToTrainee = async (trainee_id, workout_id, day) => {
+  try {
+    const query = `INSERT INTO lifta_schema.workouts_schedule (workout_id,trainee_id,day) VALUES ($1,$2,$3) RETURNING * `;
+    return (await db.query(query, [workout_id, trainee_id, day])).rows;
+  } catch (err) {
+    if (err.code === "23505") {
+      throw new AppError("Trainee already have a workout on this day", 400);
+    }
+    throw err;
+  }
 exports.assignWorkoutToTrainee = async (
   trainee_id,
   workout_id,
@@ -144,4 +154,9 @@ exports.markWorkoutAsDone = async (trainee_id, workout_id, date) => {
   const query = `UPDATE lifta_schema.workout_log SET "isDone" = true WHERE trainee_id = $1 AND workout_id = $2 AND date = $3`;
   return await db.query(query, [trainee_id, workout_id, date]);
   // same here workout id is not necessary but for future use if we ever need it (multiple workouts per date)
+};
+
+exports.removeDoneWorkout = async (trainee_id) => {
+  const query = `DELETE FROM lifta_schema.workout_log WHERE trainee_id = $1 AND date = current_date;`;
+  return await db.query(query, [trainee_id]).rows;
 };

@@ -19,6 +19,7 @@ const SideBar = ({ onSidebarClick }) => {
     { name: "Clients", label: "Clients"},
     { name: "Packages", label: "Packages"},
     { name: "Reviews", label: "Reviews"},
+    { name: "Requests", label: "Requests"},
   ];
 
   // Handle click and update the active item
@@ -45,6 +46,8 @@ const SideBar = ({ onSidebarClick }) => {
           case "Packages":
             return <TbPackages className="mr-2 text-2xl" />;
           case "Reviews":
+            return <MdReviews className="mr-2 text-2xl" />;
+          case "Requests":
             return <MdReviews className="mr-2 text-2xl" />;
           default:
             return <TbTreadmill className="mr-2 text-2xl" />;

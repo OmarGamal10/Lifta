@@ -1,4 +1,5 @@
 const subscriptionModel = require("../models/subscriptionModel");
+const userModel = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 
@@ -52,6 +53,11 @@ const subscriptionResponse = async (req, res, next) => {
       null,
       null
     );
+  }
+  if (status) {
+    const deleteAllPendingRequests =
+      await subscriptionModel.deleteAllPendingRequests(subscription_id);
+    const assignToTrainer = await userModel.assignToTrainer(subscription_id);
   }
   res.status(200).json({
     status: "success",
@@ -210,6 +216,28 @@ const getMemberships = async (req, res, next) => {
   });
 };
 
+const getSubscriptionsCountByPackageType = async (req, res, next) => {
+  const subscriptionsCount =
+    await subscriptionModel.getSubscriptionsCountByPackageType();
+  res.status(200).json({
+    status: "success",
+    data: {
+      subscriptionsCount,
+    },
+  });
+};
+
+const getActiveSubscriptionsCount = async (req, res, next) => {
+  const activeSubscriptionsCount =
+    await subscriptionModel.getActiveSubscriptionsCount();
+  res.status(200).json({
+    status: "success",
+    data: {
+      activeSubscriptionsCount,
+    },
+  });
+};
+
 module.exports = {
   getAllSubscriptions: catchAsync(getAllSubscriptions),
   createInitialSubscription: catchAsync(createInitialSubscription),
@@ -222,5 +250,9 @@ module.exports = {
     getTraineeHasNutritionSubscription
   ),
   getConversations: catchAsync(getConversations),
+  getSubscriptionsCountByPackageType: catchAsync(
+    getSubscriptionsCountByPackageType
+  ),
+  getActiveSubscriptionsCount: catchAsync(getActiveSubscriptionsCount),
   getMemberships: catchAsync(getMemberships),
 };

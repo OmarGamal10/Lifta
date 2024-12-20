@@ -6,6 +6,12 @@ exports.getExercisesByCoachId = async (coachId) => {
   return (await db.query(query, [coachId])).rows;
 };
 
+exports.getExerciseById = async (exId) => {
+  const query = `SELECT name,description ,muscle_group AS muscleGroup FROM lifta_schema.exercise WHERE exercise_id = $1`;
+  console.log("ablash");
+  return (await db.query(query, [exId])).rows[0];
+};
+
 exports.createExercise = async (...values) => {
   console.log(values);
   try {
@@ -27,4 +33,14 @@ exports.deleteExercise = async (exerciseId) => {
 exports.getExercisesByWorkoutId = async (workoutId) => {
   const query = `SELECT e.exercise_id  , e.name,e.description,e.muscle_group AS muscleGroup, e.gif_path AS gif, we.sets, we.reps FROM lifta_schema.exercise e join lifta_schema.workout_exercise we on we.exercise_id =e.exercise_id WHERE we.workout_id = $1`;
   return (await db.query(query, [workoutId])).rows;
+};
+
+exports.updateExercise = async (...values) => {
+  console.log(values);
+  const query = `
+  UPDATE lifta_schema.exercise 
+  SET name=$1, muscle_group=$2, description=$3
+  WHERE exercise_id=$4 RETURNING *;
+`;
+  return (await db.query(query, values)).rows;
 };
