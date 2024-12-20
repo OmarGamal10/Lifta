@@ -2,7 +2,7 @@ const db = require("../db");
 const AppError = require("../utils/AppError");
 
 exports.getAllClients = async (coachId) => {
-  const query = `SELECT t.trainee_id, u.first_name, u.last_name, p.name, p.package_id
+  const query = `SELECT u.photo, t.trainee_id, u.first_name, u.last_name, p.name, p.package_id
 FROM lifta_schema.trainee t
 JOIN lifta_schema.users u
   ON t.trainee_id = u.user_id
@@ -14,7 +14,6 @@ WHERE s.status = 'Active'
   AND (t.coach_id = $1 OR t.nutritionist_id = $1);`;
   return (await db.query(query, [coachId])).rows;
 };
-
 
 exports.removeClient = async (trainee_id, package_id) => {
   console.log(trainee_id, package_id);
@@ -42,4 +41,4 @@ exports.removeClient = async (trainee_id, package_id) => {
   WHERE trainee_id = $2;`; // Removed package_id from WHERE condition, as it's not needed
 
   await db.query(query3, [type, trainee_id]);
-}
+};

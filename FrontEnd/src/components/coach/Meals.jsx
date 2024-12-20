@@ -86,9 +86,12 @@ function Meals({ userId }) {
   const renderMeals = () => (
     <>
       <div
-        className={`w-full flex flex-col min-h-screen justify-center px-12 py-3 
+        className={`w-full flex flex-col min-h-screen justify-center px-12 pb-3 
         } `}
       >
+        <h2 className="py-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
+          Meals
+        </h2>
         <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 pb-5 pr-10">
           {meals.slice((curPage - 1) * 5, curPage * 5).map((meal) => (
             <div key={meal.id} className="cursor-pointer">
@@ -110,7 +113,7 @@ function Meals({ userId }) {
           <div className="flex items-center justify-center min-w-64 max-w-64 min-h-64 h-[280px]">
             <button
               onClick={() => navigate("/createMeal")}
-              className="text-primary hover:text-secondary"
+              className="text-primary hover:text-secondary transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-lg transform"
             >
               <IoIosAddCircleOutline size={100} />
             </button>
