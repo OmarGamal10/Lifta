@@ -76,6 +76,27 @@ const login = async (req, res, next) => {
   if (!(await validatePassword(password, user["password"])))
     return next(new AppError("Incorrect password", 401));
 
+  if(user.type === "Admin") {
+    //jwt token by cookie
+    const payload = {
+      user_id: user.user_id,
+      email: user.email,
+      type: user.type,
+    };
+  
+    const token = createToken(payload);
+    res.cookie("jwt", token);
+  
+    res.status(200).json({
+      status: "success",
+      data: {
+        user: {
+          user,
+        },
+        token: JSON.parse(atob(token.split(".")[1])),
+      },
+    });
+  }
   const userRest = await userModel.SelectTraineeOrTrainerById(
     user.user_id,
     user.type.toLowerCase()
@@ -212,7 +233,7 @@ const updateUser = async (req, res, next) => {
     client_limit;
   if (type === "Trainee") {
     ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
-  } else {
+  } else if(type === "Trainer") {
     ({ experience_years, client_limit } = req.body);
   }
 
@@ -238,7 +259,7 @@ const updateUser = async (req, res, next) => {
   ];
   type === "Trainee"
     ? values.push(food_allergies, weight, height, goal, workout_preferences)
-    : values.push(experience_years, client_limit);
+    : type === "Trainer"? values.push(experience_years, client_limit): values;
 
   const user = await userModel.updateUser(values);
 

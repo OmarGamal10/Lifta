@@ -154,10 +154,10 @@ exports.getDetails = async (userId) => {
   if (userData.type === "Trainer") {
     const query2 = `SELECT * FROM lifta_schema.users u JOIN lifta_schema.trainer t1 ON t1.trainer_id = u.user_id WHERE u.user_id = $1`;
     return (await db.query(query2, [userId])).rows[0];
-  } else {
+  } else if(userData.type === "Trainer") {
     const query3 = `SELECT * FROM lifta_schema.users u JOIN lifta_schema.trainee t2 ON t2.trainee_id = u.user_id WHERE u.user_id = $1`;
     return (await db.query(query3, [userId])).rows[0];
-  }
+  } else return userData;
 };
 
 exports.updateUser = async (values) => {
@@ -181,7 +181,7 @@ exports.updateUser = async (values) => {
     // Call the appropriate function based on user type
     if (type === "Trainee") {
       additionalData = await updateTrainee(rest, userId);
-    } else {
+    } else if(type === "Trainer") {
       additionalData = await updateTrainer(rest, userId);
     }
 

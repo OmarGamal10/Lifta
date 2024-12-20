@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import getTokenFromCookie from "../freqUsedFuncs/getToken";
 import ErrorMessage from "../components/errorMsg"; // Import the ErrorMessage component
+import handleImages from "../freqUsedFuncs/handleImages";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../hooks/useHTTP";
 import { Loader, Eye, EyeOff } from "lucide-react";
 
-const MyProfile = ({ userId }) => {
+const MyProfile = ({ userId, userProfile }) => {
   const [profileData, setProfileData] = useState(null);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
   const [isEditable, setIsEditable] = useState(false);
+  const fileInputRef = useRef(null);
   const [showPasswords, setShowPasswords] = useState({
     oldPassword: false,
     newPassword: false,
@@ -65,7 +67,11 @@ const MyProfile = ({ userId }) => {
       value.length > 2
     )
       return;
-      if ((id == "weight" || id == "height") && value.length > 3 || parseInt(value, 10) <= 0) return;
+    if (
+      ((id == "weight" || id == "height") && value.length > 3) ||
+      parseInt(value, 10) <= 0
+    )
+      return;
     setFormData({ ...formData, [id]: value });
     setErrors((prev) => {
       const { [id]: _, ...rest } = prev; // Destructure to exclude the key
@@ -94,7 +100,22 @@ const MyProfile = ({ userId }) => {
     }));
   };
 
+  const handleUploadButtonClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleRemoveImage = async (e) => {
+    if (!isEditable) return;
+
+    setFormData((prevData) => {
+      const { photo, ...rest } = prevData;
+      return rest;
+    });
+  };
+
   const handlePhotoChange = async (e) => {
+    if (!isEditable) return;
+
     const file = e.target.files[0];
     if (file) {
       // Check if the file is a valid photo type (jpeg, png, jpg)
@@ -106,7 +127,7 @@ const MyProfile = ({ userId }) => {
         }));
 
         setErrors((prev) => {
-          const { photo, ...rest } = prev;
+          const { ...rest } = prev;
           return rest;
         });
       } else {
@@ -139,8 +160,6 @@ const MyProfile = ({ userId }) => {
       }
     });
 
-    
-
     if (profileData.type === "trainee" && formData.weight === "") {
       newErrors.weight = `Weight is required.`;
     }
@@ -159,7 +178,7 @@ const MyProfile = ({ userId }) => {
       newErrors.password = "New password and confirmation password must match.";
     }
     console.log(newErrors, errors);
-    
+
     if (newErrors && Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -168,7 +187,7 @@ const MyProfile = ({ userId }) => {
     if (errors && Object.keys(errors).length > 0) {
       return;
     }
-    
+
     try {
       const response = await patch(`/users/${userId}/details`, formData);
       console.log(response);
@@ -177,15 +196,19 @@ const MyProfile = ({ userId }) => {
       }
       alert("Profile updated successfully!");
     } catch (error) {
-      if(error.response.data.message === "Please enter a valid Email") {
-        setErrors({email: "Please enter a valid Email"});
-      } else if(error.response.data.message === "This email is already registered. Please use another email.") {
-        setErrors({email: "This email is already registered. Please use another email."});
+      if (error.response.data.message === "Please enter a valid Email") {
+        setErrors({ email: "Please enter a valid Email" });
+      } else if (
+        error.response.data.message ===
+        "This email is already registered. Please use another email."
+      ) {
+        setErrors({
+          email: "This email is already registered. Please use another email.",
+        });
+      } else if (error.response.data.message === "Incorrect password") {
+        setErrors({ oldPassword: "Incorrect password" });
       }
-      else if(error.response.data.message === "Incorrect password") {
-        setErrors({oldPassword: "Incorrect password"});
-      }
-    } 
+    }
   };
 
   const togglePasswordVisibility = (field) => {
@@ -219,7 +242,7 @@ const MyProfile = ({ userId }) => {
               placeholder="Enter First Name"
               className="mt-2 block w-full rounded-md border-2 border-secondary shadow-sm focus:border-accent focus:ring-accent sm:text-sm bg-backGroundColor text-textspan p-4"
             />
-            {errors.first_name && <ErrorMessage  error={errors.first_name} />}
+            {errors.first_name && <ErrorMessage error={errors.first_name} />}
           </div>
           <div className="flex-1">
             <label
@@ -332,7 +355,9 @@ const MyProfile = ({ userId }) => {
                   {showPasswords.oldPassword ? <EyeOff /> : <Eye />}
                 </span>
               </div>
-              {errors.oldPassword && <ErrorMessage error={errors.oldPassword} />}
+              {errors.oldPassword && (
+                <ErrorMessage error={errors.oldPassword} />
+              )}
             </div>
 
             <div className="flex-1">
@@ -455,7 +480,7 @@ const MyProfile = ({ userId }) => {
           )}
         </form>
       );
-    else
+    else if (profileData.type === "Trainee")
       return (
         <form
           className="w-full p-6 bg-backGroundColor rounded-lg shadow-lg"
@@ -576,18 +601,50 @@ const MyProfile = ({ userId }) => {
           )}
         </form>
       );
+    else return <></>;
   };
   if (!profileData) return <Loader className="mx-auto my-10" />;
 
   return (
     <div className=" mx-auto mt-10 bg-backGroundColor text-textColor p-6 rounded-lg shadow-lg">
       <div className="flex flex-col items-center mb-6">
-        <img
-          src={profileData.profileImage || "https://via.placeholder.com/100"}
-          alt="Profile"
-          className="w-24 h-24 rounded-full mb-4"
-          //onClick={handlePhotoClick}
-        />
+        <div
+          className={`${
+            userProfile
+              ? ""
+              : "bg-primary flex rounded-full items-center justify-center"
+          }`}
+          onClick={handleUploadButtonClick}
+        >
+          <input
+            type="file"
+            name="photo"
+            accept="image/jpeg, image/png, image/jpg"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handlePhotoChange}
+          />
+          <img
+            src={
+              formData.photo
+                ? formData.photo
+                : "./src/assets/user-icon-on-transparent-background-free-png.webp"
+            }
+            alt="Submit"
+            className="w-24 h-24 object-cover rounded-full"
+          />
+          
+        </div>
+        {formData.photo && (
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              className="px-8 py-2 bg-secondary text-backGroundColor rounded-md shadow-sm hover:bg-backGroundColor hover:border-secondary hover:text-textColor focus:outline-none focus:ring-2 focus:ring-secondary mt-4"
+            >
+              Remove Image
+            </button>
+          )}
+
         <span className="text-sm text-textspan mt-1">
           {isEditable
             ? "Update your personal details below"
