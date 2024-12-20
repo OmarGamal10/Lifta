@@ -122,8 +122,18 @@ const UserProfile = ({ userId }) => {
           return <Workouts userId={userId} />;
         case "Meals":
           return <Meals userId={userId} />;
+        case "Clients":
+          return <Clients userId={userId} />;
+        case "Packages":
+          return (
+          <PrimeReactProvider value={{ pt: Tailwind }}>
+            <Packages userId={userId} />
+          </PrimeReactProvider>
+        );
         case "Reviews":
           return <CoachReviewDashboard userId={userId} />;
+        case "Requests":
+          return <SubReqDashboard userId={userId} />;
         case "Certificates":
           return <CertificatesDashboard userId={userId} isEditable={true} />;
 
