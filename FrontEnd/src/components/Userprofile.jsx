@@ -23,9 +23,6 @@ import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
 
-
-
-
 const UserProfile = ({ userId }) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
@@ -70,35 +67,30 @@ const UserProfile = ({ userId }) => {
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
     }
-  }
-  const components =  {
+  };
+  const components = {
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-    <Clients userId={userId} />
-    </PrimeReactProvider>
+        <Clients userId={userId} />
+      </PrimeReactProvider>
     ),
     Packages: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <PackageDashboard/>
-    </PrimeReactProvider>
+        <PackageDashboard />
+      </PrimeReactProvider>
     ),
     Requests: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <SubReqDashboard user_id={userId}/>
-    </PrimeReactProvider>
+        <SubReqDashboard user_id={userId} />
+      </PrimeReactProvider>
     ),
-    Workouts: (
-      <TraineeCurrentWrokout userId={userId} />
-    ),
-    Nutrition: (
-      <TraineeCurrentMeals userId={userId} />
-    ),
+    Workouts: <TraineeCurrentWrokout userId={userId} />,
+    Nutrition: <TraineeCurrentMeals userId={userId} />,
     Default: <NoDataDashboard header={activeSection + " Section"} />,
   };
 
   // Components to render based on the active section
   const renderComponent = () => {
-
     if (userType == "Trainee") {
       if (activeSection == "Workouts") {
         return <TraineeCurrentWrokout userId={userId} />;
@@ -122,22 +114,17 @@ const UserProfile = ({ userId }) => {
       return <Packages userId={userId} />;
     }
 
-      return components[activeSection] || components.Default;
-
+    return components[activeSection] || components.Default;
   };
-  
 
   return (
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
-
-      <NavBar />
+      <NavBar pref={"NotDefault"} />
       <ProfileSection
         userName={userName}
         userBio={userBio}
         userProfile={userProfile}
       />
-      <NavBar pref={"NotDefault"} />
-      <ProfileSection userName={userName} userBio={userBio}/>
 
       <div className="h-[0.5px] bg-textspan "></div>
       <div className="flex h-[960px] w-full ml-4">
