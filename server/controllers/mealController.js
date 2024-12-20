@@ -159,11 +159,12 @@ const deleteMeal = async (req, res, next) => {
 };
 
 const getMealLog = async (req, res, next) => {
-  const { traineeId } = req.params;
+  const { traineeId, trainerId } = req.params;
   if (!traineeId || isNaN(traineeId)) {
     return next(new AppError("Please provide a trainee id", 400));
   }
-  const rawMeals = await mealModel.getMealLog(traineeId);
+
+  const rawMeals = await mealModel.getMealLog(traineeId, trainerId);
   const groupedByDate = {}; // date groups, every date has array of meals of that day, where each meal has type , name, total nutrients and array of ingredients
   // i want also if the meal id is the same and the type is different , each of them should be in a different group in the same date
   rawMeals.forEach((meal) => {

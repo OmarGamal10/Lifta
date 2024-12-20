@@ -12,17 +12,15 @@ router.get("/", (req, res, next) => {
 
 router.use("/:mealId/ingredients", ingredientRouter);
 
-
 router.get("/:mealId/status/:type", (req, res, next) => {
-    return mealController.getCurrentMealStatusByType(req, res, next);
-  });
+  return mealController.getCurrentMealStatusByType(req, res, next);
+});
 
 router.post(
-    "/",
-    convertCamelToSnake,
-    sanitizeEmptyFields,
-    mealController.addDoneMeal
-  );
-
+  "/",
+  convertCamelToSnake,
+  sanitizeEmptyFields,
+  mealController.addDoneMeal
+);
 
 module.exports = router;

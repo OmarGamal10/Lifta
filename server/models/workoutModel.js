@@ -122,7 +122,7 @@ exports.deleteWorkout = async (workoutId) => {
   return (await db.query(query, [workoutId])).rows;
 };
 
-exports.getWorkoutLog = async (traineeId) => {
+exports.getWorkoutLog = async (traineeId, trainerId) => {
   const query = ` SELECT l.trainee_id, w.workout_id, w.name, w._note, l.date, l."isDone", u.first_name, u.last_name,
                   json_agg(json_build_object('name', e.name, 'description', e.description, 'id',  e.exercise_id, 'musclegroup',  e.muscle_group, 'sets', we.sets, 'reps', we.reps)) AS exercises
                   FROM lifta_schema.workout_log l
@@ -131,10 +131,13 @@ exports.getWorkoutLog = async (traineeId) => {
                   JOIN lifta_schema.exercise e ON e.exercise_id = we.exercise_id
                   JOIN lifta_schema.users u ON u.user_id = w.trainer_id
                   WHERE trainee_id = $1
+                  ${trainerId ? `AND w.trainer_id = $2` : ""}
                   GROUP BY l.trainee_id, w.workout_id, l.date, u.first_name, u.last_name
                   ORDER BY date DESC;`;
   //not necessary to group by workout_id because we have only one workout per day, but for future use if we ever need it
-  return (await db.query(query, [traineeId])).rows;
+  return (
+    await db.query(query, trainerId ? [traineeId, trainerId] : [traineeId])
+  ).rows;
 };
 
 exports.markWorkoutAsDone = async (trainee_id, workout_id, date) => {

@@ -7,7 +7,7 @@ import {
 } from "@material-tailwind/react";
 import useHttp from "../../hooks/useHTTP";
 
-const WorkoutHistory = ({ userId }) => {
+const WorkoutHistory = ({ userId, view = true }) => {
   const [open, setOpen] = useState(null);
   const [workouts, setWorkouts] = useState([]);
   const { get, loading, error } = useHttp("http://localhost:3000");
@@ -16,7 +16,9 @@ const WorkoutHistory = ({ userId }) => {
     if (!userId) return; // Guard clause for initial render
 
     try {
-      const response = await get(`/workouts/log/${userId}`);
+      let response;
+      if (view) response = await get(`/workouts/log/${userId}`);
+      //else response = await get(`/workouts/log/${userId}/trainer/${trainerId}`); //trainerId da el trainer el by3ml visit ya magdy
       setWorkouts(response.data.workoutLog);
       console.log(response.data.workoutLog);
     } catch (err) {

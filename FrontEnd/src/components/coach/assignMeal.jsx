@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useMemo, useEffect } from "react";
 import Meal from "./mealCard";
 import ErrorMessage from "../errorMsg";

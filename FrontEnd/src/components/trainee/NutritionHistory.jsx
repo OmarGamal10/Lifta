@@ -7,7 +7,7 @@ import {
 } from "@material-tailwind/react";
 import useHttp from "../../hooks/useHTTP";
 
-const NutritionHistory = ({ userId }) => {
+const NutritionHistory = ({ userId, view = true }) => {
   const [openDate, setOpenDate] = useState(null);
   const [openMeal, setOpenMeal] = useState(null);
   const [meals, setMeals] = useState([]);
@@ -15,7 +15,9 @@ const NutritionHistory = ({ userId }) => {
 
   const fetchMeals = useCallback(async () => {
     try {
-      const response = await get(`/meals/log/${userId}`);
+      let response;
+      if (view) response = await get(`/meals/log/${userId}`);
+      //else response = await get(`/meals/log/${userId}/trainer/${trainerId}`); //trainerId da el trainer el by3ml visit ya magdy
 
       const mealsArray = Object.entries(response.data.meals).map(
         ([date, dayMeals]) => ({
@@ -24,7 +26,7 @@ const NutritionHistory = ({ userId }) => {
         })
       );
       setMeals(mealsArray);
-      console.log(meals);
+      console.log(mealsArray);
     } catch (err) {
       console.error(err);
     }
@@ -60,11 +62,15 @@ const NutritionHistory = ({ userId }) => {
                   <span className="text-lg">
                     {new Date(dayMeal.date).toLocaleDateString()}
                   </span>
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm text-accent bg-secondary/20 `}
-                  >
-                    {allMealsCompleted ? "Completed" : "Incomplete"}
-                  </span>
+                  <div className="flex items-center gap-8">
+                    <span>{dayMeal.meals[0].nutritionist_name}</span>
+
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm text-accent bg-secondary/20 `}
+                    >
+                      {allMealsCompleted ? "Completed" : "Incomplete"}
+                    </span>
+                  </div>
                 </div>
               </AccordionHeader>
               <AccordionBody className="px-6 py-4">

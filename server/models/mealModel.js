@@ -137,7 +137,7 @@ exports.deleteMeal = async (mealId) => {
   return (await db.query(query, [mealId])).rows;
 };
 
-exports.getMealLog = async (traineeId) => {
+exports.getMealLog = async (traineeId, trainerId) => {
   const query = `
     SELECT 
         ml.date,
@@ -158,7 +158,10 @@ exports.getMealLog = async (traineeId) => {
       JOIN lifta_schema.ingredient i ON i.ingredient_id = mi.ingredient_id
       JOIN lifta_schema.users u ON u.user_id = m.nutritionist_id
       WHERE ml.trainee_id = $1
+      ${trainerId ? `AND m.nutritionist_id = $2` : ""}
       ORDER BY ml.date DESC, ml.type;`;
 
-  return (await db.query(query, [traineeId])).rows;
+  return (
+    await db.query(query, trainerId ? [traineeId, trainerId] : [traineeId])
+  ).rows;
 };

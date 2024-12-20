@@ -146,11 +146,11 @@ const removeWorkoutFromSchedule = async (req, res, next) => {
 };
 
 const getWorkoutLog = async (req, res, next) => {
-  const { traineeId } = req.params;
+  const { traineeId, trainerId } = req.params;
   if (!traineeId || isNaN(traineeId)) {
     return next(new AppError("Please provide a trainee id", 400));
   }
-  const workoutLog = await workoutModel.getWorkoutLog(traineeId);
+  const workoutLog = await workoutModel.getWorkoutLog(traineeId, trainerId);
   res.status(200).json({
     status: "success",
     data: {
