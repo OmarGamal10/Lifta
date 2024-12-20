@@ -127,35 +127,33 @@ const UserProfile = ({ userId }) => {
   };
 
   return (
-    <div className="w-full">
-      {" "}
-      {Loading ? (
-        <Loader />
-      ) : (
-        <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
-          <NavBar pref={"NotDefault"} />
-          <ProfileSection
-            userType={userType}
-            userId={userId}
-            userName={userName}
-            userBio={userBio}
-            userProfile={userProfile}
-          />
-          <div className="h-[0.5px] bg-textspan "></div>
-          <div className="flex min-h-[960px] w-full ml-4">
-            {renderSideBar()}
-            <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
-            {/* Vertical Divider */}
-            <div className="w-full">
-              {/* Render Active Component */}
-              <div className="flex justify-center items-center mr-4">
-                {renderComponent()}
-              </div>
-            </div>
+    <div className="w-full"> {Loading ? <Loader /> : 
+    <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
+
+      <NavBar pref={"NotDefault"} />
+      <ProfileSection
+        userName={userName}
+        userBio={userBio}
+        userProfile={userProfile}
+        userId={userId}
+        userType={userType}
+      />
+
+      <div className="h-[0.5px] bg-textspan "></div>
+      <div className="flex min-h-[960px] w-full ml-4">
+        {renderSideBar()}
+        <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
+        {/* Vertical Divider */}
+        <div className="w-full">
+          {/* Render Active Component */}
+          <div className="flex justify-center items-center mr-4">
+            {renderComponent()}
           </div>
-          <Footer />
         </div>
-      )}
+      </div>
+      <Footer />
+    </div>
+    }
     </div>
   );
 };
