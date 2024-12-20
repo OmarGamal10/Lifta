@@ -4,6 +4,7 @@ import ProfileSection from "./Profilesection";
 import { SubReqDashboard } from "./coach/subReqDashboard";
 import CoachSideBar from "./coach/Sidebar";
 import TraineeSideBar from "./trainee/Sidebar";
+import AdminSideBar from "./admin/Sidebar"
 import MyProfile from "./MyProfile";
 import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
@@ -70,10 +71,15 @@ const UserProfile = ({ userId }) => {
       return (
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
+    } else {
+      return (
+        <AdminSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
+      )
     }
   };
   const components = {
-    "My Profile": <MyProfile userId={userId} />,
+
+    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />,
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <Clients userId={userId} />
@@ -103,11 +109,7 @@ const UserProfile = ({ userId }) => {
       if (activeSection == "Nutrition") {
         return <TraineeCurrentMeals userId={userId} />;
       }
-      if (activeSection) {
-        return <NoDataDashboard header={`${activeSection}` + " Section"} />;
-      } else {
-        return <NoDataDashboard header="No Data Dashboard" />;
-      }
+
     } else if (userType == "Trainer") {
       if (activeSection == "Exercises") return <Exercises userId={userId} />;
       if (activeSection == "Ingredients")

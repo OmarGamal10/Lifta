@@ -76,6 +76,27 @@ const login = async (req, res, next) => {
   if (!(await validatePassword(password, user["password"])))
     return next(new AppError("Incorrect password", 401));
 
+  if(user.type === "Admin") {
+    //jwt token by cookie
+    const payload = {
+      user_id: user.user_id,
+      email: user.email,
+      type: user.type,
+    };
+  
+    const token = createToken(payload);
+    res.cookie("jwt", token);
+  
+    res.status(200).json({
+      status: "success",
+      data: {
+        user: {
+          user,
+        },
+        token: JSON.parse(atob(token.split(".")[1])),
+      },
+    });
+  }
   const userRest = await userModel.SelectTraineeOrTrainerById(
     user.user_id,
     user.type.toLowerCase()
@@ -177,7 +198,6 @@ const signup = async (req, res, next) => {
     type: type,
   };
 
-
   const token = createToken(payload);
   res.cookie("jwt", token);
 
@@ -190,8 +210,8 @@ const signup = async (req, res, next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  const {userId} = req.params;
-   const {
+  const { userId } = req.params;
+  const {
     email,
     first_name,
     last_name,
@@ -202,7 +222,7 @@ const updateUser = async (req, res, next) => {
     phone_number,
     type,
     photo,
-      } = req.body;
+  } = req.body;
 
   let food_allergies,
     workout_preferences,
@@ -213,21 +233,20 @@ const updateUser = async (req, res, next) => {
     client_limit;
   if (type === "Trainee") {
     ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
-  } else {
-    ({
-      experience_years,
-      client_limit
-         } = req.body);
+  } else if(type === "Trainer") {
+    ({ experience_years, client_limit } = req.body);
   }
 
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
-  
+
   if (oldPassword && !(await validatePassword(oldPassword, password)))
     return next(new AppError("Incorrect password", 401));
-  const passwordHashed = (oldPassword)? await hashPassword(newPassword): password;
-  
-   const values = [
+  const passwordHashed = oldPassword
+    ? await hashPassword(newPassword)
+    : password;
+
+  const values = [
     email,
     first_name,
     last_name,
@@ -236,14 +255,11 @@ const updateUser = async (req, res, next) => {
     phone_number,
     photo,
     type,
-    userId
+    userId,
   ];
   type === "Trainee"
     ? values.push(food_allergies, weight, height, goal, workout_preferences)
-    : values.push(
-        experience_years,
-        client_limit,
-      );
+    : type === "Trainer"? values.push(experience_years, client_limit): values;
 
   const user = await userModel.updateUser(values);
 
@@ -251,7 +267,7 @@ const updateUser = async (req, res, next) => {
     status: "success",
     user: user,
   });
-}
+};
 
 //Create Account for Admin only
 
@@ -275,7 +291,6 @@ const createAccount = async (req, res, next) => {
     height,
     goal,
     experience_years,
-
     client_limit,
     title,
     certificate_photo,
@@ -283,7 +298,7 @@ const createAccount = async (req, res, next) => {
     date_issued;
   if (type === "Trainee") {
     ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
-  } else if(type === "Trainer") {
+  } else if (type === "Trainer") {
     ({
       experience_years,
       client_limit,
@@ -313,8 +328,7 @@ const createAccount = async (req, res, next) => {
 
   if (type === "Trainee") {
     values.push(food_allergies, weight, height, goal, workout_preferences);
-  }
-  else if (type === "Trainer") {
+  } else if (type === "Trainer") {
     values.push(
       experience_years,
       client_limit,
@@ -324,7 +338,7 @@ const createAccount = async (req, res, next) => {
       date_issued
     );
   }
- 
+
   const userId = await userModel.AddUser(values);
 
   res.status(200).json({

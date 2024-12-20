@@ -55,13 +55,15 @@ const ProfileSection = ({
         className={`${
           userProfile
             ? ""
-            : "bg-primary flex rounded-full items-center  justify-center"
+            : "rounded-full flex items-center justify-center"
         }`}
       >
         <img
-          src={`${userProfile ? userProfile : "src/assets/user.png"}`}
+
+          src={`${userProfile ? userProfile : "./src/assets/user-icon-on-transparent-background-free-png.webp"}`}
           alt="User Logo"
-          className="w-40 h-40 p-3 object-cover rounded-full"
+          className="w-52 h-52 p-3 object-cover rounded-full"
+
         />
       </div>
       <div>
