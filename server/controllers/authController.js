@@ -19,6 +19,7 @@ const getUserById = async (req, res) => {
     userName: user["first_name"] + " " + user["last_name"],
     userType: user["type"],
     userBio: user["bio"],
+    userPhoto: user["photo"],
   });
 };
 

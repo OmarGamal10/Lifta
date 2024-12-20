@@ -19,16 +19,18 @@ const UserProfile = ({ userId }) => {
   const [userName, setUserName] = useState("");
   const [userType, setUserType] = useState("");
   const [userBio, setUserBio] = useState("");
-
+  const [userProfile, setUserProfile] = useState("");
   const { get } = useHttp("http://localhost:3000");
 
   useEffect(() => {
     const getUser = async () => {
       try {
         const response = await get(`/users/${userId}`);
+        console.log(response);
         setUserName(response.userName);
         setUserType(response.userType);
         setUserBio(response.userBio);
+        setUserProfile(response.userPhoto);
       } catch (err) {
         console.error(err);
       }
@@ -83,7 +85,11 @@ const UserProfile = ({ userId }) => {
   return (
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
       <NavBar />
-      <ProfileSection userName={userName} userBio={userBio} />
+      <ProfileSection
+        userName={userName}
+        userBio={userBio}
+        userProfile={userProfile}
+      />
       <div className="h-[0.5px] bg-textspan "></div>
       <div className="flex h-[960px] w-full ml-4">
         {renderSideBar()}
