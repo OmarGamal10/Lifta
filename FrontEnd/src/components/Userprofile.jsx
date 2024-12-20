@@ -103,11 +103,7 @@ const UserProfile = ({ userId }) => {
       if (activeSection == "Nutrition") {
         return <TraineeCurrentMeals userId={userId} />;
       }
-      if (activeSection) {
-        return <NoDataDashboard header={`${activeSection}` + " Section"} />;
-      } else {
-        return <NoDataDashboard header="No Data Dashboard" />;
-      }
+
     } else if (userType == "Trainer") {
       if (activeSection == "Exercises") return <Exercises userId={userId} />;
       if (activeSection == "Ingredients")
