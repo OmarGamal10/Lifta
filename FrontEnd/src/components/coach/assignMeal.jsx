@@ -7,10 +7,14 @@ import Nodata from "../Nodata";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../../hooks/useHTTP";
-function AssignMeal({ trainee_id = 97 }) {
-  const navigate = useNavigate();
-  const { get, post, loading, error, data } = useHttp("http://localhost:3000");
 
+import { useLocation } from "react-router-dom";
+import { use } from "react";
+function AssignMeal() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { clientId, userId } = location.state || {};
+  const { get, post, loading, error, data } = useHttp("http://localhost:3000");
   const [formData, setFormData] = useState({
     mealId: "",
     day: "Sunday",
@@ -38,10 +42,6 @@ function AssignMeal({ trainee_id = 97 }) {
   ////////////////////////
   useEffect(() => {
     const fetchMeals = async () => {
-      const token = getTokenFromCookies();
-      const decodedToken = token ? jwtDecode(token) : null;
-      const userId = decodedToken ? decodedToken.user_id : null;
-
       if (!userId) {
         console.error("User ID not found in token.");
         return;
@@ -129,7 +129,7 @@ function AssignMeal({ trainee_id = 97 }) {
         "/meals/trainee",
         {
           meal_id: formData.mealId,
-          trainee_id,
+          trainee_id: clientId,
           day: formData.day,
           type: formData.mealType,
         },

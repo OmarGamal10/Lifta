@@ -8,10 +8,13 @@ import Nodata from "../Nodata";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../../hooks/useHTTP";
+import { useLocation } from "react-router-dom";
 
-function AssignWorkout({ trainee_id = 97 }) {
+
+function AssignWorkout() 
   const { get, post, loading, error, data } = useHttp("http://localhost:3000");
-
+  const location = useLocation();
+  const { clientId, userId } = location.state || {};
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     workoutId: "",
@@ -39,10 +42,6 @@ function AssignWorkout({ trainee_id = 97 }) {
   ////////////////////////
   useEffect(() => {
     const fetchWorkouts = async () => {
-      const token = getTokenFromCookies();
-      const decodedToken = token ? jwtDecode(token) : null;
-      const userId = decodedToken ? decodedToken.user_id : null;
-
       if (!userId) {
         console.error("User ID not found in token.");
         return;
@@ -123,7 +122,7 @@ function AssignWorkout({ trainee_id = 97 }) {
         "/workouts/trainee",
         {
           workout_id: formData.workoutId,
-          trainee_id,
+          trainee_id: clientId,
           day: formData.day,
         },
         {

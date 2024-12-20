@@ -81,7 +81,9 @@ const UserProfile = ({ userId }) => {
     }
   };
   const components = {
-    "My Profile": <MyProfile userId={userId} />,
+
+
+    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <Clients userId={userId} />
@@ -126,13 +128,20 @@ const UserProfile = ({ userId }) => {
         return <Ingredients userId={userId} />;
       if (activeSection == "Workouts") return <Workouts userId={userId} />;
       if (activeSection == "Meals") return <Meals userId={userId} />;
-    }
-    if (activeSection == "Packages") {
-      return (
-        <PrimeReactProvider value={{ pt: Tailwind }}>
-          <Packages userId={userId} />
-        </PrimeReactProvider>
-      );
+      if (activeSection == "Packages") {
+        return (
+          <PrimeReactProvider value={{ pt: Tailwind }}>
+            <Packages userId={userId} />
+          </PrimeReactProvider>
+        );
+      }
+      if (activeSection == "Clients") {
+        return (
+          <PrimeReactProvider value={{ pt: Tailwind }}>
+            <Clients userId={userId} />
+          </PrimeReactProvider>
+        );
+      }
     }
 
     return components[activeSection] || components.Default;

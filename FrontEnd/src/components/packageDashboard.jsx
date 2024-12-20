@@ -1,4 +1,3 @@
-
 import { PackageCard } from "./packageCard";
 import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
@@ -21,22 +20,22 @@ export function PackageDashboard() {
     const getCookie = (name) => {
       const value = `; ${document.cookie}`;
       const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
+      if (parts.length === 2) return parts.pop().split(";").shift();
       return null;
     };
-  
+
     const decodeJwt = (token) => {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       const jsonPayload = decodeURIComponent(
         atob(base64)
-          .split('')
-          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
       );
       return JSON.parse(jsonPayload);
     };
-  
+
     const fetchPackages = async (coachId) => {
       try {
         const response = await httpGet(`/users/${coachId}/packages`, {
@@ -48,7 +47,7 @@ export function PackageDashboard() {
         console.error("Error fetching packages:", err);
       }
     };
-  
+
     const fetchSubscriptions = async (traineeId) => {
       try {
         const gymResponse = await httpGet(
@@ -57,34 +56,36 @@ export function PackageDashboard() {
         );
         console.log(gymResponse.data);
         setHasGymSub(gymResponse.data.hasGymSubscription.length === 1);
-  
+
         const nutritionResponse = await httpGet(
           `/subscriptions/hasNutritionSubscription/${traineeId}`,
           { headers: { "Cache-Control": "no-cache" } }
         );
         console.log(nutritionResponse.data);
-        setHasNutSub(nutritionResponse.data.hasNutritionSubscription.length === 1);
+        setHasNutSub(
+          nutritionResponse.data.hasNutritionSubscription.length === 1
+        );
       } catch (err) {
         console.error("Error fetching subscriptions:", err);
       }
     };
-  
+
     const fetchData = async () => {
       try {
         const jwtToken = getCookie("jwt");
         if (!jwtToken) {
           throw new Error("JWT token not found");
         }
-  
+
         const decoded = decodeJwt(jwtToken);
-        const isTrainer = decoded.type === 'Trainer';
+        const isTrainer = decoded.type === "Trainer";
         const coachId = isTrainer ? decoded.user_id : coach_id;
         const traineeId = isTrainer ? null : decoded.user_id;
-  
+
         setWho(isTrainer ? 0 : 1);
-  
+
         await fetchPackages(coachId);
-  
+
         if (!isTrainer && traineeId) {
           await fetchSubscriptions(traineeId);
         }
@@ -92,10 +93,10 @@ export function PackageDashboard() {
         console.error("Error during fetchData:", err);
       }
     };
-  
+
     fetchData();
-  }, [hasGymSub, hasNutSub]);  //To be corrected
-  
+  }, [hasGymSub, hasNutSub]); //To be corrected
+
   if (loading) {
     return <Loader />;
   }
