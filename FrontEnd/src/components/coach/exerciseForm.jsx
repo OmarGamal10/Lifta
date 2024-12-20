@@ -10,9 +10,9 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 function ExerciseForm({
+  edit = false,
   setExercises,
   setView,
-  edit = false,
   idToEdit,
   userId,
 }) {

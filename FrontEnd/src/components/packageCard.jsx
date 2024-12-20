@@ -7,7 +7,6 @@ import { Button } from "primereact/button";
 import useHttp from "../hooks/useHTTP";
 
 export function PackageCard(probs) {
-  const [deactivated, setDeactivated] = useState(false); // 'false' means it's initially 'on'
   const { post, loading, error, data } = useHttp("http://localhost:3000");
 
   const [subscribeEnabled, setSubscribeEnabled] = useState(true);
@@ -16,22 +15,26 @@ export function PackageCard(probs) {
   //2 for trainee packages dashboard
 
   useEffect(() => {
-    if (probs.type == "Gym" && probs.hasGymSub || probs.type == "Nutrition" && probs.hasNutSub) {
+    // console.log(probs);
+    if (
+      (probs.type == "Gym" && probs.hasGymSub) ||
+      (probs.type == "Nutrition" && probs.hasNutSub)
+    ) {
       setSubscribeEnabled(false);
-    }
-    else {
+    } else {
       setSubscribeEnabled(true);
     }
-    setDeactivated(probs.isActive);
   }, []);
 
   function handleToggle() {
-    if (deactivated) {
-      setDeactivated(false);
-    } else {
-      setDeactivated(true);
-    }
+    probs.handleToggleActive(probs.package_id);
   }
+
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    probs.setIdToEdit(probs.package_id);
+    probs.setEditView(true);
+  };
 
   async function handleSubscribe() {
     try {
@@ -66,6 +69,7 @@ export function PackageCard(probs) {
                 className: "group-hover:text-backGroundColor text-accent",
               }, // OR { className: 'text-white text-2xl' }
             }}
+            onClick={handleEdit}
           />
         </>
       );
@@ -92,10 +96,11 @@ export function PackageCard(probs) {
                 className: "group-hover:text-backGroundColor text-accent",
               }, // OR { className: 'text-white text-2xl' }
             }}
+            onClick={() => probs.handleDelete(probs.package_id)}
           />
           <Button
-            label={deactivated ? "Deactivate" : "Activate"}
-            icon={deactivated ? "pi pi-circle-fill" : "pi pi-circle"}
+            label={probs.isActive ? "Deactivate" : "Activate"}
+            icon={probs.isActive ? "pi pi-circle-fill" : "pi pi-circle"}
             onClick={handleToggle}
             rounded
             unstyled
@@ -117,10 +122,12 @@ export function PackageCard(probs) {
       return (
         <div className="flex justify-center mt-auto pb-6">
           <button
-            disabled = {!subscribeEnabled}
+            disabled={!subscribeEnabled}
             className={
               "border-accent border-[1px] py-2 px-6 rounded-full" +
-              (subscribeEnabled ? " hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50" : " btn-disabled cursor-not-allowed ")
+              (subscribeEnabled
+                ? " hover:bg-accent hover:text-backGroundColor active:ring active:ring-accent/50"
+                : " btn-disabled cursor-not-allowed ")
             }
             onClick={handleSubscribe}
           >
