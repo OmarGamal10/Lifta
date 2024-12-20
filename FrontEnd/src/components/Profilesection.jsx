@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { FaStar, FaRegStarHalfStroke } from "react-icons/fa6";
 import useHttp from "../hooks/useHTTP";
 
-const ProfileSection = ({ userName, userBio, userType, userId, userProfile }) => {
+const ProfileSection = ({
+  userName,
+  userBio,
+  userType,
+  userId,
+  userProfile,
+}) => {
   const { get } = useHttp("http://localhost:3000");
   const [coachRating, setCoachRating] = useState(0);
 
@@ -53,10 +59,9 @@ const ProfileSection = ({ userName, userBio, userType, userId, userProfile }) =>
         }`}
       >
         <img
-          src={`${userProfile != "" ? userProfile : "src/assets/user.png"}`}
+          src={`${userProfile ? userProfile : "src/assets/user.png"}`}
           alt="User Logo"
           className="w-40 h-40 p-3 object-cover rounded-full"
-
         />
       </div>
       <div>

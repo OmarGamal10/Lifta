@@ -108,7 +108,7 @@ function Ingredients({ userId }) {
           </div>
         )}
         <div
-          className={`w-full flex flex-col min-h-screen justify-center px-12 py-3 ${
+          className={`w-full flex flex-col min-h-screen justify-center px-12 pb-3  ${
             addIngredientsView || editIngredientsView ? "opacity-50" : ""
           } `}
         >

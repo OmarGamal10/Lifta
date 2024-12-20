@@ -107,7 +107,7 @@ function Exercises({ userId }) {
         </div>
       )}
       <div
-        className={`w-full flex flex-col min-h-screen justify-center px-10 py-3 ${
+        className={`w-full flex flex-col min-h-screen justify-center px-10 pb-3  ${
           addExerciseView || editExerciseView ? "opacity-50" : ""
         } `}
       >

@@ -6,7 +6,13 @@ import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import useHttp from "../../hooks/useHTTP";
 import { useNavigate } from "react-router-dom";
 
-function FormTrainee({ formData, traineeData, setTraineeData, setCurForm, isAdmin}) {
+function FormTrainee({
+  formData,
+  traineeData,
+  setTraineeData,
+  setCurForm,
+  isAdmin,
+}) {
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
@@ -69,8 +75,7 @@ function FormTrainee({ formData, traineeData, setTraineeData, setCurForm, isAdmi
         console.log(err);
       }
       //console.log("Form submitted successfully:", traineeData);
-    }
-    else {
+    } else {
       try {
         console.log(traineeData);
         const response = await post(

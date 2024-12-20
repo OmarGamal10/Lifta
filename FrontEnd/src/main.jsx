@@ -109,6 +109,22 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/coach/workouts",
+    element: (
+      <ProtectedRoute>
+        <AssignWorkout />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/coach/meals",
+    element: (
+      <ProtectedRoute>
+        <AssignMeal />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: "browse/:coach_id/packages",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
