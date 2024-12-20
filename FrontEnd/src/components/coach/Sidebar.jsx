@@ -8,7 +8,8 @@ import { MdReviews } from "react-icons/md";
 import { FaWeightScale } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
 import { TbPackages } from "react-icons/tb";
-
+import { IoGitPullRequestSharp } from "react-icons/io5";
+import { PiCertificateFill } from "react-icons/pi";
 const SideBar = ({ onSidebarClick }) => {
   const [activeItem, setActiveItem] = useState("My Profile"); // Track active item
   const menuItems = [
@@ -20,6 +21,7 @@ const SideBar = ({ onSidebarClick }) => {
     { name: "Packages", label: "Packages"},
     { name: "Reviews", label: "Reviews"},
     { name: "Requests", label: "Requests"},
+    { name: "Certificates", label: "Certificates"},
   ];
 
   // Handle click and update the active item
@@ -48,7 +50,9 @@ const SideBar = ({ onSidebarClick }) => {
           case "Reviews":
             return <MdReviews className="mr-2 text-2xl" />;
           case "Requests":
-            return <MdReviews className="mr-2 text-2xl" />;
+            return <IoGitPullRequestSharp className="mr-2 text-2xl" />;
+          case "Certificates":
+            return <PiCertificateFill className="mr-2 text-2xl" />;
           default:
             return <TbTreadmill className="mr-2 text-2xl" />;
         }

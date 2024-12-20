@@ -24,8 +24,17 @@ import Ingredients from "./coach/Ingredients";
 import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
+import { TraineesList } from "./admin/traineesList";
+import { CoachesList } from "./admin/coachesList";
+import { AdminsList } from "./admin/adminsList";
+import { AdminStatistics } from "./admin/adminStatistics";
+import SignUpForm from "./signUpForm";
+import { CoachReviewDashboard } from "./coach/coachReviewDashboard";
+import {TraineeReviewDashboard} from "./trainee/traineeReviewDashboard"
+import CertificatesDashboard from './coach/Certificatesdashboard'
 import NutritionHistory from "./trainee/NutritionHistory";
 import WorkoutHistory from "./trainee/WorkoutHistory";
+import Memberships from "./trainee/Memberships";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -55,7 +64,7 @@ const UserProfile = ({ userId }) => {
     };
 
     getUser();
-  }, []); // Run once when the component mounts
+  }, [userProfile]); // Run once when the component mounts
 
   // Function to handle button clicks from SideBar
   const handleSidebarClick = (section) => {
@@ -80,72 +89,76 @@ const UserProfile = ({ userId }) => {
       );
     }
   };
-  const components = {
-
-
-    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />
-    Clients: (
-      <PrimeReactProvider value={{ pt: Tailwind }}>
-        <Clients userId={userId} />
-      </PrimeReactProvider>
-    ),
-    Packages: (
-      <PrimeReactProvider value={{ pt: Tailwind }}>
-        <PackageDashboard />
-      </PrimeReactProvider>
-    ),
-    Requests: (
-      <PrimeReactProvider value={{ pt: Tailwind }}>
-        <SubReqDashboard user_id={userId} />
-      </PrimeReactProvider>
-    ),
-    Workouts: <TraineeCurrentWrokout userId={userId} />,
-    Nutrition: <TraineeCurrentMeals userId={userId} />,
-    Default: <NoDataDashboard header={activeSection + " Section"} />,
-  };
 
   // Components to render based on the active section
   const renderComponent = () => {
     if (userType == "Trainee") {
-      if (activeSection == "Workouts") {
-        return <TraineeCurrentWrokout userId={userId} />;
-      }
-      if (activeSection == "Nutrition") {
-        return <TraineeCurrentMeals userId={userId} />;
-      }
-      if (activeSection == "Nutrition History") {
-        return <NutritionHistory userId={userId} />;
-      }
-      if (activeSection == "Workout history") {
-        return <WorkoutHistory userId={userId} />;
-      }
-      if (activeSection == "Memberships") {
-        return <Memberships userId={userId} />;
+      switch (activeSection) {
+        case "Workouts":
+          return <TraineeCurrentWrokout userId={userId} />;
+        case "Nutrition": 
+          return <TraineeCurrentMeals userId={userId} />;
+        case "Memberships": 
+          return <Memberships userId={userId} />;
+        case "Workout history": 
+          return <WorkoutHistory userId={userId} />;
+        case "Nutrition History": 
+          return <NutritionHistory userId={userId} />;
+        case "Reviews": 
+          return (
+            <PrimeReactProvider value={{pt: Tailwind}}>
+          <TraineeReviewDashboard userId={userId} />
+          </PrimeReactProvider>
+          )
+        default:
+          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
       }
     } else if (userType == "Trainer") {
-      if (activeSection == "Exercises") return <Exercises userId={userId} />;
-      if (activeSection == "Ingredients")
-        return <Ingredients userId={userId} />;
-      if (activeSection == "Workouts") return <Workouts userId={userId} />;
-      if (activeSection == "Meals") return <Meals userId={userId} />;
-      if (activeSection == "Packages") {
-        return (
+      switch (activeSection) {
+        case "Exercises":
+          return <Exercises userId={userId} />;
+        case "Ingredients":
+          return <Ingredients userId={userId} />;
+        case "Workouts":
+          return <Workouts userId={userId} />;
+        case "Meals":
+          return <Meals userId={userId} />;
+        case "Clients":
+          return <Clients userId={userId} />;
+        case "Packages":
+          return (
           <PrimeReactProvider value={{ pt: Tailwind }}>
             <Packages userId={userId} />
           </PrimeReactProvider>
         );
-      }
-      if (activeSection == "Clients") {
-        return (
-          <PrimeReactProvider value={{ pt: Tailwind }}>
-            <Clients userId={userId} />
-          </PrimeReactProvider>
-        );
-      }
-    }
+        case "Reviews":
+          return <CoachReviewDashboard userId={userId} />;
+        case "Requests":
+          return <SubReqDashboard userId={userId} />;
+        case "Certificates":
+          return <CertificatesDashboard userId={userId} isEditable={true} />;
 
-    return components[activeSection] || components.Default;
+
+        default:
+          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
+      }
+    } else {
+      switch (activeSection) {
+        case "Trainees":
+          return <TraineesList />;
+        case "Coaches": 
+          return <CoachesList />;
+        case "Admins": 
+          return <AdminsList />;
+        case "Statistics": 
+          return <AdminStatistics />;
+        case "Add User": 
+          return <SignUpForm isAdmin={1} />;
+        default:
+          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
+    }
   };
+}
 
   return (
     <div className="w-full">
