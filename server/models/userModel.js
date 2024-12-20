@@ -222,7 +222,8 @@ const updateTrainer = async (values, id) => {
   `;
   const result = await db.query(query, values);
   return result.rows[0]; // Return the updated trainer record
-  
+}
+
 exports.banUser = async (userId) => {
   const query = `UPDATE lifta_schema.users SET is_banned = 'true' WHERE user_id = $1;`;
   return (await db.query(query, [userId])).rows;

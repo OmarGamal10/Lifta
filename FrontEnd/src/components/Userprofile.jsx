@@ -23,7 +23,6 @@ import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
 
-
 const UserProfile = ({ userId }) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
@@ -31,7 +30,7 @@ const UserProfile = ({ userId }) => {
   const [userType, setUserType] = useState("");
   const [userBio, setUserBio] = useState("");
   const [coachRating, setCoachRating] = useState(0);
-  const [Loading, setLoading ] = useState(true);
+  const [Loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState("");
   const { get } = useHttp("http://localhost:3000");
 
@@ -72,38 +71,31 @@ const UserProfile = ({ userId }) => {
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
     }
-  }
-  const components =  {
-    "My Profile": (
-      <MyProfile userId={userId} />
-    ),
+  };
+  const components = {
+    "My Profile": <MyProfile userId={userId} />,
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-    <Clients userId={userId} />
-    </PrimeReactProvider>
+        <Clients userId={userId} />
+      </PrimeReactProvider>
     ),
     Packages: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <PackageDashboard/>
-    </PrimeReactProvider>
+        <PackageDashboard />
+      </PrimeReactProvider>
     ),
     Requests: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <SubReqDashboard user_id={userId}/>
-    </PrimeReactProvider>
+        <SubReqDashboard user_id={userId} />
+      </PrimeReactProvider>
     ),
-    Workouts: (
-      <TraineeCurrentWrokout userId={userId} />
-    ),
-    Nutrition: (
-      <TraineeCurrentMeals userId={userId} />
-    ),
+    Workouts: <TraineeCurrentWrokout userId={userId} />,
+    Nutrition: <TraineeCurrentMeals userId={userId} />,
     Default: <NoDataDashboard header={activeSection + " Section"} />,
   };
 
   // Components to render based on the active section
   const renderComponent = () => {
-
     if (userType == "Trainee") {
       if (activeSection == "Workouts") {
         return <TraineeCurrentWrokout userId={userId} />;
@@ -124,43 +116,46 @@ const UserProfile = ({ userId }) => {
       if (activeSection == "Meals") return <Meals userId={userId} />;
     }
     if (activeSection == "Packages") {
-      return <Packages userId={userId} />;
+      return (
+        <PrimeReactProvider value={{ pt: Tailwind }}>
+          <Packages userId={userId} />
+        </PrimeReactProvider>
+      );
     }
 
-      return components[activeSection] || components.Default;
-
+    return components[activeSection] || components.Default;
   };
-  
 
   return (
-    <div className="w-full"> {Loading ? <Loader /> : 
-    <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
-
-      <NavBar />
-      <ProfileSection
-        userName={userName}
-        userBio={userBio}
-        userProfile={userProfile}
-      />
-      <NavBar pref={"NotDefault"} />
-
-      <ProfileSection userName={userName} userBio={userBio} userType={userType} userId={userId}/>
-
-      <div className="h-[0.5px] bg-textspan "></div>
-      <div className="flex min-h-[960px] w-full ml-4">
-        {renderSideBar()}
-        <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
-        {/* Vertical Divider */}
-        <div className="w-full">
-          {/* Render Active Component */}
-          <div className="flex justify-center items-center mr-4">
-            {renderComponent()}
+    <div className="w-full">
+      {" "}
+      {Loading ? (
+        <Loader />
+      ) : (
+        <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
+          <NavBar pref={"NotDefault"} />
+          <ProfileSection
+            userType={userType}
+            userId={userId}
+            userName={userName}
+            userBio={userBio}
+            userProfile={userProfile}
+          />
+          <div className="h-[0.5px] bg-textspan "></div>
+          <div className="flex min-h-[960px] w-full ml-4">
+            {renderSideBar()}
+            <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
+            {/* Vertical Divider */}
+            <div className="w-full">
+              {/* Render Active Component */}
+              <div className="flex justify-center items-center mr-4">
+                {renderComponent()}
+              </div>
+            </div>
           </div>
+          <Footer />
         </div>
-      </div>
-      <Footer />
-    </div>
-    }
+      )}
     </div>
   );
 };

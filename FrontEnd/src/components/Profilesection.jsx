@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaStar, FaRegStarHalfStroke } from "react-icons/fa6";
 import useHttp from "../hooks/useHTTP";
 
-const ProfileSection = ({ userName, userBio, userType, userId }) => {
+const ProfileSection = ({ userName, userBio, userType, userId, userProfile}) => {
   const { get } = useHttp("http://localhost:3000");
   const [coachRating, setCoachRating] = useState(0);
 

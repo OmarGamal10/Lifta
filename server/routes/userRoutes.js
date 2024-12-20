@@ -61,6 +61,7 @@ router.get("/browse", async (req, res, next) => {
     },
   });
 });
+
 router.get("/:userId/details", async (req, res, next) => {
   const { userId } = req.params;
   res.status(200).json({
@@ -70,6 +71,7 @@ router.get("/:userId/details", async (req, res, next) => {
     }
   })
 });
+
 router.patch("/:userId/details", authController.updateUser);
 
 router.delete("/:userId", adminController.deleteUserByUserId);
