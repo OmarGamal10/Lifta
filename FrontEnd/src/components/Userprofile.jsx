@@ -124,7 +124,11 @@ const UserProfile = ({ userId }) => {
       if (activeSection == "Meals") return <Meals userId={userId} />;
     }
     if (activeSection == "Packages") {
-      return <Packages userId={userId} />;
+      return (
+        <PrimeReactProvider value={{ pt: Tailwind }}>
+          <Packages userId={userId} />
+        </PrimeReactProvider>
+      );
     }
 
       return components[activeSection] || components.Default;
@@ -136,15 +140,14 @@ const UserProfile = ({ userId }) => {
     <div className="w-full"> {Loading ? <Loader /> : 
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
 
-      <NavBar />
+      <NavBar pref={"NotDefault"} />
       <ProfileSection
         userName={userName}
         userBio={userBio}
         userProfile={userProfile}
+        userId={userId}
+        userType={userType}
       />
-      <NavBar pref={"NotDefault"} />
-
-      <ProfileSection userName={userName} userBio={userBio} userType={userType} userId={userId}/>
 
       <div className="h-[0.5px] bg-textspan "></div>
       <div className="flex min-h-[960px] w-full ml-4">

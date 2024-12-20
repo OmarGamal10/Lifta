@@ -18,10 +18,6 @@ export function PackageCard(probs) {
 
     // console.log(probs);
     if (
-      (probs.type == "Gym" && probs.hasGymSub) ||
-      (probs.type == "Nutrition" && probs.hasNutSub)
-
-    if (
       (probs.type === "Gym" && probs.hasGymSub) || 
       (probs.type === "Nutrition" && probs.hasNutSub) || 
       (probs.type === "Both" && (probs.hasGymSub || probs.hasNutSub))
