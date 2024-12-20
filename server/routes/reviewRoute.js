@@ -24,4 +24,8 @@ router.post(
 
 router.delete("/:reviewId", reviewController.deleteReview);
 
+router.patch("/:reviewId", convertCamelToSnake, (req, res, next) => {
+  return reviewController.updateReview(req, res, next);
+});
+
 module.exports = router;

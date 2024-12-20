@@ -53,34 +53,67 @@ export function ReviewModalForm(probs) {
       return;
     }
 
-    const token = getTokenFromCookies();
-    const decodedToken = token ? jwtDecode(token) : null;
-    const userId = decodedToken ? decodedToken.user_id : null;
-    console.log(userId);
+    // const token = getTokenFromCookies();
+    // const decodedToken = token ? jwtDecode(token) : null;
+    // const userId = decodedToken ? decodedToken.user_id : null;
+    // console.log(userId);
     const content = formData.content;
-    const trainerId = 70;
-    const traineeId = 89;
     console.log(content);
-    try {
-      const response = await post(
-        "/reviews",
-        {
-          trainerId,
-          traineeId,
-          content,
-          stars,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+
+    if (probs.isEdit) {
+      const reviewId = probs.reviewId;
+      try {
+        const response = await patch(
+          `/reviews/${probs.reviewId}`,
+          {
+            content,
+            stars,
           },
-        }
-      );
-      console.log(response);
-    } catch (err) {
-      console.log(err);
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
     }
+    else {
+      const trainerId = probs.trainerId;
+      const traineeId = probs.traineeId;
+      
+      try {
+        const response = await post(
+          "/reviews",
+          {
+            trainerId,
+            traineeId,
+            content,
+            stars,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    probs.handleCloseModal();
   };
+
+  useEffect(() => {
+    if (probs.isEdit) {
+      setFormData({ content: probs.content });
+      setStars(probs.stars);      
+    }
+  }, []);
 
   return (
     
