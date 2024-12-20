@@ -1,21 +1,19 @@
 import React, { useState } from "react";
-import { TbTreadmill } from "react-icons/tb";
-import { LiaDumbbellSolid } from "react-icons/lia";
 import { FiUser } from "react-icons/fi";
-import { GiMedicinePills } from "react-icons/gi";
-import { MdReviews } from "react-icons/md";
-import { FaUsers } from "react-icons/fa";
-import { GrOverview } from "react-icons/gr";
+import { SiTrainerroad } from "react-icons/si";
+import { GiBabyfootPlayers } from "react-icons/gi";
+import { MdAdminPanelSettings } from "react-icons/md";
+import { IoStatsChartSharp } from "react-icons/io5";
+import { HiUserAdd } from "react-icons/hi";
 
 const SideBar = ({ onSidebarClick }) => {
   const [activeItem, setActiveItem] = useState("My Profile"); // Track active item
   const menuItems = [
-    { name: "Workouts", label: "Workouts"},
-    { name: "Nutrition", label: "Nutrition"},
-    { name: "Memberships", label: "Memberships",},
-    { name: "Workout history", label: "Workout history"},
-    { name: "Nutrition History", label: "Nutrition History"},
-    { name: "Reviews", label: "Reviews"},
+    { name: "Trainees", label: "Trainees"},
+    { name: "Coaches", label: "Coaches"},
+    { name: "Admins", label: "Admins",},
+    { name: "Statistics", label: "Statistics"},
+    { name: "Add User", label: "Add User"},
   ];
 
   // Handle click and update the active item
@@ -29,18 +27,16 @@ const SideBar = ({ onSidebarClick }) => {
         switch (name) {
           case "My Profile":
             return <FiUser  className="mr-2 text-2xl" />;
-          case "Workouts":
-            return <LiaDumbbellSolid className="mr-2 text-2xl" />;
-          case "Nutrition":
-            return <GiMedicinePills className="mr-2 text-2xl" />;
-          case "Memberships":
-            return <FaUsers className="mr-2 text-2xl" />;
-          case "Workout history":
-            return <LiaDumbbellSolid className="mr-2 text-2xl" />;
-          case "Nutrition History":
-            return <GiMedicinePills className="mr-2 text-2xl" />;
-          case "Reviews":
-            return <MdReviews className="mr-2 text-2xl" />;
+          case "Trainees":
+            return <GiBabyfootPlayers className="mr-2 text-2xl"/>
+          case "Coaches":
+            return <SiTrainerroad className="mr-2 text-2xl" />;
+          case "Admins":
+            return <MdAdminPanelSettings className="mr-2 text-2xl" />;
+          case "Statistics":
+            return <IoStatsChartSharp className="mr-2 text-2xl" />;
+          case "Add User":
+            return <HiUserAdd className="mr-2 text-2xl" />;
           default:
             return <TbTreadmill className="mr-2 text-2xl" />;
         }
