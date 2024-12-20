@@ -31,7 +31,6 @@ const getPackagesCoach = async (req, res, next) => {
   if (!coachId || isNaN(coachId)) {
     return next(new AppError("Please provide a coach id", 400));
   }
-  console.log(coachId);
   const packages = await packageModel.getPackagesByCoachId(coachId);
   res.status(200).json({
     status: "success",

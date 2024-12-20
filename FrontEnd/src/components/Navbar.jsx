@@ -1,16 +1,18 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Navigate, Link, useNavigate } from "react-router-dom";
 import useHttp from "../hooks/useHTTP";
 import ChatLayout from "./chat/ChatLayout";
+import logo from "../assets/logo.png"
 
-const NavBar = () => {
-  const [preference, setPreference] = useState();
+const NavBar = ({pref = "NotDefined"}) => {
+  const [preference, setPreference] = useState(pref);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const navigate = useNavigate();
   const { get, loading, err } = useHttp("http://localhost:3000");
 
   useEffect(() => {
+    if(preference === "NotDefined") {
     const checkAuth = async () => {
       try {
         const response = await get("/users/checkAuth");
@@ -23,6 +25,7 @@ const NavBar = () => {
     };
 
     checkAuth();
+  }
   }, []); // Run once when the component mounts
 
   const handleLogout = async (e) => {
@@ -80,6 +83,7 @@ const NavBar = () => {
   };
 
   return (
+
     <>
       <nav className="relative container mx-auto p-6 text-textColor">
         <div className="flex justify-between items-center">
@@ -87,7 +91,7 @@ const NavBar = () => {
             <span>LIFTA</span>
             <img
               className="object-cover h-10 w-14"
-              src="src/assets/logo.png"
+              src={logo}
               alt="logo"
             />
           </Link>

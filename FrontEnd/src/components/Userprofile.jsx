@@ -1,20 +1,31 @@
 import React from "react";
 import NavBar from "./Navbar";
 import ProfileSection from "./Profilesection";
-import SideBar from "./Sidebar";
+import { SubReqDashboard } from "./coach/subReqDashboard";
 import CoachSideBar from "./coach/Sidebar";
 import TraineeSideBar from "./trainee/Sidebar";
+import MyProfile from "./MyProfile";
 import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
 import { useState, useEffect } from "react";
 import useHttp from "../hooks/useHTTP";
+import Clients from "./coach/Clients";
+import { PrimeReactProvider } from "primereact/api";
+import Tailwind from "primereact/passthrough/tailwind";
+import { Package } from "lucide-react";
+import { PackageDashboard } from "./packageDashboard";
 import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
+
 import Exercises from "./coach/Exercises";
 import Ingredients from "./coach/Ingredients";
 import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
+
+
+
+
 const UserProfile = ({ userId }) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
@@ -59,9 +70,35 @@ const UserProfile = ({ userId }) => {
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
     }
+  }
+  const components =  {
+    Clients: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+    <Clients userId={userId} />
+    </PrimeReactProvider>
+    ),
+    Packages: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <PackageDashboard/>
+    </PrimeReactProvider>
+    ),
+    Requests: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <SubReqDashboard user_id={userId}/>
+    </PrimeReactProvider>
+    ),
+    Workouts: (
+      <TraineeCurrentWrokout userId={userId} />
+    ),
+    Nutrition: (
+      <TraineeCurrentMeals userId={userId} />
+    ),
+    Default: <NoDataDashboard header={activeSection + " Section"} />,
   };
+
   // Components to render based on the active section
   const renderComponent = () => {
+
     if (userType == "Trainee") {
       if (activeSection == "Workouts") {
         return <TraineeCurrentWrokout userId={userId} />;
@@ -84,16 +121,24 @@ const UserProfile = ({ userId }) => {
     if (activeSection == "Packages") {
       return <Packages userId={userId} />;
     }
+
+      return components[activeSection] || components.Default;
+
   };
+  
 
   return (
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
+
       <NavBar />
       <ProfileSection
         userName={userName}
         userBio={userBio}
         userProfile={userProfile}
       />
+      <NavBar pref={"NotDefault"} />
+      <ProfileSection userName={userName} userBio={userBio}/>
+
       <div className="h-[0.5px] bg-textspan "></div>
       <div className="flex h-[960px] w-full ml-4">
         {renderSideBar()}

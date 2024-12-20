@@ -15,10 +15,17 @@ export function PackageCard(probs) {
   //2 for trainee packages dashboard
 
   useEffect(() => {
+
     // console.log(probs);
     if (
       (probs.type == "Gym" && probs.hasGymSub) ||
       (probs.type == "Nutrition" && probs.hasNutSub)
+
+    if (
+      (probs.type === "Gym" && probs.hasGymSub) || 
+      (probs.type === "Nutrition" && probs.hasNutSub) || 
+      (probs.type === "Both" && (probs.hasGymSub || probs.hasNutSub))
+
     ) {
       setSubscribeEnabled(false);
     } else {
@@ -37,10 +44,39 @@ export function PackageCard(probs) {
   };
 
   async function handleSubscribe() {
+
+    const getCookie = (name) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+      return null;
+    };
+    // Function to decode a JWT (without a library like jwt-decode)
+    const decodeJwt = (token) => {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+
+      return JSON.parse(jsonPayload);
+    };
+
+    // Retrieve the JWT token from the cookie
+    
+    const jwtToken = getCookie("jwt");
+    // Decode the JWT token
+    const decoded = decodeJwt(jwtToken);
+    
+    // Extract the traineeId from the decoded JWT (assuming it's in the payload)
+    const traineeId = decoded.user_id;
+
+    console.log(traineeId)
     try {
+      console.log(probs.PackageId, traineeId)
       const response = await post("/subscriptions", {
         packageId: probs.packageId,
-        traineeId: 58, // Replace with actual trainee ID from cookie
+        traineeId: traineeId, 
       });
       console.log(response);
     } catch (err) {

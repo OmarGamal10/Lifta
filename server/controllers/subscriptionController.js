@@ -1,4 +1,5 @@
 const subscriptionModel = require("../models/subscriptionModel");
+const userModel = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 
@@ -45,6 +46,7 @@ const subscriptionResponse = async (req, res, next) => {
       start_date,
       end_date
     );
+    
   } else {
     subscription = await subscriptionModel.subscriptionResponse(
       subscription_id,
@@ -52,6 +54,10 @@ const subscriptionResponse = async (req, res, next) => {
       null,
       null
     );
+  }
+  if(status) {
+      const deleteAllPendingRequests = await subscriptionModel.deleteAllPendingRequests(subscription_id);
+      const assignToTrainer = await userModel.assignToTrainer(subscription_id);
   }
   res.status(200).json({
     status: "success",
