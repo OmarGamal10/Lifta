@@ -24,6 +24,8 @@ import Ingredients from "./coach/Ingredients";
 import Packages from "./coach/Packages";
 import Workouts from "./coach/Workouts";
 import Meals from "./coach/Meals";
+import NutritionHistory from "./trainee/NutritionHistory";
+import WorkoutHistory from "./trainee/WorkoutHistory";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
