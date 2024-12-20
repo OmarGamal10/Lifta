@@ -7,6 +7,12 @@ JOIN lifta_schema.users u ON r.trainee_id = u.user_id
 WHERE r.trainer_id = $1`;
   return (await db.query(query, [coachId])).rows;
 };
+exports.getReviewsByTraineeId = async (traineeId) => {
+  const query = `SELECT r.review_id,r.trainer_id, u.first_name,u.last_name,r.content,r.stars FROM lifta_schema.review r
+JOIN lifta_schema.users u ON r.trainer_id = u.user_id
+WHERE r.trainee_id = $1`;
+  return (await db.query(query, [traineeId])).rows;
+};
 exports.getTotalCoachRate = async (coachId) => {
   const query = `SELECT AVG(stars) FROM lifta_schema.review WHERE trainer_id = $1`;
   return (await db.query(query, [coachId])).rows[0];
