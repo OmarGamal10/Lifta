@@ -20,7 +20,7 @@ const useHttp = (baseURL = "") => {
 
   // Generic request method
   const request = useCallback(
-    async (method, endpoint, requestData = null, config = {}) => {
+    async (method, endpoint, requestData = {}, config = {}) => {
       setLoading(true);
       setError(null);
 

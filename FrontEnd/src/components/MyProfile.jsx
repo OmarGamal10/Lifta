@@ -29,7 +29,7 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
         const response = await get(`/users/${userId}/details`);
         setProfileData(response.data.details);
         setFormData(response.data.details);
-        setIsEditable(userId === decoded.userId);
+        setIsEditable(userId === decoded.user_id);
       } catch (error) {
         console.error("Failed to fetch profile data:", error);
       }

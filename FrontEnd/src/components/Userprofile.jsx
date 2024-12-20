@@ -28,6 +28,9 @@ import { CoachesList } from "./admin/coachesList";
 import { AdminsList } from "./admin/adminsList";
 import { AdminStatistics } from "./admin/adminStatistics";
 import SignUpForm from "./signUpForm";
+import { CoachReviewDashboard } from "./coach/coachReviewDashboard";
+import {TraineeReviewDashboard} from "./trainee/traineeReviewDashboard"
+import CertificatesDashboard from './coach/Certificatesdashboard'
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -82,27 +85,6 @@ const UserProfile = ({ userId }) => {
       )
     }
   };
-  const components = {
-    "My Profile": <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>,
-    Clients: (
-      <PrimeReactProvider value={{ pt: Tailwind }}>
-        <Clients userId={userId} />
-      </PrimeReactProvider>
-    ),
-    Packages: (
-      <PrimeReactProvider value={{ pt: Tailwind }}>
-        <PackageDashboard />
-      </PrimeReactProvider>
-    ),
-    Requests: (
-      <PrimeReactProvider value={{ pt: Tailwind }}>
-        <SubReqDashboard user_id={userId} />
-      </PrimeReactProvider>
-    ),
-    Workouts: <TraineeCurrentWrokout userId={userId} />,
-    Nutrition: <TraineeCurrentMeals userId={userId} />,
-    Default: <NoDataDashboard header={activeSection + " Section"} />,
-  };
 
   // Components to render based on the active section
   const renderComponent = () => {
@@ -112,8 +94,20 @@ const UserProfile = ({ userId }) => {
           return <TraineeCurrentWrokout userId={userId} />;
         case "Nutrition": 
           return <TraineeCurrentMeals userId={userId} />;
+        case "Memberships": 
+          return <TraineeCurrentMeals userId={userId} />;
+        case "Workout history": 
+          return <TraineeCurrentMeals userId={userId} />;
+        case "Nutrition History": 
+          return <TraineeCurrentMeals userId={userId} />;
+        case "Reviews": 
+          return (
+            <PrimeReactProvider value={{pt: Tailwind}}>
+          <TraineeReviewDashboard userId={userId} />
+          </PrimeReactProvider>
+          )
         default:
-          return <NoDataDashboard header={activeSection + " Section"} />;
+          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
       }
     } else if (userType == "Trainer") {
       switch (activeSection) {
@@ -125,8 +119,13 @@ const UserProfile = ({ userId }) => {
           return <Workouts userId={userId} />;
         case "Meals":
           return <Meals userId={userId} />;
+        case "Reviews":
+          return <CoachReviewDashboard userId={userId} />;
+        case "Certificates":
+          return <CertificatesDashboard userId={userId} isEditable={true} />;
+
         default:
-          return <NoDataDashboard header={activeSection + " Section"} />;
+          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
       }
     } else {
       switch (activeSection) {
@@ -141,7 +140,7 @@ const UserProfile = ({ userId }) => {
         case "Add User": 
           return <SignUpForm isAdmin={1} />;
         default:
-          return <NoDataDashboard header={activeSection + " Section"} />;
+          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
     }
   };
 }

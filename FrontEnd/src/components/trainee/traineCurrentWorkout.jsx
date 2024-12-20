@@ -8,6 +8,7 @@ import useHttp from "../../hooks/useHTTP";
 import React from "react";
 import "primeicons/primeicons.css";
 import { TraineeExerciseCard } from "./traineeExerciseCard";
+import NoDataDashboard from "../Nodata";
 
 export function TraineeCurrentWrokout(probs) {
   const [isDone, setIsDone] = useState(false);
@@ -125,8 +126,6 @@ export function TraineeCurrentWrokout(probs) {
   }
 
   return (
-    <div className="text-textColor h-[100vh] flex items-center">
-      <h2 className="text-2xl font-medium">No Workouts Today</h2>
-    </div>
+    <NoDataDashboard header="No Workouts today !!" />
   );
 }

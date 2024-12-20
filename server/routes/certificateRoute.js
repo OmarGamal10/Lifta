@@ -15,4 +15,17 @@ router.post(
   certificateController.createCertificate
 );
 
+router.patch(
+  "/:certificate_id",
+  convertCamelToSnake,
+  sanitizeEmptyFields,
+  certificateController.editCertificate
+);
+router.delete(
+  "/:certificate_id",
+  (req, res, next) => certificateController.deleteCertificate(req, res, next)
+);
+
+
+
 module.exports = router;
