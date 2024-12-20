@@ -17,6 +17,14 @@ import { PackageDashboard } from "./packageDashboard";
 import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
 
+import Exercises from "./coach/Exercises";
+import Ingredients from "./coach/Ingredients";
+import Packages from "./coach/Packages";
+import Workouts from "./coach/Workouts";
+import Meals from "./coach/Meals";
+
+
+
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -24,17 +32,18 @@ const UserProfile = ({ userId }) => {
   const [userName, setUserName] = useState("");
   const [userType, setUserType] = useState("");
   const [userBio, setUserBio] = useState("");
-
+  const [userProfile, setUserProfile] = useState("");
   const { get } = useHttp("http://localhost:3000");
 
   useEffect(() => {
     const getUser = async () => {
       try {
         const response = await get(`/users/${userId}`);
-        // Assuming response.body has these values
+        console.log(response);
         setUserName(response.userName);
         setUserType(response.userType);
         setUserBio(response.userBio);
+        setUserProfile(response.userPhoto);
       } catch (err) {
         console.error(err);
       }
@@ -56,7 +65,7 @@ const UserProfile = ({ userId }) => {
           className="w-auto"
         />
       );
-    } else {
+    } else if (userType === "Trainer") {
       return (
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
@@ -89,14 +98,47 @@ const UserProfile = ({ userId }) => {
 
   // Components to render based on the active section
   const renderComponent = () => {
+
+    if (userType == "Trainee") {
+      if (activeSection == "Workouts") {
+        return <TraineeCurrentWrokout userId={userId} />;
+      }
+      if (activeSection == "Nutrition") {
+        return <TraineeCurrentMeals userId={userId} />;
+      }
+      if (activeSection) {
+        return <NoDataDashboard header={`${activeSection}` + " Section"} />;
+      } else {
+        return <NoDataDashboard header="No Data Dashboard" />;
+      }
+    } else if (userType == "Trainer") {
+      if (activeSection == "Exercises") return <Exercises userId={userId} />;
+      if (activeSection == "Ingredients")
+        return <Ingredients userId={userId} />;
+      if (activeSection == "Workouts") return <Workouts userId={userId} />;
+      if (activeSection == "Meals") return <Meals userId={userId} />;
+    }
+    if (activeSection == "Packages") {
+      return <Packages userId={userId} />;
+    }
+
       return components[activeSection] || components.Default;
+
   };
   
 
   return (
     <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
+
+      <NavBar />
+      <ProfileSection
+        userName={userName}
+        userBio={userBio}
+        userProfile={userProfile}
+      />
       <NavBar pref={"NotDefault"} />
       <ProfileSection userName={userName} userBio={userBio}/>
+
       <div className="h-[0.5px] bg-textspan "></div>
       <div className="flex h-[960px] w-full ml-4">
         {renderSideBar()}

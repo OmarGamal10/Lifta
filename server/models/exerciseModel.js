@@ -40,7 +40,7 @@ exports.updateExercise = async (...values) => {
   const query = `
   UPDATE lifta_schema.exercise 
   SET name=$1, muscle_group=$2, description=$3
-  WHERE exercise_id=$4
+  WHERE exercise_id=$4 RETURNING *;
 `;
   return (await db.query(query, values)).rows;
 };

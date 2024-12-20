@@ -89,6 +89,19 @@ const updatePackage = async (req, res, next) => {
     },
   });
 };
+const toggleActiveState = async (req, res, next) => {
+  const { is_active } = req.body;
+  const { pkgId } = req.params;
+  console.log(req.body);
+  if (!pkgId || isNaN(pkgId)) {
+    return next(new AppError("Please provide a package id", 400));
+  }
+  const package = await packageModel.toggleActiveState(pkgId, is_active);
+  res.status(200).json({
+    status: "success",
+    message: "Package updated successfully",
+  });
+};
 const deletePackage = async (req, res, next) => {
   const { package_id } = req.body;
   await packageModel.deletePackage(package_id);
@@ -127,6 +140,7 @@ module.exports = {
   updatePackage: catchAsync(updatePackage),
   getTopFivePackages: catchAsync(getTopFivePackages),
   getAvgPrice: catchAsync(getAvgPrice),
+  toggleActiveState: catchAsync(toggleActiveState),
 };
 
 // /packages

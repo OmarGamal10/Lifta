@@ -22,6 +22,13 @@ router.patch(
   sanitizeEmptyFields,
   packageController.updatePackage
 );
+
+router.patch(
+  "/:pkgId/activate",
+  convertCamelToSnake,
+  sanitizeEmptyFields,
+  packageController.toggleActiveState
+);
 router.post(
   "/",
   convertCamelToSnake,

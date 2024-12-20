@@ -30,7 +30,7 @@ router.post(
 router.delete("/", convertCamelToSnake, (req, res, next) => {
   if (req.params.mealId)
     return mealController.removeIngredientFromMeal(req, res, next);
-  else ingredientController.deleteIngredient;
+  else ingredientController.deleteIngredient(req, res, next);
 });
 
 module.exports = router;
