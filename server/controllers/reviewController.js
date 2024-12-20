@@ -16,6 +16,21 @@ const getReviewsCoach = async (req, res, next) => {
   });
 };
 
+const getReviewsTrainee = async (req, res, next) => {
+  const { traineeId } = req.params;
+  if (!traineeId || isNaN(traineeId)) {
+    return next(new AppError("Please provide a trainee id", 400));
+  }
+  const reviews = await reviewModel.getReviewsByTraineeId(traineeId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      reviews,
+    },
+  });
+};
+
+
 const getCoachRate = async (req, res, next) => {
   const { coachId } = req.params;
   if (!coachId || isNaN(coachId)) {
@@ -54,4 +69,5 @@ module.exports = {
   getReviewsCoach: catchAsync(getReviewsCoach),
   createReview: catchAsync(createReview),
   getCoachRate: catchAsync(getCoachRate),
+  getReviewsTrainee: catchAsync(getReviewsTrainee),
 };
