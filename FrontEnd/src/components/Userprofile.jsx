@@ -72,6 +72,7 @@ const UserProfile = ({ userId }) => {
         <CoachSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
       );
     }
+
   }
   const components =  {
     "My Profile": (
@@ -79,31 +80,26 @@ const UserProfile = ({ userId }) => {
     ),
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-    <Clients userId={userId} />
-    </PrimeReactProvider>
+        <Clients userId={userId} />
+      </PrimeReactProvider>
     ),
     Packages: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <PackageDashboard/>
-    </PrimeReactProvider>
+        <PackageDashboard />
+      </PrimeReactProvider>
     ),
     Requests: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <SubReqDashboard user_id={userId}/>
-    </PrimeReactProvider>
+        <SubReqDashboard user_id={userId} />
+      </PrimeReactProvider>
     ),
-    Workouts: (
-      <TraineeCurrentWrokout userId={userId} />
-    ),
-    Nutrition: (
-      <TraineeCurrentMeals userId={userId} />
-    ),
+    Workouts: <TraineeCurrentWrokout userId={userId} />,
+    Nutrition: <TraineeCurrentMeals userId={userId} />,
     Default: <NoDataDashboard header={activeSection + " Section"} />,
   };
 
   // Components to render based on the active section
   const renderComponent = () => {
-
     if (userType == "Trainee") {
       if (activeSection == "Workouts") {
         return <TraineeCurrentWrokout userId={userId} />;
@@ -131,10 +127,8 @@ const UserProfile = ({ userId }) => {
       );
     }
 
-      return components[activeSection] || components.Default;
-
+    return components[activeSection] || components.Default;
   };
-  
 
   return (
     <div className="w-full"> {Loading ? <Loader /> : 

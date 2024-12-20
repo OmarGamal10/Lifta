@@ -35,7 +35,7 @@ function Form({ formData, setFormData, toNext, type }) {
     const newErrors = {};
 
     Object.keys(formData).forEach((key) => {
-      if (!formData[key] && key != "bio") {
+      if (!formData[key] && key != "bio" && key != "photo") {
         newErrors[key] = `${key.replace(/([A-Z])/g, " $1")} is required.`;
       }
     });
@@ -103,7 +103,7 @@ function Form({ formData, setFormData, toNext, type }) {
         }));
 
         setErrors((prev) => {
-          const { photo, ...rest } = prev;
+          const { ...rest } = prev;
           return rest;
         });
       } else {

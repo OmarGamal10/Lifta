@@ -11,8 +11,10 @@ import ExerciseForm from "./exerciseForm";
 import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
 import { use } from "react";
+import Loader from "../Loader"; // Import your Loader component
+
 function Packages({ userId }) {
-  const { get, patch, post, del, loading, error, data } = useHttp(
+  const { get, patch, post, del, error, data } = useHttp(
     "http://localhost:3000"
   );
   const [curPage, setCurPage] = useState(1);
@@ -21,10 +23,13 @@ function Packages({ userId }) {
   const [addPackageView, setAddPackageView] = useState(false);
   const [editPackageView, setEditPackageView] = useState(false);
   const [idToEdit, setIdToEdit] = useState(null);
+  const [loading, setLoading] = useState(true); // State to track loading
+
   /////////////////////////////////////////
   useEffect(() => {
     const fetchPackages = async () => {
       try {
+        setLoading(true);
         const response = await get(`/users/${userId}/packages`, {
           headers: {
             "Content-Type": "application/json",
@@ -44,6 +49,8 @@ function Packages({ userId }) {
       } catch (err) {
         console.error("Error fetching packages:", err);
         setPackages([]);
+      } finally {
+        setLoading(false); // Hide loader after API call finishes
       }
     };
 
@@ -103,7 +110,7 @@ function Packages({ userId }) {
     setCurPage((prevPage) => Math.min(totalPages, prevPage + 1));
   };
 
-  return (
+  const renderPackages = () => (
     <>
       {editPackageView && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -158,14 +165,14 @@ function Packages({ userId }) {
           </div>
         </div>
 
-        {packages.length && (
-          <div className=" flex justify-center items-center py-2 space-x-4">
+        {packages.length > 0 && (
+          <div className="flex justify-center items-center py-2 space-x-4">
             <button
               onClick={handlePreviousPage}
               disabled={curPage === 1}
               className={`px-4 py-2 rounded-xl border ${
                 curPage === 1
-                  ? " text-textColor cursor-not-allowed"
+                  ? "text-textColor cursor-not-allowed"
                   : "bg-secondary text-textColor hover:bg-textColor hover:text-secondary hover:border-secondary"
               }`}
             >
@@ -189,6 +196,10 @@ function Packages({ userId }) {
         )}
       </div>
     </>
+  );
+
+  return (
+    <div className="w-full">{loading ? <Loader /> : renderPackages()}</div>
   );
 }
 export default Packages;

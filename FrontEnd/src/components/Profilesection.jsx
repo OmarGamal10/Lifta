@@ -49,11 +49,11 @@ const ProfileSection = ({ userName, userBio, userType, userId, userProfile }) =>
         className={`${
           userProfile
             ? ""
-            : "bg-primary flex rounded-full items-center justify-center"
+            : "bg-primary flex rounded-full items-center  justify-center"
         }`}
       >
         <img
-          src={`${userProfile ? userProfile : "src / assets / user.png"}`}
+          src={`${userProfile != "" ? userProfile : "src/assets/user.png"}`}
           alt="User Logo"
           className="w-40 h-40 p-3 object-cover rounded-full"
 

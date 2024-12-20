@@ -10,20 +10,24 @@ import CreateMeal from "./createMeal";
 import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
 import { use } from "react";
+import Loader from "../Loader"; // Import your Loader component
+
 function Meals({ userId }) {
   const navigate = useNavigate();
 
-  const { get, post, del, loading, error, data } = useHttp(
-    "http://localhost:3000"
-  );
+  const { get, post, del, error, data } = useHttp("http://localhost:3000");
   const [curPage, setCurPage] = useState(1);
   const [meals, setMeals] = useState([]);
   const totalPages = Math.ceil(meals.length / 5);
   const [idToEdit, setIdToEdit] = useState(null);
+  const [loading, setLoading] = useState(true); // State to track loading
+
   /////////////////////////////////////////
   useEffect(() => {
     const fetchMeals = async () => {
       try {
+        setLoading(true);
+
         const response = await get(`/users/${userId}/meals`, {
           headers: {
             "Content-Type": "application/json",
@@ -43,6 +47,8 @@ function Meals({ userId }) {
       } catch (err) {
         console.error("Error fetching meals:", err);
         setMeals([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -77,7 +83,7 @@ function Meals({ userId }) {
     setCurPage((prevPage) => Math.min(totalPages, prevPage + 1));
   };
 
-  return (
+  const renderMeals = () => (
     <>
       <div
         className={`w-full flex flex-col min-h-screen justify-center px-12 py-3 
@@ -143,5 +149,7 @@ function Meals({ userId }) {
       </div>
     </>
   );
+
+  return <div className="w-full">{loading ? <Loader /> : renderMeals()}</div>;
 }
 export default Meals;
