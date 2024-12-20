@@ -41,6 +41,8 @@ import { TraineesList } from "./components/admin/traineesList.jsx";
 import { CoachesList } from "./components/admin/coachesList.jsx";
 import { AdminStatistics } from "./components/admin/adminStatistics.jsx";
 import { ReviewModalForm } from "./components/trainee/reviewModalForm.jsx";
+import { CoachReviewCard } from "./components/coach/coachReviewCard.jsx";
+import { CoachReviewDashboard } from "./components/coach/coachReviewDashboard.jsx";
 
 
 const router = createBrowserRouter([
@@ -102,7 +104,7 @@ const router = createBrowserRouter([
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <ReviewModalForm />
+        <CoachReviewDashboard />
       </PrimeReactProvider>
     ),
   },
