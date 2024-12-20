@@ -109,7 +109,6 @@ const UserProfile = ({ userId }) => {
         return <TraineeCurrentMeals userId={userId} />;
       }
       if (activeSection == "Nutrition History") {
-        console.log("Nutrition History");
         return <NutritionHistory userId={userId} />;
       }
       if (activeSection == "Workout history") {

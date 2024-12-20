@@ -1,6 +1,6 @@
 const cron = require("node-cron");
-const db = require("../db");
-const AppError = require("../utils/AppError");
+const db = require("../../db");
+const AppError = require("../../utils/AppError");
 
 // check everyday at 11:59 PM, every active subscription if today's date is greater than the end date, make it expired
 // also after this, i want to remove from workout_schedule and meals_diet any workout or meal that is for this trainee id and trainer id

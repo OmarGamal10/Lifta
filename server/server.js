@@ -2,8 +2,8 @@ const dotenv = require("dotenv");
 const http = require("http");
 const app = require("./app");
 const setupSocket = require("./socketServer");
-require("./cronJobs/notCompletedLog");
-require("./cronJobs/expiredSubscriptions");
+require("./controllers/cronJobs/notCompletedLog");
+require("./controllers/cronJobs/expiredSubscriptions");
 
 dotenv.config({ path: "./config.env" });
 

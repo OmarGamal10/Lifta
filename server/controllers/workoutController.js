@@ -167,6 +167,14 @@ const markWorkoutAsDone = async (req, res, next) => {
     message: "Workout marked as done",
   });
 };
+const removeDoneWorkout = async (req, res, next) => {
+  const { traineeId } = req.params;
+  await workoutModel.removeDoneWorkout(traineeId);
+  res.status(200).json({
+    status: "success",
+    message: "Workout is not done",
+  });
+};
 
 module.exports = {
   createWorkout: catchAsync(createWorkout),
@@ -181,4 +189,5 @@ module.exports = {
   removeWorkoutFromSchedule: catchAsync(removeWorkoutFromSchedule),
   getWorkoutLog: catchAsync(getWorkoutLog),
   markWorkoutAsDone: catchAsync(markWorkoutAsDone),
+  removeDoneWorkout: catchAsync(removeDoneWorkout),
 };

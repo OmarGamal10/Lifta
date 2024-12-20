@@ -1,6 +1,6 @@
 const cron = require("node-cron");
-const db = require("../db");
-const AppError = require("../utils/AppError");
+const db = require("../../db");
+const AppError = require("../../utils/AppError");
 
 // current day name
 const currentDay = new Date().toLocaleDateString("en-US", { weekday: "long" });

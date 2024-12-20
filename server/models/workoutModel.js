@@ -70,16 +70,6 @@ exports.addtoWorkoutLog = async (trainee_id, workout_id) => {
   }
 };
 
-exports.assignWorkoutToTrainee = async (trainee_id, workout_id, day) => {
-  try {
-    const query = `INSERT INTO lifta_schema.workouts_schedule (workout_id,trainee_id,day) VALUES ($1,$2,$3) RETURNING * `;
-    return (await db.query(query, [workout_id, trainee_id, day])).rows;
-  } catch (err) {
-    if (err.code === "23505") {
-      throw new AppError("Trainee already have a workout on this day", 400);
-    }
-    throw err;
-  }
 exports.assignWorkoutToTrainee = async (
   trainee_id,
   workout_id,
