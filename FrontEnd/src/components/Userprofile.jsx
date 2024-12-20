@@ -52,7 +52,7 @@ const UserProfile = ({ userId }) => {
     };
 
     getUser();
-  }, []); // Run once when the component mounts
+  }, [userProfile]); // Run once when the component mounts
 
   // Function to handle button clicks from SideBar
   const handleSidebarClick = (section) => {
@@ -78,7 +78,7 @@ const UserProfile = ({ userId }) => {
     }
   };
   const components = {
-    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />,
+    "My Profile": <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>,
     Clients: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <Clients userId={userId} />
