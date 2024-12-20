@@ -29,3 +29,7 @@ exports.createReview = async (...values) => {
     throw err;
   }
 };
+exports.deleteReview = async (reviewId) => {
+  const query = `DELETE FROM lifta_schema.review WHERE review_id = $1`;
+  return (await db.query(query, [reviewId])).rows[0];
+};

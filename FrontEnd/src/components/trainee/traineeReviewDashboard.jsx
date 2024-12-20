@@ -4,22 +4,21 @@ import { TraineeReviewCard } from "./traineeReviewCard";
 import NoDataDashboard from "../Nodata";
 
 export function TraineeReviewDashboard() {
-  
-    const { get, patch, error, data } = useHttp("http://localhost:3000");
-    const [reviews, setReviews] = useState([]);
+  const { get, patch, error, data } = useHttp("http://localhost:3000");
+  const [reviews, setReviews] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await get(`/reviews/89`, {
+        headers: { "Cache-Control": "no-cache" },
+      });
+      setReviews(response.data.reviews);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await get(`/reviews/89`, {
-          headers: { "Cache-Control": "no-cache" },
-        });
-        setReviews(response.data.reviews);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchData();
   }, []);
 
@@ -29,11 +28,13 @@ export function TraineeReviewDashboard() {
         {reviews.map((review) => (
           <TraineeReviewCard
             key={review.review_id}
+            reviewId={review.review_id}
             coachId={review.trainer_id}
             firstName={review.first_name}
             lastName={review.last_name}
             content={review.content}
             stars={review.stars}
+            fetchData={fetchData}
             className="h-full" // Ensures cards have equal height
           />
         ))}

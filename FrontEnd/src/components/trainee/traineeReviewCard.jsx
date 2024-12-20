@@ -16,6 +16,29 @@ import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
 
 export function TraineeReviewCard(probs) {
+  const {
+    get: httpGet,
+    post,
+    loading,
+    error,
+    del,
+  } = useHttp("http://localhost:3000");
+
+  const handleDelete = async () => {
+    try {
+      const response = await del(`/reviews/${probs.reviewId}`, {
+        headers: { "Cache-Control": "no-cache" },
+        body: {},
+        data: {},
+      });
+      console.log(response);
+
+      probs.fetchData();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="flex flex-col border-[2px] border-secondary rounded-2xl text-textColor w-[307px] overflow-hidden p-8">
       <div className="flex gap-2">
@@ -53,6 +76,7 @@ export function TraineeReviewCard(probs) {
           icon="pi pi-trash"
           rounded
           unstyled
+          onClick={handleDelete}
           className="group"
           pt={{
             root: {
@@ -68,7 +92,6 @@ export function TraineeReviewCard(probs) {
         <Button
           label="Edit"
           icon="pi pi-pen-to-square"
-        //   onClick={handleToggle}
           rounded
           unstyled
           className="group"
