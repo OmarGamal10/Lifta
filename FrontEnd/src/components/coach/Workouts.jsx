@@ -1,31 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { PackageCard } from "../packageCard";
+import Workout from "./workoutCard";
 import ErrorMessage from "../errorMsg";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-import PackageForm from "./packageForm";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import Nodata from "../Nodata";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import ExerciseForm from "./exerciseForm";
+import CreateWorkout from "./createWorkout";
 import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
 import { use } from "react";
-function Packages({ userId }) {
-  const { get, patch, post, del, loading, error, data } = useHttp(
+function Workouts({ userId }) {
+  const navigate = useNavigate();
+
+  const { get, post, del, loading, error, data } = useHttp(
     "http://localhost:3000"
   );
   const [curPage, setCurPage] = useState(1);
-  const [packages, setPackages] = useState([]);
-  const totalPages = Math.ceil(packages.length / 5);
-  const [addPackageView, setAddPackageView] = useState(false);
-  const [editPackageView, setEditPackageView] = useState(false);
+  const [workouts, setWorkouts] = useState([]);
+  const totalPages = Math.ceil(workouts.length / 5);
   const [idToEdit, setIdToEdit] = useState(null);
   /////////////////////////////////////////
   useEffect(() => {
-    const fetchPackages = async () => {
+    const fetchWorkouts = async () => {
       try {
-        const response = await get(`/users/${userId}/packages`, {
+        const response = await get(`/users/${userId}/workouts`, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -33,29 +32,29 @@ function Packages({ userId }) {
 
         console.log("API Response: ", response);
 
-        const fetchedPackages = Array.isArray(response.data.packages)
-          ? response.data.packages
+        const fetchedWorkouts = Array.isArray(response.data.workouts)
+          ? response.data.workouts
           : [];
-        setPackages(fetchedPackages);
+        setWorkouts(fetchedWorkouts);
 
-        if (fetchedPackages.length === 0) {
+        if (fetchedWorkouts.length === 0) {
           setCurPage(1);
         }
       } catch (err) {
-        console.error("Error fetching packages:", err);
-        setPackages([]);
+        console.error("Error fetching workouts:", err);
+        setWorkouts([]);
       }
     };
 
-    fetchPackages();
+    fetchWorkouts();
   }, []);
   /////////////////////////////////////////
   const handleDelete = async (id) => {
     try {
       const response = await del(
-        "/packages",
+        "/workouts",
         {
-          package_id: id,
+          workout_id: id,
         },
         {
           headers: {
@@ -64,37 +63,12 @@ function Packages({ userId }) {
         }
       );
       console.log(response);
-      setPackages((prev) => prev.filter((pkg) => pkg.package_id !== id));
+      setWorkouts((prev) => prev.filter((workout) => workout.id !== id));
     } catch (err) {
       console.log(err);
     }
   };
-  const handleToggleActive = async (id) => {
-    try {
-      const response = await patch(
-        `/packages/${id}/activate`,
-        {
-          is_active: !packages.find((pkg) => pkg.package_id === id).is_active,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response);
-      setPackages((prev) =>
-        prev.map((pkg) => {
-          if (pkg.package_id === id) {
-            return { ...pkg, is_active: !pkg.is_active };
-          }
-          return pkg;
-        })
-      );
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
   const handlePreviousPage = () => {
     setCurPage((prevPage) => Math.max(1, prevPage - 1));
   };
@@ -105,52 +79,25 @@ function Packages({ userId }) {
 
   return (
     <>
-      {editPackageView && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <PackageForm
-            setView={setEditPackageView}
-            edit={true}
-            idToEdit={idToEdit}
-            setPackages={setPackages}
-          />
-        </div>
-      )}
-      {addPackageView && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <PackageForm
-            setPackages={setPackages}
-            setView={setAddPackageView}
-            userId={userId}
-          />
-        </div>
-      )}
       <div
-        className={`w-full flex flex-col min-h-screen justify-center px-12 py-3 ${
-          addPackageView || editPackageView ? "opacity-50" : ""
+        className={`w-full flex flex-col min-h-screen justify-center px-12 py-3 
         } `}
       >
         <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 pb-5 pr-10">
-          {packages.slice((curPage - 1) * 5, curPage * 5).map((_package) => (
-            <div key={_package.package_id} className="cursor-pointer">
-              <PackageCard
-                package_id={_package.package_id}
-                name={_package.name}
-                price={_package.price}
-                type={_package.type}
-                duration={_package.duration}
-                description={_package.description}
-                isActive={_package.is_active}
+          {workouts.slice((curPage - 1) * 5, curPage * 5).map((workout) => (
+            <div key={workout.id} className="cursor-pointer">
+              <Workout
+                id={workout.id}
+                name={workout.name}
+                note={workout.note}
                 setIdToEdit={setIdToEdit}
-                setEditView={setEditPackageView}
                 handleDelete={handleDelete}
-                handleToggleActive={handleToggleActive}
-                view={0}
               />
             </div>
           ))}
           <div className="flex items-center justify-center min-w-64 max-w-64 min-h-64 h-[280px]">
             <button
-              onClick={() => setAddPackageView(true)}
+              onClick={() => navigate("/createWorkout")}
               className="text-primary hover:text-secondary"
             >
               <IoIosAddCircleOutline size={100} />
@@ -158,7 +105,7 @@ function Packages({ userId }) {
           </div>
         </div>
 
-        {packages.length && (
+        {workouts.length && (
           <div className=" flex justify-center items-center py-2 space-x-4">
             <button
               onClick={handlePreviousPage}
@@ -191,4 +138,4 @@ function Packages({ userId }) {
     </>
   );
 }
-export default Packages;
+export default Workouts;

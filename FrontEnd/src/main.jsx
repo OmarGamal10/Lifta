@@ -41,9 +41,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      // <ProtectedLoggedRoute>
-      <Exercises />
-      // </ProtectedLoggedRoute>
+      <ProtectedLoggedRoute>
+        <LandingPage />
+      </ProtectedLoggedRoute>
     ),
   },
   {
@@ -71,6 +71,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "createWorkout",
+    element: (
+      <ProtectedRoute>
+        <CreateWorkout />
+      </ProtectedRoute>
+    ),
+  },
+  {
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
@@ -78,6 +86,7 @@ const router = createBrowserRouter([
       </PrimeReactProvider>
     ),
   },
+
   {
     path: "*",
     element: <NotFound />,

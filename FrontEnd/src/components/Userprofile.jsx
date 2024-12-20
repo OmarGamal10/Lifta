@@ -13,6 +13,7 @@ import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
 import Exercises from "./coach/Exercises";
 import Ingredients from "./coach/Ingredients";
 import Packages from "./coach/Packages";
+import Workouts from "./coach/Workouts";
 const UserProfile = ({ userId }) => {
   // State to track the selected section
   const [activeSection, setActiveSection] = useState("My Profile");
@@ -76,6 +77,7 @@ const UserProfile = ({ userId }) => {
       if (activeSection == "Exercises") return <Exercises userId={userId} />;
       if (activeSection == "Ingredients")
         return <Ingredients userId={userId} />;
+      if (activeSection == "Workouts") return <Workouts userId={userId} />;
     }
     if (activeSection == "Packages") {
       return <Packages userId={userId} />;
