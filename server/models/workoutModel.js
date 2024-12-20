@@ -110,3 +110,8 @@ exports.deleteWorkout = async (workoutId) => {
   const query = "DELETE FROM lifta_schema.workout WHERE workout_id = $1 ";
   return (await db.query(query, [workoutId])).rows;
 };
+
+exports.removeDoneWorkout = async (trainee_id) => {
+    const query = `DELETE FROM lifta_schema.workout_log WHERE trainee_id = $1 AND date = current_date;`;
+    return await db.query(query, [trainee_id]).rows;
+};
