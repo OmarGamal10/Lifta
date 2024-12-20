@@ -11,7 +11,7 @@ function Workout({ id, name, note, view, handleDelete }) {
       hover:cursor-pointer bg-backGroundColor border-secondary 
       w-full min-w-64 max-w-64 rounded-2xl p-5
       ${view === "display" ? "h-[200px]" : "h-[280px]"}
-      flex flex-col
+      flex flex-col transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg transform
     `}
     >
       <h3 className="text-textColor font-bold text-2xl mb-5">{name}</h3>

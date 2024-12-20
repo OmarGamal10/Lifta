@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import NavBar from "./Navbar";
 import ProfileSection from "./Profilesection";
 import { SubReqDashboard } from "./coach/subReqDashboard";
 import CoachSideBar from "./coach/Sidebar";
 import TraineeSideBar from "./trainee/Sidebar";
-import AdminSideBar from "./admin/Sidebar"
+import AdminSideBar from "./admin/Sidebar";
 import MyProfile from "./MyProfile";
 import NoDataDashboard from "./Nodata";
 import Footer from "./Footer";
@@ -31,6 +32,8 @@ import SignUpForm from "./signUpForm";
 import { CoachReviewDashboard } from "./coach/coachReviewDashboard";
 import {TraineeReviewDashboard} from "./trainee/traineeReviewDashboard"
 import CertificatesDashboard from './coach/Certificatesdashboard'
+import NutritionHistory from "./trainee/NutritionHistory";
+import WorkoutHistory from "./trainee/WorkoutHistory";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -82,7 +85,7 @@ const UserProfile = ({ userId }) => {
     } else {
       return (
         <AdminSideBar onSidebarClick={handleSidebarClick} className="w-auto" />
-      )
+      );
     }
   };
 
@@ -124,6 +127,7 @@ const UserProfile = ({ userId }) => {
         case "Certificates":
           return <CertificatesDashboard userId={userId} isEditable={true} />;
 
+
         default:
           return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
       }
@@ -146,33 +150,36 @@ const UserProfile = ({ userId }) => {
 }
 
   return (
-    <div className="w-full"> {Loading ? <Loader /> : 
-    <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
+    <div className="w-full">
+      {" "}
+      {Loading ? (
+        <Loader />
+      ) : (
+        <div className="app overflow-x-hidden overflow-auto scrollbar-thin scrollbar-thumb-textspan scrollbar-track-textspan">
+          <NavBar pref={"NotDefault"} />
+          <ProfileSection
+            userName={userName}
+            userBio={userBio}
+            userProfile={userProfile}
+            userId={userId}
+            userType={userType}
+          />
 
-      <NavBar pref={"NotDefault"} />
-      <ProfileSection
-        userName={userName}
-        userBio={userBio}
-        userProfile={userProfile}
-        userId={userId}
-        userType={userType}
-      />
-
-      <div className="h-[0.5px] bg-textspan "></div>
-      <div className="flex min-h-[960px] w-full ml-4">
-        {renderSideBar()}
-        <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
-        {/* Vertical Divider */}
-        <div className="w-full">
-          {/* Render Active Component */}
-          <div className="flex justify-center items-center mr-4">
-            {renderComponent()}
+          <div className="h-[0.5px] bg-textspan "></div>
+          <div className="flex min-h-[960px] w-full ml-4">
+            {renderSideBar()}
+            <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
+            {/* Vertical Divider */}
+            <div className="w-full">
+              {/* Render Active Component */}
+              <div className="flex justify-center items-center mr-4">
+                {renderComponent()}
+              </div>
+            </div>
           </div>
+          <Footer />
         </div>
-      </div>
-      <Footer />
-    </div>
-    }
+      )}
     </div>
   );
 };

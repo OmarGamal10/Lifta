@@ -18,9 +18,10 @@ function Exercise({
     setIdToEdit(id);
     setEditView(true);
   };
+
   return (
     <div
-      className="border-2 flex flex-col text-center hover:border-primary hover:cursor-pointer bg-backGroundColor border-secondary w-full min-w-64 max-w-64 min-h-64 h-[280px] rounded-2xl p-5"
+      className="border-2 flex flex-col text-center hover:border-primary hover:cursor-pointer bg-backGroundColor border-secondary w-full min-w-64 max-w-64 min-h-64 h-[280px] rounded-2xl p-5 transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg transform"
       onClick={
         usage === "addWorkout" || !gif
           ? undefined

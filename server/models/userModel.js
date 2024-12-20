@@ -93,11 +93,11 @@ const addTrainer = async (values, id) => {
   certification.unshift(id);
   const query =
     "INSERT INTO lifta_schema.trainer (trainer_id, experience_years,client_limit) VALUES ($1, $2, $3)";
-    await db.query(query, trainerValues);
+  await db.query(query, trainerValues);
 
-    if(certification[1]) {
+  if (certification[1]) {
     const query2 =
-    "INSERT INTO lifta_schema.certificate (trainer_id, title,photo,description,date_issued) VALUES ($1, $2, $3, $4, $5)";
+      "INSERT INTO lifta_schema.certificate (trainer_id, title,photo,description,date_issued) VALUES ($1, $2, $3, $4, $5)";
     await db.query(query2, certification);
   }
 };
@@ -125,23 +125,26 @@ exports.assignToTrainer = async (s_id) => {
   await db.query(query, value);
 };
 
-exports.getAvailableCoaches = async () => {
+exports.getAvailableCoaches = async (traineeId) => {
   const query = `SELECT c.trainer_id, 
        u.first_name, 
        u.last_name, 
        c.experience_years, 
-       c.rating,
-	   COUNT(p.package_id) AS package_count
+       ROUND(AVG(r.stars)::numeric, 2) AS rating,
+	   COUNT(p.package_id) AS package_count,
+	    (SELECT r.review_id FROM lifta_schema.review r 
+		WHERE trainee_id = $1 AND r.trainer_id = c.trainer_id)
 FROM lifta_schema.trainer c
 JOIN lifta_schema.users u ON u.user_id = c.trainer_id
 JOIN lifta_schema.package p ON p.trainer_id = c.trainer_id
+LEFT JOIN lifta_schema.review r ON c.trainer_id = r.trainer_id
 LEFT JOIN lifta_schema.trainee t 
     ON t.coach_id = c.trainer_id OR t.nutritionist_id = c.trainer_id
-GROUP BY c.trainer_id, u.first_name, u.last_name, c.experience_years, c.rating, c.client_limit
+GROUP BY c.trainer_id, u.first_name, u.last_name, c.experience_years, c.client_limit
 HAVING c.client_limit > COUNT(DISTINCT CASE WHEN t.coach_id = c.trainer_id OR t.nutritionist_id = c.trainer_id THEN t.trainee_id END);
 `;
 
-  return (await db.query(query)).rows;
+  return (await db.query(query, [traineeId])).rows;
 };
 exports.deleteUserByUserId = async (userId) => {
   const query = "DELETE FROM lifta_schema.users WHERE user_id = $1;";
@@ -154,7 +157,7 @@ exports.getDetails = async (userId) => {
   if (userData.type === "Trainer") {
     const query2 = `SELECT * FROM lifta_schema.users u JOIN lifta_schema.trainer t1 ON t1.trainer_id = u.user_id WHERE u.user_id = $1`;
     return (await db.query(query2, [userId])).rows[0];
-  } else if(userData.type === "Trainer") {
+  } else if (userData.type === "Trainer") {
     const query3 = `SELECT * FROM lifta_schema.users u JOIN lifta_schema.trainee t2 ON t2.trainee_id = u.user_id WHERE u.user_id = $1`;
     return (await db.query(query3, [userId])).rows[0];
   } else return userData;
@@ -181,7 +184,7 @@ exports.updateUser = async (values) => {
     // Call the appropriate function based on user type
     if (type === "Trainee") {
       additionalData = await updateTrainee(rest, userId);
-    } else if(type === "Trainer") {
+    } else if (type === "Trainer") {
       additionalData = await updateTrainer(rest, userId);
     }
 
@@ -213,7 +216,7 @@ const updateTrainee = async (values, id) => {
 
 const updateTrainer = async (values, id) => {
   values.unshift(id);
-  
+
   const query = `
     UPDATE lifta_schema.trainer 
     SET experience_years = $2, client_limit = $3 

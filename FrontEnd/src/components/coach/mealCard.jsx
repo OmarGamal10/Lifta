@@ -15,16 +15,15 @@ function Meal({ id, name, photo, facts, view, handleDelete }) {
       hover:cursor-pointer bg-backGroundColor border-secondary 
       w-full min-w-64 max-w-64 rounded-2xl p-5
       ${view === "display" ? "h-[300px]" : "h-[350px]"}
-      flex flex-col
-    `}
+      flex flex-col transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-lg transform`}
     >
       <h3 className="text-textColor font-bold text-2xl mb-5">{name}</h3>
       <div className="mb-8 flex-grow overflow-y-auto scrollbar-thin scrollbar-thumb-primary/30 scrollbar-track-backGroundColor hover:scrollbar-thumb-secondary/50">
         <img
           src={photo}
           alt="Meal image"
-          className="w-full h-full object-contain  rounded-lg"
-          onError={handleImageError} // Handle image load error
+          className="w-full h-full object-contain rounded-lg"
+          onError={handleImageError}
         />
       </div>
 
