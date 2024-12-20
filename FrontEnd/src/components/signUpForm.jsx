@@ -36,12 +36,12 @@ function SignUpForm(probs) {
     clientLimit: "",
   });
 
-  const [adminData, setAdminData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-  });
+  // const [adminData, setAdminData] = useState({
+  //   firstName: "",
+  //   lastName: "",
+  //   email: "",
+  //   password: "",
+  // });
 
   const [certData, setCertData] = useState({
     title: "",
@@ -66,20 +66,18 @@ function SignUpForm(probs) {
           )}
         </div>
       )}
-      {curForm == 1 && userType != "Admin" && (
+      {curForm == 1 && (
         <Form1
           formData={form1Data}
           setFormData={setForm1Data}
           toNext={setCurForm}
+          type={userType}
         />
       )}
 
-      {curForm == 1 && userType == "Admin" && (
-        <AdminForm
-          formData={adminData}
-          setFormData={setAdminData}
-        />
-      )}
+      {/* {curForm == 1 && userType == "Admin" && (
+        <AdminForm formData={adminData} setFormData={setAdminData} />
+      )} */}
 
       {curForm == 2 &&
         (userType == "Trainee" ? (
@@ -88,6 +86,7 @@ function SignUpForm(probs) {
             traineeData={traineeData}
             setTraineeData={setTraineeData}
             setCurForm={setCurForm}
+            isAdmin={probs.isAdmin}
           />
         ) : (
           <Form2Coach
@@ -97,6 +96,7 @@ function SignUpForm(probs) {
             setCurForm={setCurForm}
             certData={certData}
             setCertData={setCertData}
+            isAdmin={probs.isAdmin}
           />
         ))}
     </>

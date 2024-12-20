@@ -7,18 +7,24 @@ exports.getAllUsers = async () => {
 };
 
 exports.getAllTrainees = async () => {
-  const query = `SELECT u.user_id,u.first_name, u.last_name,u.email,u.phone_number,u.gender,t.height,t.weight,t.workout_preferences, COUNT(s.subscription_id) as subscriptions FROM lifta_schema.users u
+  const query = `SELECT u.user_id,u.first_name, u.last_name,u.email,u.phone_number,u.gender,u.is_banned,t.height,t.weight,t.workout_preferences, COUNT(s.subscription_id) as subscriptions FROM lifta_schema.users u
 JOIN lifta_schema.trainee t ON user_id = trainee_id
 LEFT JOIN lifta_schema.subscription s ON s.trainee_id = t.trainee_id GROUP BY u.user_id,t.trainee_id;`;
   return (await db.query(query)).rows;
 };
 
 exports.getAllCoaches = async () => {
-  const query = `SELECT u.user_id,u.first_name, u.last_name,u.email,u.phone_number,u.gender,t.experience_years,t.rating, COUNT(s.subscription_id) as subscriptions FROM lifta_schema.users u
+  const query = `SELECT u.user_id,u.first_name, u.last_name,u.email,u.phone_number,u.gender,u.is_banned,t.experience_years,ROUND(AVG(r.stars)::numeric, 3) AS rating, COUNT(s.subscription_id) as subscriptions FROM lifta_schema.users u
 JOIN lifta_schema.trainer t ON user_id = trainer_id
 LEFT JOIN lifta_schema.package p ON p.trainer_id = t.trainer_id
 LEFT JOIN lifta_schema.subscription s ON p.package_id = s.package_id
+LEFT JOIN lifta_schema.review r ON r.trainer_id = t.trainer_id
 GROUP BY u.user_id,t.trainer_id`;
+  return (await db.query(query)).rows;
+};
+
+exports.getAllAdmins = async () => {
+  const query = `SELECT user_id,first_name, last_name,email,phone_number,gender,is_banned FROM lifta_schema.users WHERE type = 'Admin'`;
   return (await db.query(query)).rows;
 };
 
@@ -41,6 +47,7 @@ exports.SelectTraineeOrTrainerById = async (id, type) => {
 };
 
 exports.AddUser = async (values) => {
+  let id;
   try {
     const type = values[7]; // Get type from the values array
     const userValues = values.slice(0, 10); // Extract first 10 values for user
@@ -53,11 +60,11 @@ exports.AddUser = async (values) => {
       RETURNING user_id;
     `;
 
-    const id = (await db.query(query, userValues)).rows[0].user_id;
+    id = (await db.query(query, userValues)).rows[0].user_id;
 
     if (type === "Trainee") {
       await addTrainee(rest, id);
-    } else {
+    } else if (type === "Trainer") {
       await addTrainer(rest, id);
     }
   } catch (err) {
@@ -135,5 +142,15 @@ HAVING c.client_limit > COUNT(DISTINCT CASE WHEN t.coach_id = c.trainer_id OR t.
 };
 exports.deleteUserByUserId = async (userId) => {
   const query = "DELETE FROM lifta_schema.users WHERE user_id = $1;";
+  return (await db.query(query, [userId])).rows;
+};
+
+exports.banUser = async (userId) => {
+  const query = `UPDATE lifta_schema.users SET is_banned = 'true' WHERE user_id = $1;`;
+  return (await db.query(query, [userId])).rows;
+};
+
+exports.unbanUser = async (userId) => {
+  const query = `UPDATE lifta_schema.users SET is_banned = 'false' WHERE user_id = $1;`;
   return (await db.query(query, [userId])).rows;
 };
