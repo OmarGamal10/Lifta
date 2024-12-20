@@ -73,7 +73,7 @@ const router = createBrowserRouter([
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
         <ProtectedRoute>
-          <AssignWorkout />
+          <AssignMeal />
         </ProtectedRoute>
       </PrimeReactProvider>
     ),

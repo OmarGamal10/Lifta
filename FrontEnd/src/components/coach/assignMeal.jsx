@@ -6,7 +6,7 @@ import Nodata from "../Nodata";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../../hooks/useHTTP";
-function AssignMeal({ trainee_id = 89 }) {
+function AssignMeal({ trainee_id = 97 }) {
   const navigate = useNavigate();
   const { get, post, loading, error, data } = useHttp("http://localhost:3000");
 
@@ -30,7 +30,7 @@ function AssignMeal({ trainee_id = 89 }) {
     "Saturday",
   ];
 
-  const mealTypes = ["Breakfast", "Lunch", "Dinner"];
+  const mealTypes = ["Breakfast", "Lunch", "Snack", "Dinner"];
 
   const mealsPerPage = 6;
 

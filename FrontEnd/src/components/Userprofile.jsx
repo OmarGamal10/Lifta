@@ -12,6 +12,7 @@ import useHttp from "../hooks/useHTTP";
 import { TraineeCurrentWrokout } from "./trainee/traineCurrentWorkout";
 import { TraineeCurrentMeals } from "./trainee/traineeCurrentMeals";
 import WorkoutHistory from "./trainee/WorkoutHistory";
+import NutritionHistory from "./trainee/NutritionHistory";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -64,6 +65,10 @@ const UserProfile = ({ userId }) => {
     }
     if (activeSection == "Nutrition") {
       return <TraineeCurrentMeals userId={userId} />;
+    }
+    if (activeSection == "Nutrition History") {
+      console.log("Nutrition History");
+      return <NutritionHistory userId={userId} />;
     }
     if (activeSection == "Workout history") {
       return <WorkoutHistory userId={userId} />;
