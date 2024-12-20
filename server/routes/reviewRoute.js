@@ -11,6 +11,10 @@ router.get(["/", "/rate"], (req, res, next) => {
   }
 });
 
+router.get("/reviewData/:reviewId", (req, res, next) => {
+  return reviewController.getReviewByReviewId(req, res, next);
+});
+
 router.get("/:traineeId", (req, res, next) => {
   return reviewController.getReviewsTrainee(req, res, next);
 });

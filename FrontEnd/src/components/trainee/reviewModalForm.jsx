@@ -111,7 +111,7 @@ export function ReviewModalForm(probs) {
       setFormData({ content: probs.content });
       setStars(probs.stars);      
     }
-  }, []);
+  }, [probs]);
 
   return (
     

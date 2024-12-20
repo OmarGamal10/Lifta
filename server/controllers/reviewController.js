@@ -93,6 +93,20 @@ const updateReview = async (req, res, next) => {
   });
 };
 
+const getReviewByReviewId = async (req, res, next) => {
+  const { reviewId } = req.params;
+  if (!reviewId || isNaN(reviewId)) {
+    return next(new AppError("Please provide a review id", 400));
+  }
+  const review = await reviewModel.getReviewsByReviewId(reviewId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      review
+    },
+  });
+};
+
 module.exports = {
   getReviewsCoach: catchAsync(getReviewsCoach),
   createReview: catchAsync(createReview),
@@ -100,4 +114,5 @@ module.exports = {
   getReviewsTrainee: catchAsync(getReviewsTrainee),
   deleteReview: catchAsync(deleteReview),
   updateReview: catchAsync(updateReview),
+  getReviewByReviewId: catchAsync(getReviewByReviewId),
 };

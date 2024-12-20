@@ -7,30 +7,43 @@ import { useState, useEffect, useRef } from "react";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 import { ReviewModalForm } from "../components/trainee/reviewModalForm";
+import { jwtDecode } from "jwt-decode";
+import getTokenFromCookies from "../freqUsedFuncs/getToken";
+import { Edit } from "lucide-react";
+import { use } from "react";
 
 const BrowseCoaches = () => {
-  const [coaches, setCoaches] = useState({});
+  const [coaches, setCoaches] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading
   const navigate = useNavigate();
   const { get } = useHttp("http://localhost:3000");
 
   const [selectedTrainerId, setSelectedTrainerId] = useState(null);
+  const [reviewId, setReviewId] = useState(null);
+  const [traineeId, setTraineeId] = useState(null);
+  const [content, setContent] = useState("");
+  const [stars, setStars] = useState(0);
 
   const dialogRef = useRef(null);
 
-  useEffect(() => {
-    const getAllCoaches = async () => {
-      setLoading(true);
-      try {
-        const response = await get("/users/browse");
-        setCoaches(response.data.coaches);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
 
+  const getAllCoaches = async () => {
+    setLoading(true);
+    const token = getTokenFromCookies();
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken ? decodedToken.user_id : null;
+    setTraineeId(userId);
+    try {
+      const response = await get(`/users/browse/${userId}`);
+      setCoaches(response.data.coaches);
+      console.log(response.data.coaches);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     getAllCoaches();
   }, []); // Run once when the component mounts
 
@@ -39,7 +52,17 @@ const BrowseCoaches = () => {
     navigate(`${trainer_id}/packages`);
   };
 
-  const handleRate = (trainerId) => {
+  const handleRate = async (trainerId, reviewId) => {
+    if (reviewId) {
+      setReviewId(reviewId);
+      try {
+        const response = await get(`/reviews/reviewData/${reviewId}`);
+        setContent(response.data.review[0].content);
+        setStars(response.data.review[0].stars);
+      } catch (err) {
+        console.error(err);
+      }
+    }
     setSelectedTrainerId(trainerId);
     if (dialogRef.current) {
       dialogRef.current.showModal();
@@ -50,13 +73,12 @@ const BrowseCoaches = () => {
     if (dialogRef.current) {
       dialogRef.current.close();
     }
-    dialogRef.current?.addEventListener(
-      'close',
-      () => {
-        setSelectedTrainerId(null);
-      },
-      { once: true }
-    );  };
+    setSelectedTrainerId(null);
+    setReviewId(null);
+    setContent("");
+    setStars(0);
+    getAllCoaches();
+  };
 
   const renderComponet = () => {
     return (
@@ -69,7 +91,7 @@ const BrowseCoaches = () => {
             {coaches.map((coach) => (
               <div
                 key={coach.trainer_id}
-                className="bg-backGroundColor border-2 border-secondary p-6 rounded-2xl w-64 text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer"
+                className="bg-backGroundColor border-2 border-secondary p-6 rounded-2xl text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer"
               >
                 {/* Coach Photo */}
                 <img
@@ -91,15 +113,17 @@ const BrowseCoaches = () => {
                 <div className="flex space-x-4 justify-center mt-4">
                   <button
                     onClick={() => handleSubscribe(coach.trainer_id)}
-                    className="bg-backGroundColor border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+                    className="bg-backGroundColor w-32 border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
                   >
                     Subscribe
                   </button>
                   <button
-                    onClick={() => handleRate(coach.trainer_id)}
-                    className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+                    onClick={() =>
+                      handleRate(coach.trainer_id, coach.review_id)
+                    }
+                    className="bg-backGroundColor w-32 border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
                   >
-                    Rate
+                    {coach.review_id ? "Edit Rating" : "Rate"}
                   </button>
                 </div>
               </div>
@@ -109,11 +133,21 @@ const BrowseCoaches = () => {
             ref={dialogRef}
             className="p-6 rounded-lg w-full max-w-md bg-textColor text-backGroundColor"
           >
-            <ReviewModalForm
-              isEdit={0}
-              trainerId={selectedTrainerId}
-              handleCloseModal={handleCloseModal}
-            />
+            {reviewId != null ? (
+              <ReviewModalForm
+                isEdit={1}
+                reviewId={reviewId}
+                content={content}
+                stars={stars}
+                handleCloseModal={handleCloseModal}
+              />
+            ) : (
+              <ReviewModalForm
+                isEdit={0}
+                trainerId={selectedTrainerId}
+                handleCloseModal={handleCloseModal}
+              />
+            )}
           </dialog>
         </div>
       </div>

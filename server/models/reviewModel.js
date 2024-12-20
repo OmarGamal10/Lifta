@@ -37,3 +37,7 @@ exports.updateReview = async (reviewId, content, stars) => {
   const query = `UPDATE lifta_schema.review SET content = $2, stars = $3 WHERE review_id = $1 RETURNING *;`;
   return (await db.query(query, [reviewId, content, stars])).rows[0];
 };
+exports.getReviewsByReviewId = async (reviewId) => {
+  const query = `SELECT content, stars FROM lifta_schema.review WHERE review_id = $1`;
+  return (await db.query(query, [reviewId])).rows;
+};
