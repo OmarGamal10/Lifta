@@ -54,12 +54,16 @@ export function TraineeExerciseCard(probs) {
               <strong>Repetitions and sets: </strong>
               {probs.reps} &times; {probs.sets}
             </div>
-            <button className="px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around hover:bg-accent hover:text-backGroundColor">
+            {/* <button className="px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around hover:bg-accent hover:text-backGroundColor">
               <span>GIF</span>
               <span
                 className="pi pi-external-link text-sm"
               ></span>
-            </button>
+            </button>             */}
+            {
+              probs.gif != null ? <img src={`${probs.gif}`} alt="" className="w-64 h-64" /> : <></>
+            }
+            
           </AccordionBody>
         </Accordion>
       </div>
