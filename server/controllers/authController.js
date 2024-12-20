@@ -19,6 +19,7 @@ const getUserById = async (req, res) => {
     userName: user["first_name"] + " " + user["last_name"],
     userType: user["type"],
     userBio: user["bio"],
+    userPhoto: user["photo"],
   });
 };
 
@@ -190,7 +191,7 @@ const signup = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const {userId} = req.params;
-  const {
+   const {
     email,
     first_name,
     last_name,
@@ -201,7 +202,7 @@ const updateUser = async (req, res, next) => {
     phone_number,
     type,
     photo,
-  } = req.body;
+      } = req.body;
 
   let food_allergies,
     workout_preferences,
@@ -216,16 +217,17 @@ const updateUser = async (req, res, next) => {
     ({
       experience_years,
       client_limit
-    } = req.body);
+         } = req.body);
   }
 
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
-
+  
   if (oldPassword && !(await validatePassword(oldPassword, password)))
     return next(new AppError("Incorrect password", 401));
   const passwordHashed = (oldPassword)? await hashPassword(newPassword): password;
-  const values = [
+  
+   const values = [
     email,
     first_name,
     last_name,
@@ -251,6 +253,88 @@ const updateUser = async (req, res, next) => {
   });
 }
 
+//Create Account for Admin only
+
+const createAccount = async (req, res, next) => {
+  const {
+    email,
+    first_name,
+    last_name,
+    password,
+    gender,
+    bio,
+    phone_number,
+    type,
+    photo,
+    birth_date,
+  } = req.body;
+
+  let food_allergies,
+    workout_preferences,
+    weight,
+    height,
+    goal,
+    experience_years,
+
+    client_limit,
+    title,
+    certificate_photo,
+    description,
+    date_issued;
+  if (type === "Trainee") {
+    ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
+  } else if(type === "Trainer") {
+    ({
+      experience_years,
+      client_limit,
+      title,
+      certificate_photo,
+      description,
+      date_issued,
+    } = req.body);
+  }
+
+  if (!validator.isEmail(email))
+    return next(new AppError("Please enter a valid Email", 400));
+  const passwordHashed = await hashPassword(password);
+  const values = [
+    email,
+    first_name,
+    last_name,
+    passwordHashed,
+
+    gender,
+    bio,
+    phone_number,
+    type,
+    photo,
+    birth_date,
+  ];
+
+  if (type === "Trainee") {
+    values.push(food_allergies, weight, height, goal, workout_preferences);
+  }
+  else if (type === "Trainer") {
+    values.push(
+      experience_years,
+      client_limit,
+      title,
+      certificate_photo,
+      description,
+      date_issued
+    );
+  }
+ 
+  const userId = await userModel.AddUser(values);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      userId,
+    },
+  });
+};
+
 // Log-out => Reset Cookie
 
 const logout = (req, res) => {
@@ -264,5 +348,6 @@ module.exports = {
   login: catchAsync(login),
   signup: catchAsync(signup),
   updateUser: catchAsync(updateUser),
+  createAccount: catchAsync(createAccount),
   logout,
 };
