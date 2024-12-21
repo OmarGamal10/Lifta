@@ -5,6 +5,7 @@ import "./output.css"; // Adjust the path as needed
 import { ScrollPanel } from "primereact/scrollpanel";
 import { Button } from "primereact/button";
 import useHttp from "../hooks/useHTTP";
+import { Toaster, toast } from "sonner";
 
 export function PackageCard(probs) {
   const { post, loading, error, data } = useHttp("http://localhost:3000");
@@ -17,11 +18,9 @@ export function PackageCard(probs) {
   useEffect(() => {
     // console.log(probs);
     if (
-
-      (probs.type === "Gym" && probs.hasGymSub) || 
-      (probs.type === "Nutrition" && probs.hasNutSub) || 
+      (probs.type === "Gym" && probs.hasGymSub) ||
+      (probs.type === "Nutrition" && probs.hasNutSub) ||
       (probs.type === "Both" && (probs.hasGymSub || probs.hasNutSub))
-
     ) {
       setSubscribeEnabled(false);
     } else {
