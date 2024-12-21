@@ -90,6 +90,28 @@ const UserProfile = ({ userId }) => {
     }
   };
 
+  const components = {
+    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />,
+    Clients: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <Clients userId={userId} />
+      </PrimeReactProvider>
+    ),
+    Packages: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <PackageDashboard />
+      </PrimeReactProvider>
+    ),
+    Requests: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <SubReqDashboard user_id={userId} />
+      </PrimeReactProvider>
+    ),
+    Workouts: <TraineeCurrentWrokout userId={userId} />,
+    Nutrition: <TraineeCurrentMeals userId={userId} />,
+    Default: <NoDataDashboard header={activeSection + " Section"} />,
+  };
+
   // Components to render based on the active section
   const renderComponent = () => {
     if (userType == "Trainee") {
