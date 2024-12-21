@@ -79,41 +79,21 @@ const MyProfile = ({
       ...prevData,
       [id]: value,
     }));
-  
+    if(id === "oldPassword" || id === "newPassword" || id === "confirmPassword") {
+      setErrors((prev) => {
+        const { "password": _, ...rest } = prev; // Destructure to exclude the key
+        return rest;
+      });
+    } else {
     setErrors((prev) => {
       const { [id]: _, ...rest } = prev; // Destructure to exclude the key
       return rest;
     });
+  }
   };
   
 
-  const handlePhoneNumberChange = (e) => {
-    const { id, value } = e.target;
-
-    if (id === "phone_number") {
-      // Validation: Must be numeric, start with "01", and be 11 characters long
-      const phoneRegex = /^01\d{9}$/; // Matches "01" followed by 9 digits (11 total)
-
-      if (!phoneRegex.test(value)) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [id]: "Phone number must start with '01' and contain exactly 11 digits.",
-        }));
-      } else {
-        // Update form data
-        setFormData((prevData) => ({
-          ...prevData,
-          [id]: value,
-        }));
-        // Clear the error if validation passes
-        setErrors((prevErrors) => {
-          const { [id]: _, ...rest } = prevErrors; // Remove the specific error
-          return rest;
-        });
-      }
-    }
-  };
-
+  
   const handleUploadButtonClick = () => {
     if (!isEditable) return;
     fileInputRef.current.click();
@@ -229,7 +209,15 @@ const MyProfile = ({
       console.log("aaaa", error);
       if (error.response.data.message === "Please enter a valid Email") {
         setErrors({ email: "Please enter a valid Email" });
-      } else if (
+      } else if(error.response.data.message === "Please enter a valid Number")
+        {
+          setErrors({ phone_number: "Numbers from 0 to 9 and start by '01'" });
+        }
+         else if(error.response.data.message === "Please enter a positive Number")
+        {
+          setErrors({ client_limit: "Please enter a positive Number" });
+        }
+        else if (
         error.response.data.message ===
         "This email is already registered. Please use another email."
       ) {
@@ -329,7 +317,7 @@ const MyProfile = ({
               type="tel"
               id="phone_number"
               value={formData.phone_number || ""}
-              onChange={handlePhoneNumberChange}
+              onChange={handleChange}
               disabled={!isEditable}
               maxLength="11"
               autoComplete="off"
@@ -500,6 +488,7 @@ const MyProfile = ({
                 placeholder="Enter Client Limit"
                 className="mt-2 block w-full rounded-md border-2 border-secondary shadow-sm focus:border-accent focus:ring-accent sm:text-sm bg-backGroundColor text-textspan p-4"
               />
+              {errors.client_limit && <ErrorMessage error={errors.client_limit} />}
             </div>
           </div>
 

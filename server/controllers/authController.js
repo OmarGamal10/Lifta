@@ -236,8 +236,16 @@ const updateUser = async (req, res, next) => {
     ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
   } else if(type === "Trainer") {
     ({ experience_years, client_limit } = req.body);
+    if(experience_years === "") experience_years = 0;
+    if(client_limit === "" || client_limit <= 0) {
+      return next(new AppError("Please enter a positive Number", 400));
+    };
   }
+  const phoneRegex = /^01\d{9}$/; // Matches "01" followed by 9 digits (11 total)
+  if(!phoneRegex.test(phone_number)) {
+    return next(new AppError("Please enter a valid Number", 400));
 
+  }
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
 

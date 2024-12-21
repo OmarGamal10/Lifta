@@ -165,7 +165,6 @@ exports.getDetails = async (userId) => {
 };
 
 exports.updateUser = async (values) => {
-
   try {
     const type = values[7]; // Get type from the values array
     const userId = values[8];
@@ -205,8 +204,8 @@ exports.updateUser = async (values) => {
 
 const updateTrainee = async (values, id) => {
   values.unshift(id);
-  if(values[5] === 'outdoor') values[5] = 'Gym';
-  else values[5] = 'Home'
+  if (values[5] === "outdoor") values[5] = "Gym";
+  else values[5] = "Home";
   const query = `
     UPDATE lifta_schema.trainee 
     SET food_allergies = $2, weight = $3, height = $4, goal = $5, workout_preferences = $6 
