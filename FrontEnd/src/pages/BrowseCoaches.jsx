@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import NavBar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -25,7 +26,6 @@ const BrowseCoaches = () => {
   const [stars, setStars] = useState(0);
 
   const dialogRef = useRef(null);
-
 
   const getAllCoaches = async () => {
     setLoading(true);

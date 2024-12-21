@@ -121,6 +121,10 @@ const UserProfile = ({ userId }) => {
       if (activeSection == "Memberships") {
         return <Memberships userId={userId} />;
       }
+      if (activeSection == "Reviews") {
+        console.log("Reviews");
+        return <traineeReviewDashboard userId={userId} />;
+      }
     } else if (userType == "Trainer") {
       if (activeSection == "Exercises") return <Exercises userId={userId} />;
       if (activeSection == "Ingredients")
