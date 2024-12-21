@@ -99,14 +99,14 @@ const Clients = ({ userId }) => {
 
     const handleAssignWorkout = () => {
       navigate("/coach/workouts", {
-        state: { clientId: selectedClient, userId },
+        state: { clientId: selectedClient.clientId, userId },
       });
       closeModal();
     };
 
     const handleAssignMeal = () => {
       navigate("/coach/meals", {
-        state: { clientId: selectedClient, userId },
+        state: { clientId: selectedClient.clientId, userId },
       });
       closeModal();
       closeModal();
@@ -167,9 +167,7 @@ const Clients = ({ userId }) => {
               >
                 {/* Client Photo */}
                 <img
-                  src={`${
-                    client.photo ? client.photo : photo
-                  }`} // Replace with the actual path to the client's photo if available
+                  src={`${client.photo ? client.photo : photo}`} // Replace with the actual path to the client's photo if available
                   alt={client.name}
                   className="w-24 h-24 rounded-full mx-auto object-cover mb-4"
                 />
