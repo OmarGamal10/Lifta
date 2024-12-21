@@ -5,17 +5,13 @@ import NoDataDashboard from "../Nodata";
 import { jwtDecode } from "jwt-decode";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 
-export function TraineeReviewDashboard() {
+export function TraineeReviewDashboard(props) {
   const { get, patch, error, data } = useHttp("http://localhost:3000");
   const [reviews, setReviews] = useState([]);
 
   const fetchData = async () => {
-    const token = getTokenFromCookies();
-    const decodedToken = token ? jwtDecode(token) : null;
-    const userId = decodedToken ? decodedToken.user_id : null;
-    
     try {
-      const response = await get(`/reviews/${userId}`, {
+      const response = await get(`/reviews/${props.userId}`, {
         headers: { "Cache-Control": "no-cache" },
       });
       setReviews(response.data.reviews);
@@ -41,6 +37,7 @@ export function TraineeReviewDashboard() {
               content={review.content}
               stars={review.stars}
               fetchData={fetchData}
+              isEditable={props.isEditable}
               className="h-full" // Ensures cards have equal height
             />
           ))}

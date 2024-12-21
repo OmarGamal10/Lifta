@@ -6,13 +6,19 @@ import { jwtDecode } from "jwt-decode";
 import useHttp from "../hooks/useHTTP";
 import { Loader, Eye, EyeOff } from "lucide-react";
 import { ToastContainer, toast } from 'react-toastify';
-
-const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBio }) => {
+import photo from "../assets/user-icon-on-transparent-background-free-png.webp";
+const MyProfile = ({
+  userId,
+  userProfile,
+  setUserProfile,
+  setUserName,
+  setUserBio,
+  isEditable,
+}) => {
   const [profileData, setProfileData] = useState(null);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isEditable, setIsEditable] = useState(false);
   const fileInputRef = useRef(null);
   const [showPasswords, setShowPasswords] = useState({
     oldPassword: false,
@@ -20,8 +26,6 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
     confirmPassword: false,
   });
 
-  const token = getTokenFromCookie();
-  const decoded = jwtDecode(token);
   const { get, patch } = useHttp("http://localhost:3000");
 
   useEffect(() => {
@@ -30,13 +34,14 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
         const response = await get(`/users/${userId}/details`);
         setProfileData(response.data.details);
         setFormData(response.data.details);
-        setIsEditable(userId === decoded.user_id);
+        console.log("res", response.data.details);  
       } catch (error) {
         console.error("Failed to fetch profile data:", error);
       }
     };
     fetchProfileData();
   }, [userId]);
+
   const handleNameChange = (e) => {
     const { id, value } = e.target;
 
@@ -62,57 +67,52 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
 
   const handleChange = (e) => {
     if (!isEditable) return;
+  
     const { id, value } = e.target;
-    if (
-      ([id] == "experience_years" || [id] == "client_limit") &&
-      value.length > 2
-    )
-      return;
-    if (
-      ((id == "weight" || id == "height") && value.length > 3) ||
-      parseInt(value, 10) <= 0
-    )
-      return;
-    setFormData({ ...formData, [id]: value });
+  
+    // Corrected condition for experience_years and client_limit
+    if ((id === "experience_years" || id === "client_limit") && value.length > 2) return;
+  
+    // Corrected condition for weight and height
+    if ((id === "weight" || id === "height") && (value.length > 3 || parseInt(value, 10) <= 0)) return;
+  
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+    if(id === "oldPassword" || id === "newPassword" || id === "confirmPassword") {
+      setErrors((prev) => {
+        const { "password": _, ...rest } = prev; // Destructure to exclude the key
+        return rest;
+      });
+    } else {
     setErrors((prev) => {
       const { [id]: _, ...rest } = prev; // Destructure to exclude the key
       return rest;
     });
+  }
   };
+  
 
-  const handlePhoneNumberChange = (e) => {
-    const { id, value } = e.target;
-
-    if (id === "phone_number") {
-      // Validation: Must be numeric, start with "01", and be 11 characters long
-      const phoneRegex = /^01\d{9}$/; // Matches "01" followed by up to 9 digits
-      if (!phoneRegex.test(value)) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [id]: "Phone number must start with '01' and contain only 11 digits.",
-        }));
-      }
-    }
-
-    // Update form data
-    setFormData((prevErrors) => ({
-      ...prevErrors,
-      [id]: value,
-    }));
-  };
-
+  
   const handleUploadButtonClick = () => {
-    if(!isEditable) return;
+    if (!isEditable) return;
     fileInputRef.current.click();
   };
 
   const handleRemoveImage = async (e) => {
     if (!isEditable) return;
 
-    setFormData((prevData) => {
-      const { photo, ...rest } = prevData;
+    setFormData((prevData) => ({
+      ...prevData,
+      photo: null, // Explicitly set photo to null
+    }));
+    setErrors((prevErrors) => {
+      const { photo, ...rest } = prevErrors; // Remove any photo-specific errors
       return rest;
     });
+
+    console.log("test remove", formData);
   };
 
   const handlePhotoChange = async (e) => {
@@ -143,14 +143,13 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
           photo: "Please select a valid photo file (jpeg, jpg, png).",
         }));
       }
+      console.log("test", formData);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!isEditable) return;
-
     const newErrors = {};
     const allowedKeys = ["email", "first_name", "last_name", "phone_number"];
     Object.keys(formData).forEach((key) => {
@@ -162,18 +161,19 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
       }
     });
 
-    if (profileData.type === "trainee" && formData.weight === "") {
+    if (profileData.type === "Trainee" &&(formData.weight === "" || !formData.weight)) {
       newErrors.weight = `Weight is required.`;
     }
 
-    if (profileData.type === "trainee" && formData.height === "") {
-      newErrors.weight = `height is required.`;
+    if (profileData.type === "Trainee" && (formData.height === "" || !formData.height)) {
+      newErrors.height = `height is required.`;
     }
 
     const { oldPassword, newPassword, confirmPassword } = formData;
     const allPasswordsEmpty = !oldPassword && !newPassword && !confirmPassword;
     const allPasswordsFilled = oldPassword && newPassword && confirmPassword;
 
+    console.log("her", oldPassword, newPassword, confirmPassword);
     if (!allPasswordsEmpty && !allPasswordsFilled) {
       newErrors.password = "All password fields must be filled or left empty.";
     } else if (newPassword !== confirmPassword) {
@@ -191,20 +191,35 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
     }
 
     try {
-      const response = await patch(`/users/${userId}/details`, formData);
 
-      if (response.status !== "success") {
-        throw new Error("Failed to save profile data");
-      }
+      console.log("testpas", formData);
+      const response = await patch(`/users/${userId}/details`, formData);
+      console.log("yala", response);
       setUserBio(response.user.bio);
       setUserName(response.user.first_name + " " + response.user.last_name);
       setUserProfile(response.user.photo);
-      setFormData(...response.user);
+      setFormData((prev) => ({
+        ...prev,
+        ...response.user,
+      }));
+      setProfileData((prev) => ({
+        ...prev,
+        ...response.user,
+      }));
       toast("Information updated successfully");
     } catch (error) {
+      console.log("aaaa", error);
       if (error.response.data.message === "Please enter a valid Email") {
         setErrors({ email: "Please enter a valid Email" });
-      } else if (
+      } else if(error.response.data.message === "Please enter a valid Number")
+        {
+          setErrors({ phone_number: "Numbers from 0 to 9 and start by '01'" });
+        }
+         else if(error.response.data.message === "Please enter a positive Number")
+        {
+          setErrors({ client_limit: "Please enter a positive Number" });
+        }
+        else if (
         error.response.data.message ===
         "This email is already registered. Please use another email."
       ) {
@@ -304,7 +319,7 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
               type="tel"
               id="phone_number"
               value={formData.phone_number || ""}
-              onChange={handlePhoneNumberChange}
+              onChange={handleChange}
               disabled={!isEditable}
               maxLength="11"
               autoComplete="off"
@@ -351,6 +366,7 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
                   id="oldPassword"
                   placeholder="Old Password"
                   onChange={handleChange}
+                  value={formData.oldPassword?formData.oldPassword:""}
                   maxLength="50"
                   className="mt-2 block w-full rounded-md border-2 border-secondary shadow-sm focus:border-accent focus:ring-accent sm:text-sm bg-backGroundColor text-textspan p-4"
                 />
@@ -379,6 +395,7 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
                   id="newPassword"
                   placeholder="New Password"
                   onChange={handleChange}
+                  value={formData.newPassword?formData.newPassword:""}
                   maxLength="50"
                   className="mt-2 block w-full rounded-md border-2 border-secondary shadow-sm focus:border-accent focus:ring-accent sm:text-sm bg-backGroundColor text-textspan p-4"
                 />
@@ -404,6 +421,7 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
                   type={showPasswords.confirmPassword ? "text" : "password"}
                   id="confirmPassword"
                   placeholder="Confirm Password"
+                  value={formData.confirmPassword?formData.confirmPassword:""}
                   onChange={handleChange}
                   maxLength="50"
                   className="mt-2 block w-full rounded-md border-2 border-secondary shadow-sm focus:border-accent focus:ring-accent sm:text-sm bg-backGroundColor text-textspan p-4"
@@ -472,6 +490,7 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
                 placeholder="Enter Client Limit"
                 className="mt-2 block w-full rounded-md border-2 border-secondary shadow-sm focus:border-accent focus:ring-accent sm:text-sm bg-backGroundColor text-textspan p-4"
               />
+              {errors.client_limit && <ErrorMessage error={errors.client_limit} />}
             </div>
           </div>
 
@@ -546,7 +565,7 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
               <input
                 type="number"
                 id="weight"
-                value={formData.weight || ""}
+                value={formData.weight}
                 onChange={handleChange}
                 disabled={!isEditable}
                 placeholder="Enter Weight"
@@ -631,25 +650,20 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
             onChange={handlePhotoChange}
           />
           <img
-            src={
-              formData.photo
-                ? formData.photo
-                : "./src/assets/user-icon-on-transparent-background-free-png.webp"
-            }
+            src={formData.photo ? formData.photo : photo}
             alt="Submit"
             className="w-24 h-24 object-cover rounded-full"
           />
-          
         </div>
         {formData.photo && isEditable && (
-            <button
-              type="button"
-              onClick={handleRemoveImage}
-              className="px-8 py-2 bg-secondary text-backGroundColor rounded-md shadow-sm hover:bg-backGroundColor hover:border-secondary hover:text-textColor focus:outline-none focus:ring-2 focus:ring-secondary mt-4"
-            >
-              Remove Image
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={handleRemoveImage}
+            className="px-8 py-2 bg-secondary text-backGroundColor rounded-md shadow-sm hover:bg-backGroundColor hover:border-secondary hover:text-textColor focus:outline-none focus:ring-2 focus:ring-secondary mt-4"
+          >
+            Remove Image
+          </button>
+        )}
 
         <span className="text-sm text-textspan mt-1">
           {isEditable
@@ -665,7 +679,13 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
         <div className="flex justify-center space-x-16 mt-6">
           <button
             type="reset"
-            onClick={() => setFormData(...profileData)}
+            onClick={() => {
+              setFormData((prev) => ({
+                ...profileData,  // Keep other profile data
+              }));
+              setErrors({}); // Clear errors
+            }}
+            
             className="px-8 py-2 bg-backGroundColor text-textColor rounded-md shadow-sm hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary"
           >
             Reset

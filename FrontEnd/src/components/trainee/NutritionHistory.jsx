@@ -6,18 +6,21 @@ import {
   AccordionHeader,
 } from "@material-tailwind/react";
 import useHttp from "../../hooks/useHTTP";
-
-const NutritionHistory = ({ userId, view = true }) => {
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
+import { jwtDecode } from "jwt-decode";
+const NutritionHistory = ({ userId, view = true, isEditable }) => {
   const [openDate, setOpenDate] = useState(null);
   const [openMeal, setOpenMeal] = useState(null);
   const [meals, setMeals] = useState([]);
   const { get, loading, error } = useHttp("http://localhost:3000");
 
+  const decoded = jwtDecode(getTokenFromCookies());
+  
   const fetchMeals = useCallback(async () => {
     try {
       let response;
-      if (view) response = await get(`/meals/log/${userId}`);
-      //else response = await get(`/meals/log/${userId}/trainer/${trainerId}`); //trainerId da el trainer el by3ml visit ya magdy
+      if (isEditable) response = await get(`/meals/log/${userId}`);
+      else response = await get(`/meals/log/${userId}/trainer/${decoded.user_id}`); //trainerId da el trainer el by3ml visit ya magdy
 
       const mealsArray = Object.entries(response.data.meals).map(
         ([date, dayMeals]) => ({
