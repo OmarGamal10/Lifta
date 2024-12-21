@@ -5,8 +5,9 @@ import handleImages from "../freqUsedFuncs/handleImages";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../hooks/useHTTP";
 import { Loader, Eye, EyeOff } from "lucide-react";
+import { ToastContainer, toast } from 'react-toastify';
 
-const MyProfile = ({ userId, userProfile }) => {
+const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBio }) => {
   const [profileData, setProfileData] = useState(null);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
@@ -29,7 +30,7 @@ const MyProfile = ({ userId, userProfile }) => {
         const response = await get(`/users/${userId}/details`);
         setProfileData(response.data.details);
         setFormData(response.data.details);
-        setIsEditable(decoded.user_id === userId);
+        setIsEditable(userId === decoded.user_id);
       } catch (error) {
         console.error("Failed to fetch profile data:", error);
       }
@@ -101,6 +102,7 @@ const MyProfile = ({ userId, userProfile }) => {
   };
 
   const handleUploadButtonClick = () => {
+    if(!isEditable) return;
     fileInputRef.current.click();
   };
 
@@ -190,11 +192,15 @@ const MyProfile = ({ userId, userProfile }) => {
 
     try {
       const response = await patch(`/users/${userId}/details`, formData);
-      console.log(response);
+
       if (response.status !== "success") {
         throw new Error("Failed to save profile data");
       }
-      alert("Profile updated successfully!");
+      setUserBio(response.user.bio);
+      setUserName(response.user.first_name + " " + response.user.last_name);
+      setUserProfile(response.user.photo);
+      setFormData(...response.user);
+      toast("Information updated successfully");
     } catch (error) {
       if (error.response.data.message === "Please enter a valid Email") {
         setErrors({ email: "Please enter a valid Email" });
@@ -635,7 +641,7 @@ const MyProfile = ({ userId, userProfile }) => {
           />
           
         </div>
-        {formData.photo && (
+        {formData.photo && isEditable && (
             <button
               type="button"
               onClick={handleRemoveImage}
@@ -659,7 +665,7 @@ const MyProfile = ({ userId, userProfile }) => {
         <div className="flex justify-center space-x-16 mt-6">
           <button
             type="reset"
-            onClick={() => setFormData(profileData)}
+            onClick={() => setFormData(...profileData)}
             className="px-8 py-2 bg-backGroundColor text-textColor rounded-md shadow-sm hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary"
           >
             Reset
@@ -670,6 +676,7 @@ const MyProfile = ({ userId, userProfile }) => {
             onClick={handleSubmit}
           >
             Save
+            <ToastContainer />
           </button>
         </div>
       )}

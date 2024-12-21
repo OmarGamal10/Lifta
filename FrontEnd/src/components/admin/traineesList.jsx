@@ -1,9 +1,9 @@
 import "../output.css"; // Adjust the path as needed
 import { useState, useEffect, useRef } from "react";
 import useHttp from "../../hooks/useHTTP";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+        
 export function TraineesList() {
   const {
     get: httpGet,
@@ -105,7 +105,8 @@ export function TraineesList() {
   };
 
   return (
-    <div>
+    <div className="p-8">
+      <h1 className="text-4xl font-medium mb-6 text-textColor">Trainees</h1>
       <DataTable
         value={trainees}
         paginator

@@ -11,6 +11,8 @@ import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
 import { use } from "react";
 import Loader from "../Loader"; // Import your Loader component
+import WorkoutModal from "./workoutModal";
+import { Toaster, toast } from "sonner";
 
 function Workouts({ userId }) {
   const navigate = useNavigate();
@@ -21,6 +23,11 @@ function Workouts({ userId }) {
   const totalPages = Math.ceil(workouts.length / 5);
   const [idToEdit, setIdToEdit] = useState(null);
   const [loading, setLoading] = useState(true); // State to track loading
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedWorkout, setSelectedWorkout] = useState({
+    name: "",
+    id: "",
+  });
 
   /////////////////////////////////////////
   useEffect(() => {
@@ -44,7 +51,12 @@ function Workouts({ userId }) {
           setCurPage(1);
         }
       } catch (err) {
-        console.error("Error fetching workouts:", err);
+        toast.error("Error Loading Workouts", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
         setWorkouts([]);
       } finally {
         setLoading(false);
@@ -69,8 +81,27 @@ function Workouts({ userId }) {
       );
       console.log(response);
       setWorkouts((prev) => prev.filter((workout) => workout.id !== id));
+      toast.success(" Exercise Deleted Succefully", {
+        style: {
+          background: "white",
+          color: "green",
+        },
+      });
     } catch (err) {
-      console.log(err);
+      if (err.response?.data?.error?.code === "23503")
+        toast.error("Can't Delete Workout Assigned to a Trainee", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+      else
+        toast.error("Can't Delete Workout", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
     }
   };
 
@@ -81,19 +112,47 @@ function Workouts({ userId }) {
   const handleNextPage = () => {
     setCurPage((prevPage) => Math.min(totalPages, prevPage + 1));
   };
+
+  const openModal = (workoutId, name) => {
+    setSelectedWorkout({ id: workoutId, name: name });
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedWorkout({
+      name: "",
+      id: "",
+    });
+  };
   const renderWorkouts = () => {
     return (
       <>
+        <Toaster />
+
+        {isModalOpen && (
+          <WorkoutModal
+            isModalOpen={isModalOpen}
+            workoutId={selectedWorkout.id}
+            name={selectedWorkout.name}
+            closeModal={closeModal}
+          />
+        )}
         <div
           className={`w-full flex flex-col min-h-screen justify-center px-12 pb-3 
-        } `}
+        } ${isModalOpen ? "opacity-50" : ""}`}
         >
           <h2 className="py-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
             Workouts
           </h2>
-          <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 pb-5 pr-10">
+          <div
+            className={`w-full grid grid-cols-2 lg:grid-cols-3 gap-4 pb-5 pr-10 `}
+          >
             {workouts.slice((curPage - 1) * 5, curPage * 5).map((workout) => (
-              <div key={workout.id} className="cursor-pointer">
+              <div
+                key={workout.id}
+                onClick={() => openModal(workout.id, workout.name)}
+                className="cursor-pointer"
+              >
                 <Workout
                   id={workout.id}
                   name={workout.name}

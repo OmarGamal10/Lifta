@@ -10,7 +10,10 @@ const Clients = ({ userId }) => {
   const [loading, setLoading] = useState(true); // State to track loading
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState(null);
+  const [selectedClient, setSelectedClient] = useState({
+    clientId: null,
+    type: null,
+  });
   const navigate = useNavigate();
   const clientsPerPage = 4;
 
@@ -76,14 +79,20 @@ const Clients = ({ userId }) => {
     if (clients.length === 0) {
       return <NoDataDashboard header="Clients Section" />;
     }
-    const openModal = (clientId) => {
-      setSelectedClient(clientId);
+    const openModal = (clientId, type) => {
+      setSelectedClient({
+        clientId,
+        type,
+      });
       setIsModalOpen(true);
     };
 
     const closeModal = () => {
       setIsModalOpen(false);
-      setSelectedClient(null);
+      setSelectedClient({
+        clientId: null,
+        type: null,
+      });
     };
 
     const handleAssignWorkout = () => {
@@ -117,19 +126,26 @@ const Clients = ({ userId }) => {
             >
               &times;
             </button>
+
             <h2 className="text-xl font-bold mb-4">Assign</h2>
-            <button
-              onClick={handleAssignWorkout}
-              className="bg-primary text-white py-2 px-4 rounded m-2 w-full hover:bg-secondary duration-300"
-            >
-              Workout
-            </button>
-            <button
-              onClick={handleAssignMeal}
-              className="bg-primary text-white py-2 px-4 rounded m-2 w-full hover:bg-secondary duration-300"
-            >
-              Meal
-            </button>
+            {(selectedClient.type === "Gym" ||
+              selectedClient.type === "Both") && (
+              <button
+                onClick={handleAssignWorkout}
+                className="bg-primary text-white py-2 px-4 rounded m-2 w-full hover:bg-secondary duration-300"
+              >
+                Workout
+              </button>
+            )}
+            {(selectedClient.type === "Nutrition" ||
+              selectedClient.type === "Both") && (
+              <button
+                onClick={handleAssignMeal}
+                className="bg-primary text-white py-2 px-4 rounded m-2 w-full hover:bg-secondary duration-300"
+              >
+                Meal
+              </button>
+            )}
           </div>
         </Modal>
         <div
@@ -149,7 +165,9 @@ const Clients = ({ userId }) => {
               >
                 {/* Client Photo */}
                 <img
-                  src="src/assets/landingGym.svg" // Replace with the actual path to the client's photo if available
+                  src={`${
+                    client.photo ? client.photo : "src/assets/landingGym.svg"
+                  }`} // Replace with the actual path to the client's photo if available
                   alt={client.name}
                   className="w-24 h-24 rounded-full mx-auto object-cover mb-4"
                 />
@@ -175,7 +193,7 @@ const Clients = ({ userId }) => {
                   </button>
                   <button
                     onClick={(e) => {
-                      openModal(client.trainee_id);
+                      openModal(client.trainee_id, client.type);
                     }}
                     className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
                   >

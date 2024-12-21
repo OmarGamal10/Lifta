@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import "../output.css";
 import { BsUpload } from "react-icons/bs";
 import { BsX } from "react-icons/bs";
-
+import { Toaster, toast } from "sonner";
 import ErrorMessage from "../errorMsg";
 import handleImages from "../../freqUsedFuncs/handleImages";
 import useHttp from "../../hooks/useHTTP";
@@ -133,8 +133,20 @@ function ExerciseForm({
             gif: response.data.exercise.gif_path,
           },
         ]);
+        toast.success("Exercise Added Successfully", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
         setView(false);
       } catch (err) {
+        toast.error("Error adding exercise", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
         console.log(err);
       }
     } else {
@@ -166,10 +178,22 @@ function ExerciseForm({
               : exercise
           )
         );
-
+        toast.success("Exercise Updated Successfully", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
         setView(false);
       } catch (err) {
-        console.log(err);
+        if (err)
+          toast.error("Error updating exercise", {
+            style: {
+              background: "white",
+              color: "red",
+            },
+          });
+        console.log(err.data);
       }
     }
   };

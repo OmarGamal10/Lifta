@@ -9,6 +9,7 @@ import React from "react";
 import "primeicons/primeicons.css";
 import { TraineeMealCard } from "./traineeMealCard";
 import { Knob } from "primereact/knob";
+import NoDataDashboard from "../Nodata";
 
 export function TraineeCurrentMeals(probs) {
   const [knobValue, setKnobValue] = useState(0);
@@ -16,31 +17,33 @@ export function TraineeCurrentMeals(probs) {
   const { get: httpGet, loading, error } = useHttp("http://localhost:3000");
 
   const [meals, setMeals] = useState([]);
-  
+
+  const fetchData = async () => {
+    try {
+      const response = await httpGet(`/users/${probs.userId}/currentMeals`, {
+        headers: { "Cache-Control": "no-cache" },
+      });
+      setMeals(response.data.meals);
+      console.log(response.data.meals);
+      const value = Math.ceil(((response.data.meals.filter(meal => meal.isDone).length) / response.data.meals.length) * 100);
+      value > 100 ? setKnobValue(100) : setKnobValue(value);
+    } catch (err) {
+      console.log(err);
+    }
+    
+  };    
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await httpGet(`/users/${probs.userId}/currentMeals`, {
-          headers: { "Cache-Control": "no-cache" },
-        });
-        setMeals(response.data.meals);
-      } catch (err) {
-        console.log(err);
-      }
-      
-    };    
-
     fetchData();
   }, []);
 
-  function incrementDoneCount() {
-    let newValue = knobValue + Math.ceil((1 / meals.length) * 100);
-    if (newValue > 100) {
-      newValue = 100;
-    }
-    setKnobValue(newValue);
-  }
+  // function incrementDoneCount() {
+  //   let newValue = knobValue + Math.ceil((1 / meals.length) * 100);
+  //   if (newValue > 100) {
+  //     newValue = 100;
+  //   }
+  //   setKnobValue(newValue);
+  // }
 
   if (meals.length > 0) {
     return (
@@ -56,10 +59,11 @@ export function TraineeCurrentMeals(probs) {
               fats={meal.fat}
               carbs={meal.carb}
               protein={meal.protein}
-              incrementDoneCount={incrementDoneCount}
+              fetchParentData={fetchData}
               userId={probs.userId}
               picture={meal.picture}
               type={meal.type}
+              isDone={meal.isDone}
             />
           </div>
         ))}
@@ -80,8 +84,6 @@ export function TraineeCurrentMeals(probs) {
  
 
   return (
-    <div className="text-textColor h-[100vh] flex items-center">
-      <h2 className="text-2xl font-medium">No Meals Today</h2>
-    </div>
+    <NoDataDashboard header="No Meals today !!" />
   );
 }

@@ -91,11 +91,12 @@ const login = async (req, res, next) => {
       status: "success",
       data: {
         user: {
-          user,
+          ...user,
         },
         token: JSON.parse(atob(token.split(".")[1])),
       },
     });
+    return;
   }
   const userRest = await userModel.SelectTraineeOrTrainerById(
     user.user_id,

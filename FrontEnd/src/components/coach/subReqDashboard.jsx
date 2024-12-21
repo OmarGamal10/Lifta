@@ -3,11 +3,15 @@ import "../output.css";
 import { useState, useEffect } from "react";
 import { SubscriptionRequestCard } from "./subscriptionRequestCard";
 import useHttp from "../../hooks/useHTTP";
-import Loader from "../Loader"
+import Loader from "../Loader";
 import NoDataDashboard from "../Nodata";
+import { Toaster, toast } from "sonner";
 
-export function SubReqDashboard({user_id}) {
+
+export function SubReqDashboard({ userId: user_id }) {
   const [userId, setUserId] = useState(user_id);
+
+
   const [requests, setRequests] = useState([]);
   const [trigger, setTrigger] = useState(false);
   const { get, error } = useHttp("http://localhost:3000");
@@ -15,15 +19,21 @@ export function SubReqDashboard({user_id}) {
 
   const fetchRequests = async () => {
     try {
+      console.log(userId);
       const response = await get(`/subscriptions/trainer/pending/${userId}`, {
         headers: { "Cache-Control": "no-cache" },
-      }); //70 is the coach id from cookie lmfrod httzbt ba3d man-reach el page de mel profile
+      }); 
       if (response && response.data) {
         setRequests(response.data.subscriptions);
       }
       setTrigger(false);
     } catch (error) {
-      console.error(error);
+      toast.error("Error Loading Requests", {
+        style: {
+          background: "white",
+          color: "red",
+        },
+      });
     } finally {
       setLoading(false);
     }
@@ -39,6 +49,8 @@ export function SubReqDashboard({user_id}) {
   const renderComponent = () => {
     return (
       <div className="p-6 bg-gray-50 min-h-screen">
+        <Toaster />
+
         <div className="max-w-7xl mx-auto">
           {requests.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -59,16 +71,15 @@ export function SubReqDashboard({user_id}) {
                 </div>
               ))}
             </div>
-          ) : <NoDataDashboard header="Subscription Requests" />
-          }
+          ) : (
+            <NoDataDashboard header="Subscription Requests" />
+          )}
         </div>
       </div>
     );
-  }
-  
+  };
+
   return (
-    <div className="w-full">
-    {loading ? <Loader /> : renderComponent()}
-    </div>
-  )
+    <div className="w-full">{loading ? <Loader /> : renderComponent()}</div>
+  );
 }

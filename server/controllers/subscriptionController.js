@@ -55,6 +55,7 @@ const subscriptionResponse = async (req, res, next) => {
     );
   }
   if (status) {
+    console.log("hi");
     const deleteAllPendingRequests =
       await subscriptionModel.deleteAllPendingRequests(subscription_id);
     const assignToTrainer = await userModel.assignToTrainer(subscription_id);
