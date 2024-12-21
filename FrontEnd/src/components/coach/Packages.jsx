@@ -87,7 +87,8 @@ function Packages({ userId }) {
           },
         });
       else
-        toast.error("Can't Delete Package", {
+
+        toast.error(`${err.response.data.message}`, {
           style: {
             background: "white",
             color: "red",

@@ -148,6 +148,10 @@ const UserProfile = ({ userId }) => {
         default:
           return <MyProfile isEditable={isEditable} userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
       }
+      if (activeSection == "Reviews") {
+        console.log("Reviews");
+        return <traineeReviewDashboard userId={userId} />;
+      }
     } else if (userType == "Trainer") {
       switch (activeSection) {
         case "Exercises":

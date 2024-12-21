@@ -4,7 +4,7 @@ import IngForm from "./components/coach/IngredientForm.jsx";
 import PkgForm from "./components/coach/packageForm.jsx";
 import ExerciseForm from "./components/coach/exerciseForm.jsx";
 
-import UserProfile from "./components/Userprofile.jsx"
+import UserProfile from "./components/Userprofile.jsx";
 import Form from "./components/mainForm";
 import FormTrainee from "./components/trainee/formTrainee";
 import LoginForm from "./components/loginForm";
@@ -26,6 +26,8 @@ import { TraineesList } from "./components/admin/traineesList.jsx";
 import { CoachesList } from "./components/admin/coachesList.jsx";
 import BrowseCoaches from "./pages/BrowseCoaches.jsx";
 import ChatLayout from "./components/chat/ChatLayout.jsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (

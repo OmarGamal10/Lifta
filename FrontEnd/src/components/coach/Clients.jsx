@@ -169,9 +169,7 @@ const Clients = ({ userId }) => {
               >
                 {/* Client Photo */}
                 <img
-                  src={`${
-                    client.photo ? client.photo : photo
-                  }`} // Replace with the actual path to the client's photo if available
+                  src={`${client.photo ? client.photo : photo}`} // Replace with the actual path to the client's photo if available
                   alt={client.name}
                   className="w-24 h-24 rounded-full mx-auto object-cover mb-4"
                 />

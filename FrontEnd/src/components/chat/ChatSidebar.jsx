@@ -28,7 +28,7 @@ const ChatSidebar = ({ onChatSelect, activeChat, id, type }) => {
   }, [id]);
 
   return (
-    <div className="h-full overflow-y-auto bg-primary">
+    <div className="h-full overflow-y-auto bg-primary ">
       {chats.length > 0 ? (
         chats.map((chat) => (
           <div
