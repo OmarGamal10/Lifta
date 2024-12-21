@@ -9,10 +9,11 @@ import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../../hooks/useHTTP";
 import { useLocation } from "react-router-dom";
+import Loader from "../Loader"; // Import your Loader component
 
 
 function AssignWorkout() {
-  const { get, post, loading, error, data } = useHttp("http://localhost:3000");
+  const { get, post, error, data } = useHttp("http://localhost:3000");
   const location = useLocation();
   const { clientId, userId } = location.state || {};
   const navigate = useNavigate();
@@ -24,8 +25,12 @@ function AssignWorkout() {
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [workouts, setworkouts] = useState([]);
+
+  const [loading, setLoading] = useState(true); // State to track loading
+
   const [newWorkout, setNewWorkout] = useState(null);
   const [lastSelectdDay, setLastSelectedDay] = useState(null);
+
 
   const days = [
     "Sunday",
@@ -42,6 +47,8 @@ function AssignWorkout() {
   ////////////////////////
   useEffect(() => {
     const fetchWorkouts = async () => {
+      setLoading(true);
+
       if (!userId) {
         console.error("User ID not found in token.");
         return;
@@ -67,6 +74,8 @@ function AssignWorkout() {
       } catch (err) {
         console.error("Error fetching workouts:", err);
         setworkouts([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -166,76 +175,79 @@ function AssignWorkout() {
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
+  const renderForm = () => {
+    return (
+      <div className="p-4 max-w-4xl mx-auto">
+        <h2 className="text-2xl text-textColor font-bold mb-4">
+          Assign Workout
+        </h2>
 
-  return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <h2 className="text-2xl text-textColor font-bold mb-4">Assign Workout</h2>
-
-      {workouts.length > 0 ? (
-        <div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-5 mb-4">
-            {paginatedWorkouts.map((workout) => (
-              <div
-                key={workout.id}
-                onClick={() => handleWorkoutSelect(workout)}
-                className={`cursor-pointer ${
-                  selectedWorkout?.id === workout.id
-                    ? "border-4 border-primary rounded-2xl"
-                    : ""
-                }`}
-              >
-                <Workout
-                  name={workout.name}
-                  note={workout.note}
-                  view={"display"}
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-center items-center space-x-4 mb-2">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-4 py-2 bg-secondary rounded disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <span className="text-textColor">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 bg-secondary rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-
-          {selectedWorkout && (
-            <div className="mb-4">
-              <label className="block mb-2 font-medium text-textColor">
-                Select Day for {selectedWorkout.name}
-              </label>
-              <select
-                name="day"
-                value={formData.day}
-                onChange={handleDayChange}
-                className="w-full p-2 border rounded"
-              >
-                {days.map((day) => (
-                  <option key={day} value={day}>
-                    {day}
-                  </option>
-                ))}
-              </select>
+        {workouts.length > 0 ? (
+          <div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-5 mb-4">
+              {paginatedWorkouts.map((workout) => (
+                <div
+                  key={workout.id}
+                  onClick={() => handleWorkoutSelect(workout)}
+                  className={`cursor-pointer ${
+                    selectedWorkout?.id === workout.id
+                      ? "border-4 border-primary rounded-2xl"
+                      : ""
+                  }`}
+                >
+                  <Workout
+                    name={workout.name}
+                    note={workout.note}
+                    view={"display"}
+                  />
+                </div>
+              ))}
             </div>
-          )}
 
-          {errors.workoutId && <ErrorMessage error={errors.workoutId} />}
+            <div className="flex justify-center items-center space-x-4 mb-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-secondary rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span className="text-textColor">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-secondary rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
 
-          <div className="flex justify-end space-x-4">
+            {selectedWorkout && (
+              <div className="mb-4">
+                <label className="block mb-2 font-medium text-textColor">
+                  Select Day for {selectedWorkout.name}
+                </label>
+                <select
+                  name="day"
+                  value={formData.day}
+                  onChange={handleDayChange}
+                  className="w-full p-2 border rounded"
+                >
+                  {days.map((day) => (
+                    <option key={day} value={day}>
+                      {day}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {errors.workoutId && <ErrorMessage error={errors.workoutId} />}
+
+
+             <div className="flex justify-end space-x-4">
             <button
               type="button"
               onClick={handleCancel}
@@ -269,6 +281,9 @@ function AssignWorkout() {
       )}
     </div>
   );
+  };
+  return <div className="w-full">{loading ? <Loader /> : renderForm()}</div>;
+
 }
 
 export default AssignWorkout;
