@@ -15,10 +15,22 @@ const getCertificatesCoach = async (req, res, next) => {
     },
   });
 };
-
+const getCertificateById = async (req, res, next) => {
+  const { certId } = req.params;
+  if (!certId || isNaN(certId)) {
+    return next(new AppError("Please provide a certificate id", 400));
+  }
+  const certificate = await certificateModel.getCertificateById(certId);
+  res.status(200).json({
+    status: "success",
+    data: {
+      certificate,
+    },
+  });
+};
 const createCertificate = async (req, res, next) => {
   const { trainer_id, title, photo, description, date_issued } = req.body;
-
+  console.log(trainer_id, title, photo, description, date_issued);
   const certificate = await certificateModel.createCertificate(
     trainer_id,
     title,
@@ -35,7 +47,7 @@ const createCertificate = async (req, res, next) => {
 };
 
 const editCertificate = async (req, res, next) => {
-  const {certificate_id} = req.params;
+  const { certificate_id } = req.params;
   const { trainer_id, title, photo, description, date_issued } = req.body;
 
   const certificate = await certificateModel.editCertificate(
@@ -55,11 +67,9 @@ const editCertificate = async (req, res, next) => {
 };
 
 const deleteCertificate = async (req, res, next) => {
-  const {certificate_id} = req.params;
+  const { certificate_id } = req.params;
 
-  const certificate = await certificateModel.deleteCertificate(
-    certificate_id,
-  );
+  const certificate = await certificateModel.deleteCertificate(certificate_id);
   res.status(201).json({
     status: "success",
     data: {
@@ -72,4 +82,5 @@ module.exports = {
   createCertificate: catchAsync(createCertificate),
   editCertificate: catchAsync(editCertificate),
   deleteCertificate: catchAsync(deleteCertificate),
+  getCertificateById: catchAsync(getCertificateById),
 };

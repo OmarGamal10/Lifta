@@ -1,215 +1,194 @@
 import React, { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import CertificateCard from "./Certificatecard";
+import Certificate from "./Certificatecard"; // The card component we created earlier
+import { IoIosAddCircleOutline } from "react-icons/io";
 import useHttp from "../../hooks/useHTTP";
 import Loader from "../Loader";
-import NoDataDashboard from "../Nodata";
-import CertForm from "./certificateForm"; // Import the AddCertificate component
+import { Toaster, toast } from "sonner";
+import CertificateForm from "./certificateForm_profile";
 
-const CertificatesDashboard = ({ userId, isEditable }) => {
+function Certificates({ userId }) {
+  const { get, post, del, error, data } = useHttp("http://localhost:3000");
+  const [curPage, setCurPage] = useState(1);
   const [certificates, setCertificates] = useState([]);
-  const [formData, setFormData] = useState({});
+  const totalPages = Math.ceil(certificates.length / 5);
+  const [addCertificateView, setAddCertificateView] = useState(false);
+  const [editCertificateView, setEditCertificateView] = useState(false);
+  const [idToEdit, setIdToEdit] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editCertId, setEditCertId] = useState();
-  const [showAddCertificate, setShowAddCertificate] = useState(false); // State to show AddCertificate
-  const { get, post, patch, del, remove } = useHttp("http://localhost:3000");
-  const certificatesPerPage = 3;
 
   useEffect(() => {
+    const fetchCertificates = async () => {
+      setLoading(true);
+      try {
+        const response = await get(`/users/${userId}/certificates`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        console.log("API Response: ", response);
+
+        const fetchedCertificate = response.data.certificate;
+        setCertificates(fetchedCertificate);
+
+        if (fetchedCertificate.length === 0) {
+          setCurPage(1);
+        }
+      } catch (err) {
+        toast.error("Error Loading Certificates", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+        setCertificates([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchCertificates();
   }, []);
+  useEffect(() => {
+    console.log("Certificates: ", certificates);
+  }, [certificates]);
 
-  const appendCertificate = async (trigger) => {
-    if (!trigger && formData) {
-      try {
-        setLoading(true);
-        const certificateData = { ...formData, trainer_id: userId };
-        const response = await post(`/users/${userId}/certificates`, certificateData);
-
-        // Append the new certificate to the state
-        setCertificates((prevCerts) => [...prevCerts, response.data.certificate]);
-        setShowAddCertificate(false); // Close the form after appending
-
-        setError(null); // Reset error state if the request is successful
-      } catch (err) {
-        setError("Failed to add certificate. Please try again later.");
-        console.error("Error adding certificate:", err);
-      } finally {
-        setLoading(false); // Stop loading state
-      }
-    }
-  };
-
-  const editCertificate = async (trigger) => {
-    if (!trigger && formData) {
-      try {
-        setLoading(true);
-        const certificateData = { ...formData};
-        const response = await patch(`/users/${userId}/certificates/${editCertId}`, certificateData);
-        
-        // Update the certificates state by replacing the edited certificate
-        setCertificates((prevCerts) =>
-          prevCerts.map((cert) =>
-            cert.certificate_id === editCertId ? response.data.certificate : cert
-          )
-        );
-        setShowAddCertificate(false); // Close the form after editing
-        setIsEditing(false);
-
-        setError(null); // Reset error state if the request is successful
-      } catch (err) {
-        setError("Failed to update certificate. Please try again later.");
-        console.error("Error updating certificate:", err);
-      } finally {
-        setLoading(false); // Stop loading state
-      }
-    }
-  };
-
-  const handleEdit = (cert) => {
-    setFormData(cert); // Set the formData with the updated cert object
-    setEditCertId(cert.certificate_id);
-    setIsEditing(true);
-    setShowAddCertificate(true); // Open the form to edit
-  };
-  const handleDelete = async (certId) => {
+  const handleDelete = async (id) => {
     try {
-        setLoading(true);
-        const response = await del(`/users/${userId}/certificates/${certId}`);
-        
-        // Update the certificates state by replacing the edited certificate
-        setCertificates((prevCerts) =>
-            prevCerts.filter((cert) => cert.certificate_id !== certId)
-          );
-        setIsEditing(false);
-
-        setError(null); // Reset error state if the request is successful
-      } catch (err) {
-        setError("Failed to delete certificate. Please try again later.");
-        console.error("Error deleting certificate:", err);
-      } finally {
-        setLoading(false); // Stop loading state
-      }
-        
-  };
-
-  const fetchCertificates = async () => {
-    try {
-      setLoading(true);
-      const response = await get(`/users/${userId}/certificates`);
-      setCertificates(response.data.certificate);
-      setError("");
+      const response = await del(
+        "/certificates",
+        {
+          certificate_id: id,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      setCertificates((prev) =>
+        prev.filter((certificate) => certificate.id !== id)
+      );
+      toast.success("Certificate Deleted Successfully", {
+        style: {
+          background: "white",
+          color: "green",
+        },
+      });
     } catch (err) {
-      setError("Failed to fetch certificates. Please try again later.");
-      console.error("Error fetching certificates:", err);
-    } finally {
-      setLoading(false);
+      toast.error("Can't Delete Certificate", {
+        style: {
+          background: "white",
+          color: "red",
+        },
+      });
     }
   };
-  const indexOfLastCertificate = currentPage * certificatesPerPage;
-  const indexOfFirstCertificate = indexOfLastCertificate - certificatesPerPage;
-  const currentCertificates = certificates.slice(indexOfFirstCertificate, indexOfLastCertificate);
-  const totalPages = Math.ceil(certificates.length / certificatesPerPage);
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+  const handlePreviousPage = () => {
+    setCurPage((prevPage) => Math.max(1, prevPage - 1));
   };
 
-  if (loading) {
-    return <Loader />;
-  }
+  const handleNextPage = () => {
+    setCurPage((prevPage) => Math.min(totalPages, prevPage + 1));
+  };
 
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-error">
-        {error}
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen pt-28 flex items-center justify-center bg-gray-100">
-      <div className="space-y-8 w-full max-w-6xl px-4 pb-16">
-        {showAddCertificate ? (
-          <CertForm
-            formData={formData}
-            setFormData={setFormData}
-            setViewCert={isEditing ? editCertificate : appendCertificate}
-          /> // Render AddCertificate if the state is true
-        ) : (
-          <>
-            {/* Grid of Certificates */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentCertificates.map((cert, index) => (
-                <CertificateCard
-                  key={cert.certificate_id || index} // Use cert.certificate_id or fallback to index
-                  imageUrl={cert.photo}
-                  title={cert.title}
-                  description={cert.description}
-                  dateIssued={new Date(cert.date_issued).toLocaleDateString()}
-                  handleEdit={() => handleEdit(cert)}
-                  handleDelete={() => handleDelete(cert.certificate_id)} 
-                  id={cert.certificate_id}
+  const renderCertificates = () => (
+    <>
+      {editCertificateView && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <CertificateForm
+            setView={setEditCertificateView}
+            edit={true}
+            idToEdit={idToEdit}
+            setCertificates={setCertificates}
+            userId={userId}
+          />
+        </div>
+      )}
+      {addCertificateView && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <CertificateForm
+            setCertificates={setCertificates}
+            setView={setAddCertificateView}
+            userId={userId}
+          />
+        </div>
+      )}
+      <div
+        className={`w-full flex flex-col min-h-screen justify-center px-10 pb-3 ${
+          addCertificateView || editCertificateView ? "opacity-50" : ""
+        }`}
+      >
+        <Toaster />
+        <h2 className="py-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
+          Certificates
+        </h2>
+        <div className="w-full grid grid-cols-2 lg:grid-cols-3 gap-4 pb-5 pr-10">
+          {certificates
+            .slice((curPage - 1) * 5, curPage * 5)
+            .map((certificate) => (
+              <div key={certificate.id} className="cursor-pointer">
+                <Certificate
+                  id={certificate.certificate_id}
+                  title={certificate.title}
+                  photo={certificate.photo}
+                  description={certificate.description}
+                  dateIssued={certificate.date_issued}
+                  setEditView={setEditCertificateView}
+                  setIdToEdit={setIdToEdit}
+                  handleDelete={handleDelete}
+                  view="edit"
                 />
-              ))}
-            </div>
-
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center space-x-4 pt-8 pb-12">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="p-2 rounded-full text-textColor hover:bg-secondary/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <ChevronLeft className="w-6 h-6" />
-                </button>
-
-                <div className="flex items-center space-x-2">
-                  {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNum) => (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`px-4 py-2 rounded-md transition-colors duration-300 ${
-                        currentPage === pageNum
-                          ? "bg-secondary text-textColor"
-                          : "text-textspan hover:bg-secondary/20"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="p-2 rounded-full text-textColor hover:bg-secondary/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <ChevronRight className="w-6 h-6" />
-                </button>
               </div>
-            )}
+            ))}
+          <div className="flex items-center justify-center min-w-64 max-w-64 min-h-64 h-[400px]">
+            <button
+              onClick={() => setAddCertificateView(true)}
+              className="text-primary hover:text-secondary transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-lg transform"
+            >
+              <IoIosAddCircleOutline size={100} />
+            </button>
+          </div>
+        </div>
 
-            {/* Button to Add Certificate */}
-            {isEditable && (
-              <div className="flex justify-center">
-                <button
-                  onClick={() => setShowAddCertificate(true)} // Show AddCertificate on click
-                  className="px-6 py-3 bg-accent text-textColor rounded-md hover:bg-accent/90 transition-all duration-300"
-                >
-                  Add Certificate
-                </button>
-              </div>
-            )}
-          </>
+        {certificates.length > 0 && (
+          <div className="flex justify-center items-center py-2 space-x-4">
+            <button
+              onClick={handlePreviousPage}
+              disabled={curPage === 1}
+              className={`px-4 py-2 rounded-xl border ${
+                curPage === 1
+                  ? "text-textColor cursor-not-allowed"
+                  : "bg-secondary text-textColor hover:bg-textColor hover:text-secondary hover:border-secondary"
+              }`}
+            >
+              Previous
+            </button>
+            <span className="text-sm text-textColor">
+              Page {curPage} of {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={curPage === totalPages}
+              className={`px-8 py-2 rounded-xl border ${
+                curPage === totalPages
+                  ? "text-textColor cursor-not-allowed"
+                  : "bg-secondary text-textColor hover:bg-textColor hover:text-secondary hover:border-secondary"
+              }`}
+            >
+              Next
+            </button>
+          </div>
         )}
       </div>
-    </div>
+    </>
   );
-};
 
-export default CertificatesDashboard;
+  return (
+    <div className="w-full">{loading ? <Loader /> : renderCertificates()}</div>
+  );
+}
+
+export default Certificates;
