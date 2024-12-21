@@ -9,6 +9,7 @@ import React from "react";
 import "primeicons/primeicons.css";
 import { TraineeExerciseCard } from "./traineeExerciseCard";
 import NoDataDashboard from "../Nodata";
+import { ToastContainer, toast } from "react-toastify";
 
 export function TraineeCurrentWrokout(probs) {
   const [isDone, setIsDone] = useState(false);
@@ -26,9 +27,18 @@ export function TraineeCurrentWrokout(probs) {
           traineeId: probs.userId,
           workoutId: workout.workout_id,
         });
-        console.log(response);
+        toast.success(response.message, {
+          theme: "dark",
+          position: "bottom-right",
+          autoClose: 2500,
+          hideProgressBar: true,
+          draggable: true,
+        });
       } catch (err) {
         console.error(err);
+        toast.error(err, {
+          theme: "dark",
+        });
       }
     } else {
       setIsDone(false);
@@ -40,8 +50,18 @@ export function TraineeCurrentWrokout(probs) {
           }
         );
         console.log(response);
+        toast.success(response.message, {
+          theme: "dark",
+          position: "bottom-right",
+          autoClose: 2500,
+          hideProgressBar: true,
+          draggable: true,
+        });
       } catch (err) {
         console.log(err);
+        toast.error(err, {
+          theme: "dark",
+        });
       }
     }
   }
@@ -117,22 +137,17 @@ export function TraineeCurrentWrokout(probs) {
           ))}
         </div>
         <button
-          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around
-          ${
-            isDone
-              ? "btn-disabled cursor-not-allowed bg-accent text-backGroundColor"
-              : "hover:bg-accent hover:text-backGroundColor"
-          } `}
+          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
+            justify-around hover:bg-accent hover:text-backGroundColor`}
           onClick={handleMarkAsDone}
         >
           <span>{isDone ? "Mark as undone" : "Mark as done"}</span>
           {!isDone ? <span className="pi pi-check"></span> : <></>}
         </button>
+        <ToastContainer />
       </div>
     );
   }
 
-  return (
-    <NoDataDashboard header="No Workouts today !!" />
-  );
+  return <NoDataDashboard header="No Workouts today !!" />;
 }

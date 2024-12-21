@@ -111,21 +111,21 @@ const addDoneMeal = async (req, res, next) => {
   });
 };
 
-const getCurrentMealStatusByType = async (req, res, next) => {
-  const { traineeId, type } = req.params;
+// const getCurrentMealStatusByType = async (req, res, next) => {
+//   const { traineeId, type } = req.params;
 
-  if (!traineeId || isNaN(traineeId)) {
-    return next(new AppError("Please provide a trainee id", 400));
-  }
+//   if (!traineeId || isNaN(traineeId)) {
+//     return next(new AppError("Please provide a trainee id", 400));
+//   }
 
-  const isDone = await mealModel.getCurrentMealStatusByType(traineeId, type);
-  res.status(200).json({
-    status: "success",
-    data: {
-      isDone,
-    },
-  });
-};
+//   const isDone = await mealModel.getCurrentMealStatusByType(traineeId, type);
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       isDone,
+//     },
+//   });
+// };
 
 const removeIngredientFromMeal = async (req, res, next) => {
   const { ingredient_id } = req.body;
@@ -231,7 +231,7 @@ module.exports = {
   getMealNutritionInfo: catchAsync(getMealNutritionInfo),
   getCurrentMealsByTraineeId: catchAsync(getCurrentMealsByTraineeId),
   addDoneMeal: catchAsync(addDoneMeal),
-  getCurrentMealStatusByType: catchAsync(getCurrentMealStatusByType),
+  // getCurrentMealStatusByType: catchAsync(getCurrentMealStatusByType),
   deleteMeal: catchAsync(deleteMeal),
   removeIngredientFromMeal: catchAsync(removeIngredientFromMeal),
   assignMealTrainee: catchAsync(assignMealTrainee),

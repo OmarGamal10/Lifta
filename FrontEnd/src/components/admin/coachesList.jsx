@@ -104,7 +104,8 @@ export function CoachesList() {
   };
 
   return (
-    <div>
+    <div className="p-8">
+      <h1 className="text-4xl font-medium mb-6 text-textColor">Coaches</h1>
       <DataTable
         value={coaches}
         paginator

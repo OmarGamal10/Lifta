@@ -90,6 +90,28 @@ const UserProfile = ({ userId }) => {
     }
   };
 
+  const components = {
+    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />,
+    Clients: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <Clients userId={userId} />
+      </PrimeReactProvider>
+    ),
+    Packages: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <PackageDashboard />
+      </PrimeReactProvider>
+    ),
+    Requests: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <SubReqDashboard user_id={userId} />
+      </PrimeReactProvider>
+    ),
+    Workouts: <TraineeCurrentWrokout userId={userId} />,
+    Nutrition: <TraineeCurrentMeals userId={userId} />,
+    Default: <NoDataDashboard header={activeSection + " Section"} />,
+  };
+
   // Components to render based on the active section
   const renderComponent = () => {
     if (userType == "Trainee") {
@@ -140,9 +162,17 @@ const UserProfile = ({ userId }) => {
             </PrimeReactProvider>
           );
         case "Reviews":
-          return <CoachReviewDashboard userId={userId} />;
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <CoachReviewDashboard userId={userId} />
+            </PrimeReactProvider>
+          );
         case "Requests":
-          return <SubReqDashboard userId={userId} />;
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <SubReqDashboard userId={userId} />
+            </PrimeReactProvider>
+          );
         case "Certificates":
           return <CertificatesDashboard userId={userId} isEditable={true} />;
 
@@ -160,11 +190,25 @@ const UserProfile = ({ userId }) => {
     } else {
       switch (activeSection) {
         case "Trainees":
-          return <TraineesList />;
+
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <TraineesList />
+            </PrimeReactProvider>
+          );
         case "Coaches":
-          return <CoachesList />;
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <CoachesList />
+            </PrimeReactProvider>
+          );
         case "Admins":
-          return <AdminsList />;
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <AdminsList />
+            </PrimeReactProvider>
+          );
+
         case "Statistics":
           return <AdminStatistics />;
         case "Add User":
@@ -204,9 +248,9 @@ const UserProfile = ({ userId }) => {
             {renderSideBar()}
             <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
             {/* Vertical Divider */}
-            <div className="w-full">
+            <div className="w-full overflow-scroll">
               {/* Render Active Component */}
-              <div className="flex justify-center items-center mr-4">
+              <div className="flex items-center">
                 {renderComponent()}
               </div>
             </div>
