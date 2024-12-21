@@ -5,6 +5,7 @@ import "./output.css"; // Adjust the path as needed
 import { ScrollPanel } from "primereact/scrollpanel";
 import { Button } from "primereact/button";
 import useHttp from "../hooks/useHTTP";
+import { ToastContainer, toast } from "react-toastify";
 
 export function PackageCard(probs) {
   const { post, loading, error, data } = useHttp("http://localhost:3000");
@@ -17,11 +18,9 @@ export function PackageCard(probs) {
   useEffect(() => {
     // console.log(probs);
     if (
-
-      (probs.type === "Gym" && probs.hasGymSub) || 
-      (probs.type === "Nutrition" && probs.hasNutSub) || 
+      (probs.type === "Gym" && probs.hasGymSub) ||
+      (probs.type === "Nutrition" && probs.hasNutSub) ||
       (probs.type === "Both" && (probs.hasGymSub || probs.hasNutSub))
-
     ) {
       setSubscribeEnabled(false);
     } else {
@@ -79,8 +78,18 @@ export function PackageCard(probs) {
         traineeId: traineeId,
       });
       console.log(response);
+      toast.success("Subscription request sent successfully", {
+        theme: "dark",
+        position: "bottom-right",
+        autoClose: 2500,
+        hideProgressBar: true,
+        draggable: true,
+      });
     } catch (err) {
       console.error(err);
+      toast.error(err, {
+        theme: "dark",
+      });
     }
   }
 
@@ -169,6 +178,7 @@ export function PackageCard(probs) {
           >
             Subscribe Now
           </button>
+          <ToastContainer />
         </div>
       );
     }

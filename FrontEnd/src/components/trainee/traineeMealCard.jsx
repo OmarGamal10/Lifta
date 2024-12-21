@@ -87,7 +87,6 @@ export function TraineeMealCard(probs) {
       } catch (err) {
         console.error(err);
       }
-      probs.fetchParentData();
     } else {
       // setIsDone(false);
       try {

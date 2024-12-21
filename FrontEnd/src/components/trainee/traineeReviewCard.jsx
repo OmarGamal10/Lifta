@@ -15,6 +15,7 @@ import { Rating } from "primereact/rating";
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
 import { ReviewModalForm } from "./reviewModalForm";
+import { ToastContainer, toast } from "react-toastify";
 
 export function TraineeReviewCard(probs) {
   const {
@@ -35,10 +36,19 @@ export function TraineeReviewCard(probs) {
         data: {},
       });
       console.log(response);
-
+      toast.success("Review deleted successfully", {
+        theme: "dark",
+        position: "bottom-right",
+        autoClose: 2500,
+        hideProgressBar: true,
+        draggable: true,
+      });
       probs.fetchData();
     } catch (err) {
       console.log(err);
+      toast.error(err, {
+        theme: "dark",
+      });
     }
   };
 
@@ -128,6 +138,7 @@ export function TraineeReviewCard(probs) {
               }, // OR { className: 'text-white text-2xl' }
             }}
           />
+          <ToastContainer />
         </div>
       </div>
 
