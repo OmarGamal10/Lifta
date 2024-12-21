@@ -81,7 +81,7 @@ function Workouts({ userId }) {
       );
       console.log(response);
       setWorkouts((prev) => prev.filter((workout) => workout.id !== id));
-      toast.success(" Exercise Deleted Succefully", {
+      toast.success("Workout Deleted Succefully", {
         style: {
           background: "white",
           color: "green",

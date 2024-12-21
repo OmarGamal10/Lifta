@@ -127,6 +127,7 @@ function CreateWorkout() {
           name: workoutName,
           exercises: [...choosedExercises],
           trainer_id: userId,
+          note: workoutNote,
         },
         {
           headers: {
@@ -324,12 +325,33 @@ function CreateWorkout() {
               className="bg-textColor border pl-4 rounded-xl border-secondary py-3 text-sm text-backGroundColor placeholder-gray-500 text-left"
               type="text"
               placeholder="Enter name"
-              maxLength="25"
+              maxLength="50"
               onChange={(e) => {
                 updateWorkoutName(e.target.value);
                 setWorkoutError("");
               }}
               value={workoutName}
+              autoComplete="off"
+            />
+          </div>
+        </div>
+
+        <div className={`absolute bottom-[70px] right-[0] flex justify-center`}>
+          <div className="w-full">
+            <h6 className="text-xs text-left text-backGroundColor mb-2">
+              note
+            </h6>
+            <input
+              name="note"
+              className="bg-textColor w-[400px] border pl-4 rounded-xl border-secondary py-3 text-sm text-backGroundColor placeholder-gray-500 text-left overflow-x-auto whitespace-nowrap"
+              type="text"
+              placeholder="Enter note"
+              maxLength="100"
+              onChange={(e) => {
+                updateWorkoutNote(e.target.value);
+                setWorkoutError("");
+              }}
+              value={workoutNote}
               autoComplete="off"
             />
           </div>
