@@ -11,7 +11,7 @@ import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
 import { use } from "react";
 import Loader from "../Loader"; // Import your Loader component
-
+import { Toaster, toast } from "sonner";
 function Exercises({ userId }) {
   const navigate = useNavigate();
 
@@ -70,10 +70,29 @@ function Exercises({ userId }) {
         }
       );
       console.log(response);
-      // Remove the deleted exercise from the state
       setExercises((prev) => prev.filter((exercise) => exercise.id !== id));
+      toast.success(" Exercise Deleted Succefully", {
+        style: {
+          background: "white",
+          color: "green",
+        },
+      });
+      // Remove the deleted exercise from the state
     } catch (err) {
-      console.log(err);
+      if (err.response.data.error.code === "23503")
+        toast.error("Can't Delete Exercise Assigned to a Workout", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+      else
+        toast.error("Can't Delete Exercise", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
     }
   };
 
@@ -111,6 +130,7 @@ function Exercises({ userId }) {
           addExerciseView || editExerciseView ? "opacity-50" : ""
         } `}
       >
+        <Toaster />
         <h2 className="py-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
           Exercises
         </h2>
