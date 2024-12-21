@@ -13,6 +13,7 @@ import {
   AccordionBody,
 } from "@material-tailwind/react";
 import { Card, Typography } from "@material-tailwind/react";
+import { ToastContainer, toast } from "react-toastify";
 
 const tableHead = ["Ingredient", "Quantity"];
 
@@ -36,6 +37,9 @@ export function TraineeMealCard(probs) {
         setIngredients(response.data.ingredients);
       } catch (err) {
         console.log(err);
+        toast.error(err, {
+          theme: "dark",
+        });
       }
 
       try {
@@ -54,6 +58,9 @@ export function TraineeMealCard(probs) {
         }
       } catch (err) {
         console.log(err);
+        toast.error(err, {
+          theme: "dark",
+        });
       }
     };
 
@@ -71,15 +78,31 @@ export function TraineeMealCard(probs) {
           type: probs.type,
         });
         console.log(response);
+        toast.success(response.message, {
+          theme: "dark",
+          position: "bottom-right",
+          autoClose: 2500,
+          hideProgressBar: true,
+          draggable: true,
+        });
       } catch (err) {
         console.error(err);
       }
-    }
-    else {
+    } else {
       setIsDone(false);
       try {
-        const response = await del(`/users/${probs.userId}/currentMeals/${probs.type}/removeDoneMeal`, {
-          data: {},
+        const response = await del(
+          `/users/${probs.userId}/currentMeals/${probs.type}/removeDoneMeal`,
+          {
+            data: {},
+          }
+        );
+        toast.success(response.message, {
+          theme: "dark",
+          position: "bottom-right",
+          autoClose: 2500,
+          hideProgressBar: true,
+          draggable: true,
         });
         console.log(response);
       } catch (err) {
@@ -108,7 +131,7 @@ export function TraineeMealCard(probs) {
               <div className="flex gap-4">
                 <span>{probs.name}</span>
                 <span className="text-xs text-accent border border-accent rounded-lg flex items-center px-2">
-                  {probs.calories} calories
+                  {probs.calories} kcal
                 </span>
               </div>
               <span
@@ -119,7 +142,7 @@ export function TraineeMealCard(probs) {
             </div>
           </AccordionHeader>
           <AccordionBody className="pt-0 text-base font-normal px-4 flex flex-col gap-6">
-            <img src={`${probs.picture}`} alt="" className="w-64 h-64"/>
+            <img src={`${probs.picture}`} alt="" className="w-64 h-64" />
             <div>
               <h3 className="text-lg font-medium">Ingredients</h3>
               <Card className="h-fit w-[50%] px-4">
@@ -186,13 +209,14 @@ export function TraineeMealCard(probs) {
               {probs.fats} gm
             </div>
             <button
-          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
+              className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
             justify-around hover:bg-accent hover:text-backGroundColor`}
-          onClick={handleMarkAsDone}
-        >
-          <span>{isDone ? "Mark as undone" : "Mark as done"}</span>
-          {!isDone ? <span className="pi pi-check"></span> : <></>}
-        </button>
+              onClick={handleMarkAsDone}
+            >
+              <span>{isDone ? "Mark as undone" : "Mark as done"}</span>
+              {!isDone ? <span className="pi pi-check"></span> : <></>}
+            </button>
+            <ToastContainer />
           </AccordionBody>
         </Accordion>
       </div>
