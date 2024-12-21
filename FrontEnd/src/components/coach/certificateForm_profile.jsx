@@ -144,7 +144,7 @@ function CertForm({
         setCertificates((prev) => [
           ...prev,
           {
-            id: response.data.certificate.certificate_id,
+            certificate_id: response.data.certificate.certificate_id,
             title: response.data.certificate.title,
             description: response.data.certificate.description,
             date_issued: response.data.certificate.date_issued,

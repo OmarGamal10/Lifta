@@ -129,7 +129,7 @@ function Certificates({ userId }) {
           {certificates
             .slice((curPage - 1) * 5, curPage * 5)
             .map((certificate) => (
-              <div key={certificate.id} className="cursor-pointer">
+              <div key={certificate.certificate_id} className="cursor-pointer">
                 <Certificate
                   id={certificate.certificate_id}
                   title={certificate.title}
