@@ -68,7 +68,7 @@ function Certificates({ userId }) {
       );
       console.log(response);
       setCertificates((prev) =>
-        prev.filter((certificate) => certificate.id !== id)
+        prev.filter((certificate) => certificate.certificate_id !== id)
       );
       toast.success("Certificate Deleted Successfully", {
         style: {
@@ -93,7 +93,6 @@ function Certificates({ userId }) {
   const handleNextPage = () => {
     setCurPage((prevPage) => Math.min(totalPages, prevPage + 1));
   };
-
 
   const renderCertificates = () => (
     <>
@@ -139,10 +138,10 @@ function Certificates({ userId }) {
                   dateIssued={certificate.date_issued}
                   setEditView={setEditCertificateView}
                   setIdToEdit={setIdToEdit}
+                  isEditable={true}
                   handleDelete={handleDelete}
                   view="edit"
                 />
-
               </div>
             ))}
           <div className="flex items-center justify-center min-w-64 max-w-64 min-h-64 h-[400px]">
