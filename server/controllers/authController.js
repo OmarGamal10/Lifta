@@ -40,7 +40,7 @@ const checkAuth = async (req, res) => {
   try {
     // Verify the token
     const decoded = jwt.verify(token, process.env.SECRETKEY);
-
+    const is_banned = await userModel.isBanned(decoded.user_id);
     // Extract userId and userType from the token payload
     const { user_id, type } = decoded;
 
@@ -49,6 +49,7 @@ const checkAuth = async (req, res) => {
       isAuthenticated: true,
       userId: user_id,
       userType: type,
+      is_banned: is_banned,
     });
   } catch (err) {
     // Handle invalid or expired tokens
