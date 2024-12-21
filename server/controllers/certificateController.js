@@ -67,7 +67,7 @@ const editCertificate = async (req, res, next) => {
 };
 
 const deleteCertificate = async (req, res, next) => {
-  const { certificate_id } = req.params;
+  const { certificate_id } = req.body;
 
   const certificate = await certificateModel.deleteCertificate(certificate_id);
   res.status(201).json({

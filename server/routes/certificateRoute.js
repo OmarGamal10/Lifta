@@ -24,7 +24,7 @@ router.patch(
   sanitizeEmptyFields,
   certificateController.editCertificate
 );
-router.delete("/:certificate_id", (req, res, next) =>
+router.delete("/", (req, res, next) =>
   certificateController.deleteCertificate(req, res, next)
 );
 
