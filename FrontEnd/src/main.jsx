@@ -157,11 +157,7 @@ const router = createBrowserRouter([
       </PrimeReactProvider>
     ),
   },
-  
-  {
-    path: "banned",
-    element: <Banned />,
-  },
+
   {
     path: "*",
     element: <NotFound />,

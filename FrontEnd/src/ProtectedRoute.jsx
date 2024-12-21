@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import useHttp from "./hooks/useHTTP";
 import Loader from "./components/Loader";
+import Banned from "./pages/Banned";
 
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -39,7 +40,7 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if(isBanned) {
-    return <Navigate to="/banned" />;
+    return <Banned />;
   }
 
   // If authenticated, render children

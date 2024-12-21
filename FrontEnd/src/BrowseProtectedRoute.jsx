@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import useHttp from "./hooks/useHTTP";
 import Loader from "./components/Loader";
+import Banned from "./pages/Banned";
 
 
 
@@ -41,10 +42,10 @@ const BrowseProtectedRoute = ({ children }) => {
     return <Navigate to="/log-in" replace />;
 
     if(isBanned) {
-      return <Navigate to="/banned" />;
+      return <Banned/>;
     }
   
-    
+
   if(coach_id) {
     console.log("hi", coach_id);
     return React.cloneElement(children, { userId: coach_id });
