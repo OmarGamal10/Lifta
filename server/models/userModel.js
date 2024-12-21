@@ -4,7 +4,7 @@ const AppError = require("../utils/AppError");
 exports.isBanned = async (userId) => {
   const query = `SELECT is_banned FROM lifta_schema.users WHERE user_id = $1;`;
   return (await db.query(query, [userId])).rows[0].is_banned;
-}
+};
 exports.getAllUsers = async () => {
   const query = "SELECT * FROM lifta_schema.users";
   return (await db.query(query)).rows;
