@@ -9,8 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { ReviewModalForm } from "../components/trainee/reviewModalForm";
 import { jwtDecode } from "jwt-decode";
 import getTokenFromCookies from "../freqUsedFuncs/getToken";
+import photo from "../assets/user-icon-on-transparent-background-free-png.webp";
 import { Edit } from "lucide-react";
 import { use } from "react";
+import NoDataDashboard from "../components/Nodata";
 
 const BrowseCoaches = () => {
   const [coaches, setCoaches] = useState([]);
@@ -83,10 +85,11 @@ const BrowseCoaches = () => {
   const renderComponet = () => {
     return (
       <div>
-        <div className="bg-backGroundColor text-textColor pt-6 pb-12">
+        <div className="bg-backGroundColor text-textColor pt-6 p-12">
           <h2 className="pt-8 pb-10 text-3xl font-bold text-center text-textColor">
             Available Coaches
           </h2>
+          {coaches.length?
           <div className="flex flex-wrap justify-center gap-32">
             {coaches.map((coach) => (
               <div
@@ -95,9 +98,9 @@ const BrowseCoaches = () => {
               >
                 {/* Coach Photo */}
                 <img
-                  src="src/assets/logo.png" // Replace with the actual URL or path to the coach's photo
+                  src={coach.photo || photo} // Replace with the actual URL or path to the coach's photo
                   alt={`${coach.first_name} ${coach.last_name}`}
-                  className="w-28 h-24 rounded-full mx-auto mb-4" // Rounded photo with specific width and height
+                  className="w-24 h-24 rounded-full object-cover mx-auto mb-4" // Rounded photo with specific width and height
                 />
 
                 <h3 className="text-2xl font-semibold mb-2">
@@ -129,6 +132,7 @@ const BrowseCoaches = () => {
               </div>
             ))}
           </div>
+          :<NoDataDashboard header=""/>}
           <dialog
             ref={dialogRef}
             className="p-6 rounded-lg w-full max-w-md bg-textColor text-backGroundColor"
@@ -156,7 +160,7 @@ const BrowseCoaches = () => {
 
   return (
     <div className="w-full">
-      <NavBar pref={"NotDafault"} />
+      <NavBar pref={"Trainee"} />
       {loading ? <Loader /> : renderComponet()}
       <Footer />
     </div>

@@ -5,13 +5,12 @@ import handleImages from "../freqUsedFuncs/handleImages";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../hooks/useHTTP";
 import { Loader, Eye, EyeOff } from "lucide-react";
-
-const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBio }) => {
+import photo from "../assets/user-icon-on-transparent-background-free-png.webp";
+const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBio, isEditable}) => {
   const [profileData, setProfileData] = useState(null);
   const [formData, setFormData] = useState({});
   const [errors, setErrors] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isEditable, setIsEditable] = useState(false);
   const fileInputRef = useRef(null);
   const [showPasswords, setShowPasswords] = useState({
     oldPassword: false,
@@ -19,8 +18,6 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
     confirmPassword: false,
   });
 
-  const token = getTokenFromCookie();
-  const decoded = jwtDecode(token);
   const { get, patch } = useHttp("http://localhost:3000");
 
   useEffect(() => {
@@ -29,7 +26,6 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
         const response = await get(`/users/${userId}/details`);
         setProfileData(response.data.details);
         setFormData(response.data.details);
-        setIsEditable(userId === decoded.user_id);
       } catch (error) {
         console.error("Failed to fetch profile data:", error);
       }
@@ -632,7 +628,7 @@ const MyProfile = ({ userId, userProfile, setUserProfile, setUserName, setUserBi
             src={
               formData.photo
                 ? formData.photo
-                : "./src/assets/user-icon-on-transparent-background-free-png.webp"
+                : photo
             }
             alt="Submit"
             className="w-24 h-24 object-cover rounded-full"

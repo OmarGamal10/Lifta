@@ -3,13 +3,13 @@ import useHttp from "../../hooks/useHTTP";
 import { TraineeReviewCard } from "./traineeReviewCard";
 import NoDataDashboard from "../Nodata";
 
-export function TraineeReviewDashboard() {
+export function TraineeReviewDashboard(props) {
   const { get, patch, error, data } = useHttp("http://localhost:3000");
   const [reviews, setReviews] = useState([]);
 
   const fetchData = async () => {
     try {
-      const response = await get(`/reviews/86`, {
+      const response = await get(`/reviews/${props.userId}`, {
         headers: { "Cache-Control": "no-cache" },
       });
       setReviews(response.data.reviews);
@@ -35,6 +35,7 @@ export function TraineeReviewDashboard() {
               content={review.content}
               stars={review.stars}
               fetchData={fetchData}
+              isEditable={props.isEditable}
               className="h-full" // Ensures cards have equal height
             />
           ))}

@@ -61,6 +61,7 @@ export function TraineeCurrentMeals(probs) {
               userId={probs.userId}
               picture={meal.picture}
               type={meal.type}
+              isEditable={probs.isEditable}
             />
           </div>
         ))}

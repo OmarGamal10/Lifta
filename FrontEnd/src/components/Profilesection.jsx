@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaStar, FaRegStarHalfStroke } from "react-icons/fa6";
 import useHttp from "../hooks/useHTTP";
-
+import photo from "../assets/user-icon-on-transparent-background-free-png.webp";
 const ProfileSection = ({
   userName,
   userBio,
@@ -60,7 +60,7 @@ const ProfileSection = ({
       >
         <img
 
-          src={`${userProfile ? userProfile : "./src/assets/user-icon-on-transparent-background-free-png.webp"}`}
+          src={`${userProfile ? userProfile : photo}`}
           alt="User Logo"
           className="w-52 h-52 p-3 object-cover rounded-full"
 

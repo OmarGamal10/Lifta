@@ -10,19 +10,20 @@ import { FaUsers } from "react-icons/fa";
 import { TbPackages } from "react-icons/tb";
 import { IoGitPullRequestSharp } from "react-icons/io5";
 import { PiCertificateFill } from "react-icons/pi";
-const SideBar = ({ onSidebarClick }) => {
+const SideBar = ({ onSidebarClick, isEditable }) => {
   const [activeItem, setActiveItem] = useState("My Profile"); // Track active item
   const menuItems = [
-    { name: "Exercises", label: "Exercises"},
-    { name: "Workouts", label: "Workouts"},
-    { name: "Ingredients", label: "Ingredients"},
-    { name: "Meals", label: "Meals",},
-    { name: "Clients", label: "Clients"},
-    { name: "Packages", label: "Packages"},
-    { name: "Reviews", label: "Reviews"},
-    { name: "Requests", label: "Requests"},
-    { name: "Certificates", label: "Certificates"},
-  ];
+    ...(isEditable ? [{ name: "Exercises", label: "Exercises" }] : []),
+    ...(isEditable ? [{ name: "Workouts", label: "Workouts" }] : []),
+    ...(isEditable ? [{ name: "Ingredients", label: "Ingredients" }] : []),
+    ...(isEditable ? [{ name: "Meals", label: "Meals" }] : []),
+    ...(isEditable ? [{ name: "Clients", label: "Clients" }] : []),
+    { name: "Packages", label: "Packages" },
+    { name: "Reviews", label: "Reviews" },
+    { name: "Certificates", label: "Certificates" },
+];
+
+
 
   // Handle click and update the active item
   const handleItemClick = (name) => {
@@ -73,7 +74,7 @@ const SideBar = ({ onSidebarClick }) => {
                 active:bg-primary hover:cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:shadow-lg mx-3 pl-3 py-2 rounded-l-md`}
             >
               {renderComponent("My Profile")}
-              My Profile
+              Profile
             </li>
           </div>
 
@@ -83,7 +84,7 @@ const SideBar = ({ onSidebarClick }) => {
           {/* Remaining Items */}
           {/* Heading */}
           <h1 className="text-textspan text-2xl font-semibold text-left ml-1 mt-6 mb-6">
-            My Work
+            Work
           </h1>
           <ul className="space-y-4 ml-4">
             {menuItems.map((item) => (
