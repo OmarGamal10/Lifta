@@ -12,9 +12,9 @@ router.get("/", (req, res, next) => {
 
 router.use("/:mealId/ingredients", ingredientRouter);
 
-router.get("/:mealId/status/:type", (req, res, next) => {
-  return mealController.getCurrentMealStatusByType(req, res, next);
-});
+// router.get("/:mealId/status/:type", (req, res, next) => {
+//   return mealController.getCurrentMealStatusByType(req, res, next);
+// });
 
 router.post(
   "/",

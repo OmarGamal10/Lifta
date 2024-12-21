@@ -19,7 +19,7 @@ const tableHead = ["Ingredient", "Quantity"];
 
 export function TraineeMealCard(probs) {
   const [open, setOpen] = React.useState(0);
-  const [isDone, setIsDone] = useState(false);
+  // const [isDone, setIsDone] = useState(false);
 
   const { get: httpGet, post, del } = useHttp("http://localhost:3000");
 
@@ -42,35 +42,34 @@ export function TraineeMealCard(probs) {
         });
       }
 
-      try {
-        const response = await httpGet(
-          `/users/${probs.userId}/currentMeals/${probs.mealId}/status/${probs.type}`,
-          {
-            headers: { "Cache-Control": "no-cache" },
-          }
-        );
-        if (
-          response.data.isDone.rows.length > 0 &&
-          response.data.isDone.rows[0].isDone == true
-        ) {
-          setIsDone(true);
-          probs.incrementDoneCount();
-        }
-      } catch (err) {
-        console.log(err);
-        toast.error(err, {
-          theme: "dark",
-        });
-      }
+      // try {
+      //   const response = await httpGet(
+      //     `/users/${probs.userId}/currentMeals/${probs.mealId}/status/${probs.type}`,
+      //     {
+      //       headers: { "Cache-Control": "no-cache" },
+      //     }
+      //   );
+      //   if (
+      //     response.data.isDone.rows.length > 0 &&
+      //     response.data.isDone.rows[0].isDone == true
+      //   ) {
+      //     setIsDone(true);
+      //     probs.fetchParentData();
+      //   }
+      // } catch (err) {
+      //   console.log(err);
+      //   toast.error(err, {
+      //     theme: "dark",
+      //   });
+      // }
     };
 
     fetchData();
   }, []);
 
   async function handleMarkAsDone() {
-    if (!isDone) {
-      setIsDone(true);
-      probs.incrementDoneCount();
+    if (!probs.isDone) {
+      // setIsDone(true);
       try {
         const response = await post(`/users/${probs.userId}/currentMeals`, {
           traineeId: probs.userId,
@@ -88,8 +87,9 @@ export function TraineeMealCard(probs) {
       } catch (err) {
         console.error(err);
       }
+      probs.fetchParentData();
     } else {
-      setIsDone(false);
+      // setIsDone(false);
       try {
         const response = await del(
           `/users/${probs.userId}/currentMeals/${probs.type}/removeDoneMeal`,
@@ -109,6 +109,7 @@ export function TraineeMealCard(probs) {
         console.error(err);
       }
     }
+    probs.fetchParentData();
   }
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
@@ -213,8 +214,8 @@ export function TraineeMealCard(probs) {
             justify-around hover:bg-accent hover:text-backGroundColor`}
               onClick={handleMarkAsDone}
             >
-              <span>{isDone ? "Mark as undone" : "Mark as done"}</span>
-              {!isDone ? <span className="pi pi-check"></span> : <></>}
+              <span>{probs.isDone ? "Mark as undone" : "Mark as done"}</span>
+              {!probs.isDone ? <span className="pi pi-check"></span> : <></>}
             </button>
             <ToastContainer />
           </AccordionBody>

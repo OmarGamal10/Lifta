@@ -65,7 +65,9 @@ exports.getCurrentMealsByTraineeId = async (traineeId) => {
   const query = `SELECT m.meal_id, m.name, m.picture, md.type, SUM(i.carb*mi.quantity/100) AS carb ,
 SUM(i.protein*mi.quantity/100) AS protein ,
 SUM(i.fat*mi.quantity/100) AS fat,
-SUM(i.calories_serving*mi.quantity/100) AS calories
+SUM(i.calories_serving*mi.quantity/100) AS calories,
+(SELECT ml."isDone" FROM lifta_schema.meal_log ml 
+WHERE ml.trainee_id = $1 AND ml.date = current_date AND ml.type = md.type)
 FROM lifta_schema.meal_ingredient mi
 JOIN lifta_schema.meal m ON m.meal_id = mi.meal_id
 JOIN lifta_schema.ingredient i ON i.ingredient_id = mi.ingredient_id 
@@ -108,12 +110,12 @@ exports.assignMealToTrainee = async (trainee_id, meal_id, day, type) => {
   }
 };
 
-exports.getCurrentMealStatusByType = async (trainee_id, type) => {
-  const query = `SELECT "isDone" FROM lifta_schema.meal_log
-    WHERE trainee_id = $1 AND type = $2 AND date = current_date;`;
+// exports.getCurrentMealStatusByType = async (trainee_id, type) => {
+//   const query = `SELECT "isDone" FROM lifta_schema.meal_log
+//     WHERE trainee_id = $1 AND type = $2 AND date = current_date;`;
 
-  return await db.query(query, [trainee_id, type]);
-};
+//   return await db.query(query, [trainee_id, type]);
+// };
 
 exports.getMealsByTraineeId = async (trainee_id) => {
   const query = `SELECT m.meal_id ,m.name,m.picture ,md.day,md.type from lifta_schema.meal m 
