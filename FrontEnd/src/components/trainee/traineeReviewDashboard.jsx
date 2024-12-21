@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState, useRef } from "react";
 import useHttp from "../../hooks/useHTTP";
 import { TraineeReviewCard } from "./traineeReviewCard";
@@ -13,7 +14,7 @@ export function TraineeReviewDashboard() {
     const token = getTokenFromCookies();
     const decodedToken = token ? jwtDecode(token) : null;
     const userId = decodedToken ? decodedToken.user_id : null;
-    
+
     try {
       const response = await get(`/reviews/${userId}`, {
         headers: { "Cache-Control": "no-cache" },
@@ -24,6 +25,7 @@ export function TraineeReviewDashboard() {
     }
   };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
