@@ -2,14 +2,20 @@ import { useEffect, useState, useRef } from "react";
 import useHttp from "../../hooks/useHTTP";
 import { TraineeReviewCard } from "./traineeReviewCard";
 import NoDataDashboard from "../Nodata";
+import { jwtDecode } from "jwt-decode";
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 
 export function TraineeReviewDashboard() {
   const { get, patch, error, data } = useHttp("http://localhost:3000");
   const [reviews, setReviews] = useState([]);
 
   const fetchData = async () => {
+    const token = getTokenFromCookies();
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken ? decodedToken.user_id : null;
+    
     try {
-      const response = await get(`/reviews/86`, {
+      const response = await get(`/reviews/${userId}`, {
         headers: { "Cache-Control": "no-cache" },
       });
       setReviews(response.data.reviews);

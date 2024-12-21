@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { CoachReviewCard } from "./coachReviewCard";
 import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
+import { jwtDecode } from "jwt-decode";
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 
 export function CoachReviewDashboard() {
   
@@ -9,9 +11,13 @@ export function CoachReviewDashboard() {
     const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
+    const token = getTokenFromCookies();
+    const decodedToken = token ? jwtDecode(token) : null;
+    const userId = decodedToken ? decodedToken.user_id : null;
+
     const fetchData = async () => {
       try {
-        const response = await get(`/users/61/reviews`, {
+        const response = await get(`/users/${userId}/reviews`, {
           headers: { "Cache-Control": "no-cache" },
         });
         setReviews(response.data.reviews);

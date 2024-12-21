@@ -63,11 +63,21 @@ exports.deleteAllPendingRequests = async (subscription_id) => {
   // Retrieve the type and trainee_id associated with the subscription
   const { type, trainee_id } =
     await this.getTraineePackageTypeRequest(subscription_id);
-  const query1 = `SELECT package_id FROM lifta_schema.package WHERE type IN ('Both', $1);`;
-  const packages = (await db.query(query1, [type])).rows.map(
-    (row) => row.package_id
-  ); // Extract package_ids
-
+  let query1;
+  let packages;
+  if (type === "Both") {
+    query1 = `SELECT package_id FROM lifta_schema.package;`;
+    packages = (await db.query(query1)).rows.map(
+      (row) => row.package_id
+    ); // Extract package_ids 
+  }
+  else {
+    query1 = `SELECT package_id FROM lifta_schema.package WHERE type IN ('Both', $1);`; 
+    packages = (await db.query(query1, [type])).rows.map(
+      (row) => row.package_id
+    ); // Extract package_ids  
+  }
+  
   // Query to delete subscriptions
   const query = `
     DELETE FROM lifta_schema.subscription

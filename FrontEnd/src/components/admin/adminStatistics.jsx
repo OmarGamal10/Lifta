@@ -176,42 +176,6 @@ export function AdminStatistics() {
         </div>
         <div className="text-textColor">
           <h2 className="text-2xl font-medium mb-4">Packages Subscriptions</h2>
-          {/* <BarChart
-            borderRadius={16}
-            xAxis={[
-              {
-                scaleType: "band",
-                data: ["Gym", "Nutrition", "Both"],
-                tickLabelStyle: {
-                  // Instead, use RGB/hex values from Tailwind color palette
-                  fill: "#E3E5EF", // equivalent to text-blue-500
-                },
-                axisLine: {
-                  stroke: "#E3E5EF", // Line color for x-axis
-                },
-              },
-            ]}
-            yAxis={[
-              {
-                tickLabelStyle: {
-                  // Instead, use RGB/hex values from Tailwind color palette
-                  fill: "#E3E5EF", // equivalent to text-blue-500
-                },
-                axisLine: {
-                  stroke: "#E3E5EF", // Line color for x-axis
-                  strokeWidth: 2,
-                },
-              },
-            ]}
-            series={[
-              {
-                data: [gymCount, nutritionCount, bothCount],
-                color: "#B076A9",
-              },
-            ]}
-            width={640}
-            height={480}
-          /> */}
           <PieChart
             colors={["#B076A9", "#A2A7C9", "#5F3C68"]} // Use palette
             series={[

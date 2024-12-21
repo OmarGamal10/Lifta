@@ -11,7 +11,6 @@ import useHttp from "../../hooks/useHTTP";
 import { useLocation } from "react-router-dom";
 import Loader from "../Loader"; // Import your Loader component
 
-
 function AssignWorkout() {
   const { get, post, error, data } = useHttp("http://localhost:3000");
   const location = useLocation();

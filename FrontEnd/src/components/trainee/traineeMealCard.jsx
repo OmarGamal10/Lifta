@@ -13,12 +13,13 @@ import {
   AccordionBody,
 } from "@material-tailwind/react";
 import { Card, Typography } from "@material-tailwind/react";
+import { ToastContainer, toast } from "react-toastify";
 
 const tableHead = ["Ingredient", "Quantity"];
 
 export function TraineeMealCard(probs) {
   const [open, setOpen] = React.useState(0);
-  const [isDone, setIsDone] = useState(false);
+  // const [isDone, setIsDone] = useState(false);
 
   const { get: httpGet, post, del } = useHttp("http://localhost:3000");
 
@@ -36,34 +37,39 @@ export function TraineeMealCard(probs) {
         setIngredients(response.data.ingredients);
       } catch (err) {
         console.log(err);
+        toast.error(err, {
+          theme: "dark",
+        });
       }
 
-      try {
-        const response = await httpGet(
-          `/users/${probs.userId}/currentMeals/${probs.mealId}/status/${probs.type}`,
-          {
-            headers: { "Cache-Control": "no-cache" },
-          }
-        );
-        if (
-          response.data.isDone.rows.length > 0 &&
-          response.data.isDone.rows[0].isDone == true
-        ) {
-          setIsDone(true);
-          probs.incrementDoneCount();
-        }
-      } catch (err) {
-        console.log(err);
-      }
+      // try {
+      //   const response = await httpGet(
+      //     `/users/${probs.userId}/currentMeals/${probs.mealId}/status/${probs.type}`,
+      //     {
+      //       headers: { "Cache-Control": "no-cache" },
+      //     }
+      //   );
+      //   if (
+      //     response.data.isDone.rows.length > 0 &&
+      //     response.data.isDone.rows[0].isDone == true
+      //   ) {
+      //     setIsDone(true);
+      //     probs.fetchParentData();
+      //   }
+      // } catch (err) {
+      //   console.log(err);
+      //   toast.error(err, {
+      //     theme: "dark",
+      //   });
+      // }
     };
 
     fetchData();
   }, []);
 
   async function handleMarkAsDone() {
-    if (!isDone) {
-      setIsDone(true);
-      probs.incrementDoneCount();
+    if (!probs.isDone) {
+      // setIsDone(true);
       try {
         const response = await post(`/users/${probs.userId}/currentMeals`, {
           traineeId: probs.userId,
@@ -71,21 +77,39 @@ export function TraineeMealCard(probs) {
           type: probs.type,
         });
         console.log(response);
+        toast.success(response.message, {
+          theme: "dark",
+          position: "bottom-right",
+          autoClose: 2500,
+          hideProgressBar: true,
+          draggable: true,
+        });
       } catch (err) {
         console.error(err);
       }
-    }
-    else {
-      setIsDone(false);
+      probs.fetchParentData();
+    } else {
+      // setIsDone(false);
       try {
-        const response = await del(`/users/${probs.userId}/currentMeals/${probs.type}/removeDoneMeal`, {
-          data: {},
+        const response = await del(
+          `/users/${probs.userId}/currentMeals/${probs.type}/removeDoneMeal`,
+          {
+            data: {},
+          }
+        );
+        toast.success(response.message, {
+          theme: "dark",
+          position: "bottom-right",
+          autoClose: 2500,
+          hideProgressBar: true,
+          draggable: true,
         });
         console.log(response);
       } catch (err) {
         console.error(err);
       }
     }
+    probs.fetchParentData();
   }
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
@@ -108,7 +132,7 @@ export function TraineeMealCard(probs) {
               <div className="flex gap-4">
                 <span>{probs.name}</span>
                 <span className="text-xs text-accent border border-accent rounded-lg flex items-center px-2">
-                  {probs.calories} calories
+                  {probs.calories} kcal
                 </span>
               </div>
               <span
@@ -119,7 +143,7 @@ export function TraineeMealCard(probs) {
             </div>
           </AccordionHeader>
           <AccordionBody className="pt-0 text-base font-normal px-4 flex flex-col gap-6">
-            <img src={`${probs.picture}`} alt="" className="w-64 h-64"/>
+            <img src={`${probs.picture}`} alt="" className="w-64 h-64" />
             <div>
               <h3 className="text-lg font-medium">Ingredients</h3>
               <Card className="h-fit w-[50%] px-4">
@@ -186,13 +210,14 @@ export function TraineeMealCard(probs) {
               {probs.fats} gm
             </div>
             <button
-          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
+              className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
             justify-around hover:bg-accent hover:text-backGroundColor`}
-          onClick={handleMarkAsDone}
-        >
-          <span>{isDone ? "Mark as undone" : "Mark as done"}</span>
-          {!isDone ? <span className="pi pi-check"></span> : <></>}
-        </button>
+              onClick={handleMarkAsDone}
+            >
+              <span>{probs.isDone ? "Mark as undone" : "Mark as done"}</span>
+              {!probs.isDone ? <span className="pi pi-check"></span> : <></>}
+            </button>
+            <ToastContainer />
           </AccordionBody>
         </Accordion>
       </div>
