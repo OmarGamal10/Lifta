@@ -20,7 +20,6 @@ const Banned = () => {
   };
   return (
     <div>
-      <NavBar pref={"NotDefault"} />
       <div className="flex flex-col justify-center items-center h-auto py-10">
         <img src={ban} className=" w-[720px] h-auto" />
         <h1 className="text-3xl font-bold my-2 text-secondary">Oops!</h1>
