@@ -6,7 +6,7 @@ import useHttp from "../../hooks/useHTTP";
 import Loader from "../Loader";
 import NoDataDashboard from "../Nodata";
 
-export function SubReqDashboard({ user_id }) {
+export function SubReqDashboard({ userId: user_id }) {
   const [userId, setUserId] = useState(user_id);
   const [requests, setRequests] = useState([]);
   const [trigger, setTrigger] = useState(false);
