@@ -111,6 +111,20 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "browse/:coach_id/packages",
+    element: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <BrowseProtectedRoute>
+          <div>
+            <NavBar pref="Trainee" />
+            <PackageDashboard />
+            <Footer />
+          </div>
+        </BrowseProtectedRoute>
+      </PrimeReactProvider>
+    ),
+  },
+  {
     path: "/coach/workouts",
     element: (
       <ProtectedRoute>
@@ -126,18 +140,13 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  
   {
-    path: "browse/:coach_id/packages",
+    path: ":coach_id/profile",
     element: (
-      <PrimeReactProvider value={{ pt: Tailwind }}>
         <BrowseProtectedRoute>
-          <div>
-            <NavBar pref="NotDefault" />
-            <PackageDashboard />
-            <Footer />
-          </div>
+          <UserProfile />
         </BrowseProtectedRoute>
-      </PrimeReactProvider>
     ),
   },
   {

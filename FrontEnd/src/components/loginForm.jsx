@@ -51,7 +51,7 @@ function LoginForm() {
           "Content-Type": "application/json",
         },
       });
-
+      
       // After successful login, navigate to the profile page
       navigate("/profile");
       console.log(response);

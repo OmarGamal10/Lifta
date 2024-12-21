@@ -9,6 +9,7 @@ const CertificateCard = ({
   handleEdit,
   handleDelete,
   id,
+  isEditable,
 }) => {
 
   return (
@@ -36,7 +37,7 @@ const CertificateCard = ({
             {description}
           </p>
         </div>
-
+        {isEditable?
         <div className="flex justify-end space-x-2 pt-4">
           <button 
             onClick={() => handleEdit(id)}
@@ -54,6 +55,7 @@ const CertificateCard = ({
             Delete
           </button>
         </div>
+        :<></>}
       </div>
     </div>
   );

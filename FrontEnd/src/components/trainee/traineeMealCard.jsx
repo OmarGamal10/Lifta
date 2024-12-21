@@ -209,6 +209,7 @@ export function TraineeMealCard(probs) {
               <strong>Fats: </strong>
               {probs.fats} gm
             </div>
+            {probs.isEditable?
             <button
               className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
             justify-around hover:bg-accent hover:text-backGroundColor`}
@@ -216,7 +217,7 @@ export function TraineeMealCard(probs) {
             >
               <span>{probs.isDone ? "Mark as undone" : "Mark as done"}</span>
               {!probs.isDone ? <span className="pi pi-check"></span> : <></>}
-            </button>
+            </button>:<></>}
             <ToastContainer />
           </AccordionBody>
         </Accordion>

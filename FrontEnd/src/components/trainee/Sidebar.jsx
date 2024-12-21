@@ -8,16 +8,17 @@ import { MdReviews } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { GrOverview } from "react-icons/gr";
 
-const SideBar = ({ onSidebarClick }) => {
+const SideBar = ({ onSidebarClick, isEditable }) => {
   const [activeItem, setActiveItem] = useState("My Profile"); // Track active item
   const menuItems = [
     { name: "Workouts", label: "Workouts" },
     { name: "Nutrition", label: "Nutrition" },
-    { name: "Memberships", label: "Memberships" },
+    ...(isEditable ? [{ name: "Memberships", label: "Memberships" }] : []),
     { name: "Workout history", label: "Workout history" },
     { name: "Nutrition History", label: "Nutrition History" },
     { name: "Reviews", label: "Reviews" },
-  ];
+];
+
 
   // Handle click and update the active item
   const handleItemClick = (name) => {
@@ -65,7 +66,7 @@ const SideBar = ({ onSidebarClick }) => {
                 active:bg-primary hover:cursor-pointer transform transition-transform duration-300 hover:scale-110 hover:shadow-lg mx-3 pl-3 py-2 rounded-l-md`}
             >
               {renderComponent("My Profile")}
-              My Profile
+              Profile
             </li>
           </div>
 
@@ -75,7 +76,7 @@ const SideBar = ({ onSidebarClick }) => {
           {/* Remaining Items */}
           {/* Heading */}
           <h1 className="text-textspan text-2xl font-semibold text-left ml-1 mt-6 mb-6">
-            My Work
+            Work
           </h1>
           <ul className="space-y-4 ml-4">
             {menuItems.map((item) => (

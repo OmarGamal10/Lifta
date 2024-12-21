@@ -5,6 +5,7 @@ import Loader from "../Loader"; // Import your Loader component
 import { Paginator } from "primereact/paginator";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
+import photo from "../../assets/user-icon-on-transparent-background-free-png.webp";
 const Clients = ({ userId }) => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading
@@ -25,6 +26,7 @@ const Clients = ({ userId }) => {
       try {
         const response = await get(`/users/${userId}/clients`);
         setClients(response.data.clients);
+        console.log("clients:", response.data.clients);
       } catch (err) {
         console.error(err);
       } finally {
@@ -67,7 +69,7 @@ const Clients = ({ userId }) => {
   };
 
   const viewClient = (trainee_id) => {
-    // Placeholder function
+    navigate(`/${trainee_id}/profile`);
   };
 
   const onPageChange = (event) => {
@@ -166,7 +168,7 @@ const Clients = ({ userId }) => {
                 {/* Client Photo */}
                 <img
                   src={`${
-                    client.photo ? client.photo : "src/assets/landingGym.svg"
+                    client.photo ? client.photo : photo
                   }`} // Replace with the actual path to the client's photo if available
                   alt={client.name}
                   className="w-24 h-24 rounded-full mx-auto object-cover mb-4"
@@ -193,6 +195,7 @@ const Clients = ({ userId }) => {
                   </button>
                   <button
                     onClick={(e) => {
+                      e.stopPropagation();
                       openModal(client.trainee_id, client.type);
                     }}
                     className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"

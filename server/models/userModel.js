@@ -129,6 +129,7 @@ exports.getAvailableCoaches = async (traineeId) => {
   const query = `SELECT c.trainer_id, 
        u.first_name, 
        u.last_name, 
+       u.photo,
        c.experience_years, 
        ROUND(AVG(r.stars)::numeric, 2) AS rating,
 	   COUNT(p.package_id) AS package_count,
@@ -140,7 +141,7 @@ JOIN lifta_schema.package p ON p.trainer_id = c.trainer_id
 LEFT JOIN lifta_schema.review r ON c.trainer_id = r.trainer_id
 LEFT JOIN lifta_schema.trainee t 
     ON t.coach_id = c.trainer_id OR t.nutritionist_id = c.trainer_id
-GROUP BY c.trainer_id, u.first_name, u.last_name, c.experience_years, c.client_limit
+GROUP BY c.trainer_id, u.first_name, u.last_name, u.photo, c.experience_years, c.client_limit
 HAVING c.client_limit > COUNT(DISTINCT CASE WHEN t.coach_id = c.trainer_id OR t.nutritionist_id = c.trainer_id THEN t.trainee_id END);
 `;
 
@@ -157,7 +158,7 @@ exports.getDetails = async (userId) => {
   if (userData.type === "Trainer") {
     const query2 = `SELECT * FROM lifta_schema.users u JOIN lifta_schema.trainer t1 ON t1.trainer_id = u.user_id WHERE u.user_id = $1`;
     return (await db.query(query2, [userId])).rows[0];
-  } else if (userData.type === "Trainer") {
+  } else if (userData.type === "Trainee") {
     const query3 = `SELECT * FROM lifta_schema.users u JOIN lifta_schema.trainee t2 ON t2.trainee_id = u.user_id WHERE u.user_id = $1`;
     return (await db.query(query3, [userId])).rows[0];
   } else return userData;
@@ -203,7 +204,8 @@ exports.updateUser = async (values) => {
 
 const updateTrainee = async (values, id) => {
   values.unshift(id);
-
+  if (values[5] === "outdoor") values[5] = "Gym";
+  else values[5] = "Home";
   const query = `
     UPDATE lifta_schema.trainee 
     SET food_allergies = $2, weight = $3, height = $4, goal = $5, workout_preferences = $6 
