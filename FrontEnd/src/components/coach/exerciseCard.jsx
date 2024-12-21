@@ -45,7 +45,7 @@ function Exercise({
       {usage !== "addWorkout" && (
         <div className="flex-none flex flex-row justify-center gap-16 mt-4">
           <button
-            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor"
+            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor transform transition-transform duration-300 hover:scale-110"
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(id);
@@ -54,7 +54,7 @@ function Exercise({
             <FaRegTrashAlt size={20} />
           </button>
           <button
-            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor"
+            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor transform transition-transform duration-300 hover:scale-110"
             onClick={handleEdit}
           >
             <CiEdit size={20} />
