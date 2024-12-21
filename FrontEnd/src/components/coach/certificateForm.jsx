@@ -29,7 +29,7 @@ function CertForm({ formData, setFormData, setViewCert }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {};
-
+    
     Object.keys(formData).forEach((key) => {
       if (!formData[key]) {
         newErrors[key] = `${key.replace(/([A-Z])/g, " $1")} is required.`;
@@ -51,16 +51,16 @@ function CertForm({ formData, setFormData, setViewCert }) {
         const photoUrl = await handlesImage(file);
         setFormData((prevData) => ({
           ...prevData,
-          certificatePhoto: photoUrl, // Store the URL instead of the file
+          photo: photoUrl, // Store the URL instead of the file
         }));
 
         setErrors((prev) => {
-          const { certificatePhoto, ...rest } = prev;
+          const { photo, ...rest } = prev;
           return rest;
         });
       } else {
         setFormData((prevData) => {
-          const { certificatePhoto, ...rest } = prevData;
+          const { photo, ...rest } = prevData;
           return rest;
         });
 
@@ -76,7 +76,8 @@ function CertForm({ formData, setFormData, setViewCert }) {
       title: "",
       dateIssued: "",
       description: "",
-      certificatePhoto: "",
+      photo: "",
+      
     });
     setViewCert(false);
   };

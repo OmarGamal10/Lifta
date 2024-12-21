@@ -23,10 +23,4 @@ router.post(
   mealController.addDoneMeal
 );
 
-router.delete(
-  "/:type/removeDoneMeal",
-  convertCamelToSnake,
-  mealController.removeDoneMeal
-);
-
 module.exports = router;

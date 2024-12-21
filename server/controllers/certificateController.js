@@ -34,7 +34,42 @@ const createCertificate = async (req, res, next) => {
   });
 };
 
+const editCertificate = async (req, res, next) => {
+  const {certificate_id} = req.params;
+  const { trainer_id, title, photo, description, date_issued } = req.body;
+
+  const certificate = await certificateModel.editCertificate(
+    certificate_id,
+    trainer_id,
+    title,
+    description,
+    date_issued,
+    photo
+  );
+  res.status(201).json({
+    status: "success",
+    data: {
+      certificate,
+    },
+  });
+};
+
+const deleteCertificate = async (req, res, next) => {
+  const {certificate_id} = req.params;
+
+  const certificate = await certificateModel.deleteCertificate(
+    certificate_id,
+  );
+  res.status(201).json({
+    status: "success",
+    data: {
+      certificate,
+    },
+  });
+};
 module.exports = {
   getCertificatesCoach: catchAsync(getCertificatesCoach),
   createCertificate: catchAsync(createCertificate),
+  editCertificate: catchAsync(editCertificate),
+  deleteCertificate: catchAsync(deleteCertificate),
 };

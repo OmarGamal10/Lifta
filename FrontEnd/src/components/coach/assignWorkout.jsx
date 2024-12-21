@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useMemo, useEffect } from "react";
 import Workout from "./workoutCard";
 import ErrorMessage from "../errorMsg";
@@ -9,6 +10,7 @@ import { jwtDecode } from "jwt-decode";
 import useHttp from "../../hooks/useHTTP";
 import { useLocation } from "react-router-dom";
 import Loader from "../Loader"; // Import your Loader component
+
 
 function AssignWorkout() {
   const { get, post, error, data } = useHttp("http://localhost:3000");
@@ -23,7 +25,12 @@ function AssignWorkout() {
   const [selectedWorkout, setSelectedWorkout] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [workouts, setworkouts] = useState([]);
+
   const [loading, setLoading] = useState(true); // State to track loading
+
+  const [newWorkout, setNewWorkout] = useState(null);
+  const [lastSelectdDay, setLastSelectedDay] = useState(null);
+
 
   const days = [
     "Sunday",
@@ -133,6 +140,9 @@ function AssignWorkout() {
           },
         }
       );
+      setLastSelectedDay(formData.day);
+      console.log(response.data.workout);
+      setNewWorkout(response.data.workout.new);
       setSelectedWorkout(null);
       setFormData({
         workoutId: "",
@@ -140,7 +150,6 @@ function AssignWorkout() {
       });
       setErrors({});
       console.log(response);
-      navigate("/profile");
     } catch (err) {
       console.log(err.response.data.message);
       errors.workoutId = err.response.data.message;
@@ -154,7 +163,6 @@ function AssignWorkout() {
       day: "Sunday",
     });
     setErrors({});
-    navigate("/profile");
   };
 
   const paginatedWorkouts = useMemo(() => {
@@ -238,31 +246,44 @@ function AssignWorkout() {
 
             {errors.workoutId && <ErrorMessage error={errors.workoutId} />}
 
-            <div className="flex justify-end space-x-4">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
-              >
-                Cancel
-              </button>
 
-              <button
-                type="button"
-                onClick={() => handleSubmit(true)}
-                className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
-              >
-                Assign Workout
-              </button>
-            </div>
+             <div className="flex justify-end space-x-4">
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSubmit(true)}
+              className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
+            >
+              Assign Workout
+            </button>
           </div>
-        ) : (
-          <Nodata header="No Workouts Available" />
-        )}
-      </div>
-    );
+          <div className="mt-4">
+            {newWorkout !== null && (
+              <div className="mt-2 text-center">
+                <span className={`text-sm font-semibold text-accent`}>
+                  {newWorkout
+                    ? "New Workout assigned for this trainee on " +
+                      lastSelectdDay
+                    : `Updated Workout for this trainee on ${lastSelectdDay}`}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <Nodata header="No Workouts Available" />
+      )}
+    </div>
+  );
   };
   return <div className="w-full">{loading ? <Loader /> : renderForm()}</div>;
+
 }
 
 export default AssignWorkout;

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useMemo, useEffect } from "react";
 import Meal from "./mealCard";
 import ErrorMessage from "../errorMsg";
@@ -6,6 +7,7 @@ import Nodata from "../Nodata";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../../hooks/useHTTP";
+
 import { useLocation } from "react-router-dom";
 import { use } from "react";
 import Loader from "../Loader"; // Import your Loader component
@@ -36,7 +38,7 @@ function AssignMeal() {
     "Saturday",
   ];
 
-  const mealTypes = ["Breakfast", "Lunch", "Dinner"];
+  const mealTypes = ["Breakfast", "Lunch", "Snack", "Dinner"];
 
   const mealsPerPage = 6;
 

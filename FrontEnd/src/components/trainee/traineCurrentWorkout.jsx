@@ -8,6 +8,7 @@ import useHttp from "../../hooks/useHTTP";
 import React from "react";
 import "primeicons/primeicons.css";
 import { TraineeExerciseCard } from "./traineeExerciseCard";
+import NoDataDashboard from "../Nodata";
 
 export function TraineeCurrentWrokout(probs) {
   const [isDone, setIsDone] = useState(false);
@@ -29,13 +30,15 @@ export function TraineeCurrentWrokout(probs) {
       } catch (err) {
         console.error(err);
       }
-    }
-    else {
+    } else {
       setIsDone(false);
       try {
-        const response = await del(`/users/${probs.userId}/currentWorkout/removeDoneWorkout`, {
-          data: {},
-        });
+        const response = await del(
+          `/users/${probs.userId}/currentWorkout/removeDoneWorkout`,
+          {
+            data: {},
+          }
+        );
         console.log(response);
       } catch (err) {
         console.log(err);
@@ -45,6 +48,7 @@ export function TraineeCurrentWrokout(probs) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(probs.userId);
         const response = await httpGet(
           `/users/${probs.userId}/currentWorkout`,
           {
@@ -113,8 +117,12 @@ export function TraineeCurrentWrokout(probs) {
           ))}
         </div>
         <button
-          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
-            justify-around hover:bg-accent hover:text-backGroundColor`}
+          className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center justify-around
+          ${
+            isDone
+              ? "btn-disabled cursor-not-allowed bg-accent text-backGroundColor"
+              : "hover:bg-accent hover:text-backGroundColor"
+          } `}
           onClick={handleMarkAsDone}
         >
           <span>{isDone ? "Mark as undone" : "Mark as done"}</span>
@@ -125,8 +133,6 @@ export function TraineeCurrentWrokout(probs) {
   }
 
   return (
-    <div className="text-textColor h-[100vh] flex items-center">
-      <h2 className="text-2xl font-medium">No Workouts Today</h2>
-    </div>
+    <NoDataDashboard header="No Workouts today !!" />
   );
 }

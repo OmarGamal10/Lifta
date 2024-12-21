@@ -84,8 +84,11 @@ exports.addDoneMeal = async (trainee_id, meal_id, type) => {
     return await db.query(query, values);
   } catch (err) {
     if (err.code === "23505") {
-      throw new AppError("You already have a meal log with this type in this date", 400);
-      }
+      throw new AppError(
+        "You already have a meal log with this type in this date",
+        400
+      );
+    }
     throw err;
   }
 };
@@ -100,7 +103,7 @@ exports.assignMealToTrainee = async (trainee_id, meal_id, day, type) => {
         `Trainee already have a ${type} meal on this day`,
         400
       );
-     }
+    }
     throw err;
   }
 };
@@ -134,7 +137,36 @@ exports.deleteMeal = async (mealId) => {
   return (await db.query(query, [mealId])).rows;
 };
 
+exports.getMealLog = async (traineeId, trainerId) => {
+  const query = `
+    SELECT 
+        ml.date,
+        ml.type,
+        m.meal_id,
+        m.name as meal_name,
+        i.name as ingredient_name,
+        mi.quantity as ingredient_quantity,
+        i.calories_serving,
+        i.protein,
+        i.carb,
+        i.fat,
+        u.first_name || ' ' || u.last_name as nutritionist_name,
+        ml."isDone"
+      FROM lifta_schema.meal_log ml
+      JOIN lifta_schema.meal m ON m.meal_id = ml.meal_id
+      JOIN lifta_schema.meal_ingredient mi ON mi.meal_id = m.meal_id
+      JOIN lifta_schema.ingredient i ON i.ingredient_id = mi.ingredient_id
+      JOIN lifta_schema.users u ON u.user_id = m.nutritionist_id
+      WHERE ml.trainee_id = $1
+      ${trainerId ? `AND m.nutritionist_id = $2` : ""}
+      ORDER BY ml.date DESC, ml.type;`;
+
+  return (
+    await db.query(query, trainerId ? [traineeId, trainerId] : [traineeId])
+  ).rows;
+};
+
 exports.removeDoneMeal = async (trainee_id, type) => {
-    const query = `DELETE FROM lifta_schema.meal_log WHERE trainee_id = $1 AND type = $2 AND date = current_date;`;
-    return await db.query(query, [trainee_id, type]).rows;
+  const query = `DELETE FROM lifta_schema.meal_log WHERE trainee_id = $1 AND type = $2 AND date = current_date;`;
+  return await db.query(query, [trainee_id, type]).rows;
 };

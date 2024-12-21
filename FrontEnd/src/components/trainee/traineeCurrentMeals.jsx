@@ -9,6 +9,7 @@ import React from "react";
 import "primeicons/primeicons.css";
 import { TraineeMealCard } from "./traineeMealCard";
 import { Knob } from "primereact/knob";
+import NoDataDashboard from "../Nodata";
 
 export function TraineeCurrentMeals(probs) {
   const [knobValue, setKnobValue] = useState(0);
@@ -80,8 +81,6 @@ export function TraineeCurrentMeals(probs) {
  
 
   return (
-    <div className="text-textColor h-[100vh] flex items-center">
-      <h2 className="text-2xl font-medium">No Meals Today</h2>
-    </div>
+    <NoDataDashboard header="No Meals today !!" />
   );
 }
