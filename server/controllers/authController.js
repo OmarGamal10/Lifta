@@ -40,7 +40,7 @@ const checkAuth = async (req, res) => {
   try {
     // Verify the token
     const decoded = jwt.verify(token, process.env.SECRETKEY);
-
+    const is_banned = await userModel.isBanned(decoded.user_id);
     // Extract userId and userType from the token payload
     const { user_id, type } = decoded;
 
@@ -49,6 +49,7 @@ const checkAuth = async (req, res) => {
       isAuthenticated: true,
       userId: user_id,
       userType: type,
+      is_banned: is_banned,
     });
   } catch (err) {
     // Handle invalid or expired tokens
@@ -236,8 +237,16 @@ const updateUser = async (req, res, next) => {
     ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
   } else if(type === "Trainer") {
     ({ experience_years, client_limit } = req.body);
+    if(experience_years === "") experience_years = 0;
+    if(client_limit === "" || client_limit <= 0) {
+      return next(new AppError("Please enter a positive Number", 400));
+    };
   }
+  const phoneRegex = /^01\d{9}$/; // Matches "01" followed by 9 digits (11 total)
+  if(!phoneRegex.test(phone_number)) {
+    return next(new AppError("Please enter a valid Number", 400));
 
+  }
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
 

@@ -94,6 +94,7 @@ function Certificates({ userId }) {
     setCurPage((prevPage) => Math.min(totalPages, prevPage + 1));
   };
 
+
   const renderCertificates = () => (
     <>
       {editCertificateView && (
@@ -141,6 +142,7 @@ function Certificates({ userId }) {
                   handleDelete={handleDelete}
                   view="edit"
                 />
+
               </div>
             ))}
           <div className="flex items-center justify-center min-w-64 max-w-64 min-h-64 h-[400px]">

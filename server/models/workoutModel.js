@@ -123,7 +123,7 @@ exports.deleteWorkout = async (workoutId) => {
 };
 
 exports.getWorkoutLog = async (traineeId, trainerId) => {
-  const query = ` SELECT l.trainee_id, w.workout_id, w.name, w._note, l.date, l."isDone", u.first_name, u.last_name,
+  const query = ` SELECT l.trainee_id, w.trainer_id, w.workout_id, w.name, w._note, l.date, l."isDone", u.first_name, u.last_name,
                   json_agg(json_build_object('name', e.name, 'description', e.description, 'id',  e.exercise_id, 'musclegroup',  e.muscle_group, 'sets', we.sets, 'reps', we.reps)) AS exercises
                   FROM lifta_schema.workout_log l
                   JOIN lifta_schema.workout w ON w.workout_id = l.workout_id

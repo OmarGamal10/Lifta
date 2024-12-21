@@ -9,7 +9,9 @@ const CertificateCard = ({
   handleDelete,
   setEditView,
   id,
+
   setIdToEdit,
+
 }) => {
   console.log(dateIssued);
   return (
@@ -38,7 +40,7 @@ const CertificateCard = ({
 
           <p className="text-sm text-textspan line-clamp-3">{description}</p>
         </div>
-
+        {isEditable?
         <div className="flex justify-end space-x-2 pt-4">
           <button
             className="flex items-center gap-1 px-4 py-2 text-sm rounded-md bg-secondary/20 border border-accent/30 text-accent hover:bg-accent/20 hover:border-accent transition-all duration-300"
@@ -59,6 +61,7 @@ const CertificateCard = ({
             Delete
           </button>
         </div>
+        :<></>}
       </div>
     </div>
   );
