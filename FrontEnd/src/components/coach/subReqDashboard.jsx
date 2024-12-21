@@ -5,6 +5,7 @@ import { SubscriptionRequestCard } from "./subscriptionRequestCard";
 import useHttp from "../../hooks/useHTTP";
 import Loader from "../Loader";
 import NoDataDashboard from "../Nodata";
+import { Toaster, toast } from "sonner";
 
 export function SubReqDashboard({ userId: user_id }) {
   const [userId, setUserId] = useState(user_id);
@@ -24,7 +25,12 @@ export function SubReqDashboard({ userId: user_id }) {
       }
       setTrigger(false);
     } catch (error) {
-      console.error(error);
+      toast.error("Error Loading Requests", {
+        style: {
+          background: "white",
+          color: "red",
+        },
+      });
     } finally {
       setLoading(false);
     }
@@ -40,6 +46,8 @@ export function SubReqDashboard({ userId: user_id }) {
   const renderComponent = () => {
     return (
       <div className="p-6 bg-gray-50 min-h-screen">
+        <Toaster />
+
         <div className="max-w-7xl mx-auto">
           {requests.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
