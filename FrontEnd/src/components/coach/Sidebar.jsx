@@ -20,6 +20,7 @@ const SideBar = ({ onSidebarClick, isEditable }) => {
     ...(isEditable ? [{ name: "Clients", label: "Clients" }] : []),
     { name: "Packages", label: "Packages" },
     { name: "Reviews", label: "Reviews" },
+    ...(isEditable ? [{ name: "Requests", label: "Requests" }] : []),
     { name: "Certificates", label: "Certificates" },
 ];
 

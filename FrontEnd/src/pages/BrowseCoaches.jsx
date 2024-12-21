@@ -54,6 +54,10 @@ const BrowseCoaches = () => {
     navigate(`${trainer_id}/packages`);
   };
 
+  const viewCoach = (trainer_id) => {
+    navigate(`/${trainer_id}/profile`);
+  };
+
   const handleRate = async (trainerId, reviewId) => {
     if (reviewId) {
       setReviewId(reviewId);
@@ -93,43 +97,49 @@ const BrowseCoaches = () => {
           <div className="flex flex-wrap justify-center gap-32">
             {coaches.map((coach) => (
               <div
-                key={coach.trainer_id}
-                className="bg-backGroundColor border-2 border-secondary p-6 rounded-2xl text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer"
-              >
-                {/* Coach Photo */}
-                <img
-                  src={coach.photo || photo} // Replace with the actual URL or path to the coach's photo
-                  alt={`${coach.first_name} ${coach.last_name}`}
-                  className="w-24 h-24 rounded-full object-cover mx-auto mb-4" // Rounded photo with specific width and height
-                />
-
-                <h3 className="text-2xl font-semibold mb-2">
-                  {coach.first_name + " " + coach.last_name}
-                </h3>
-                <div className="flex items-center justify-center space-x-2 mb-2">
-                  <FaStar className="text-yellow-500" />
-                  <p className="text-textspan">Rating: {coach.rating} / 5</p>
-                </div>
-                <p className="text-textspan mb-2">
-                  Experience: {coach.experience_years} years
-                </p>
-                <div className="flex space-x-4 justify-center mt-4">
-                  <button
-                    onClick={() => handleSubscribe(coach.trainer_id)}
-                    className="bg-backGroundColor w-32 border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
-                  >
-                    Subscribe
-                  </button>
-                  <button
-                    onClick={() =>
-                      handleRate(coach.trainer_id, coach.review_id)
-                    }
-                    className="bg-backGroundColor w-32 border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
-                  >
-                    {coach.review_id ? "Edit Rating" : "Rate"}
-                  </button>
-                </div>
+              key={coach.trainer_id}
+              className="bg-backGroundColor border-2 border-secondary p-6 rounded-2xl text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer"
+              onClick={() => viewCoach(coach.trainer_id)} // View coach when div is clicked
+            >
+              {/* Coach Photo */}
+              <img
+                src={coach.photo || photo} // Replace with the actual URL or path to the coach's photo
+                alt={`${coach.first_name} ${coach.last_name}`}
+                className="w-24 h-24 rounded-full object-cover mx-auto mb-4"
+              />
+            
+              <h3 className="text-2xl font-semibold mb-2">
+                {coach.first_name + " " + coach.last_name}
+              </h3>
+              <div className="flex items-center justify-center space-x-2 mb-2">
+                <FaStar className="text-yellow-500" />
+                <p className="text-textspan">Rating: {coach.rating} / 5</p>
               </div>
+              <p className="text-textspan mb-2">
+                Experience: {coach.experience_years} years
+              </p>
+              <div className="flex space-x-4 justify-center mt-4">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the event from bubbling to the parent div
+                    handleSubscribe(coach.trainer_id); // Local onClick function for Subscribe button
+                  }}
+                  className="bg-backGroundColor w-32 border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+                >
+                  Subscribe
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the event from bubbling to the parent div
+                    handleRate(coach.trainer_id, coach.review_id); // Local onClick function for Rate button
+                  }}
+                  className="bg-backGroundColor w-32 border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+                >
+                  {coach.review_id ? "Edit Rating" : "Rate"}
+                </button>
+              </div>
+            </div>
+            
             ))}
           </div>
           :<NoDataDashboard header=""/>}

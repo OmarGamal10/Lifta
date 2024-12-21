@@ -142,7 +142,9 @@ const CertificatesDashboard = ({ userId, isEditable }) => {
         ) : (
           <>
             {/* Grid of Certificates */}
+            {currentCertificates.length?
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              
               {currentCertificates.map((cert, index) => (
                 <CertificateCard
                   key={cert.certificate_id || index} // Use cert.certificate_id or fallback to index
@@ -156,6 +158,7 @@ const CertificatesDashboard = ({ userId, isEditable }) => {
                 />
               ))}
             </div>
+            :<NoDataDashboard header="" />}
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
