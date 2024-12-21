@@ -31,7 +31,7 @@ function WorkoutModal({
 
     loadWorkout();
   }, []);
-  const renederModal = () => (
+  return (
     <Modal
       isOpen={isModalOpen}
       onRequestClose={closeModal}
@@ -40,7 +40,7 @@ function WorkoutModal({
       ariaHideApp={false}
       appElement={document.getElementById("root")}
     >
-      <div className="relative max-w-3xl p-4 bg-textColor rounded-lg shadow-lg">
+      <div className="relative max-w-3xl max-h-[400px] p-4 bg-textColor rounded-lg shadow-lg position:absolute">
         <button
           onClick={closeModal}
           className="absolute top-2 right-1 text-gray-500 hover:text-gray-700"
@@ -48,22 +48,20 @@ function WorkoutModal({
           &times;
         </button>
         <h2 className="text-xl font-bold">{name}</h2>
-        <div className="p-4 max-h-[350px] overflow-y-auto">
-          {workout &&
-            workout.map((exercise) => (
-              <div key={exercise.exercise_id}>
-                <ExerciseListItem exercise={exercise} />
-              </div>
-            ))}
-        </div>
+        {loading ? (
+          <Loader />
+        ) : (
+          <div className="p-4 max-h-[350px] overflow-y-auto">
+            {workout &&
+              workout.map((exercise) => (
+                <div key={exercise.exercise_id}>
+                  <ExerciseListItem exercise={exercise} />
+                </div>
+              ))}
+          </div>
+        )}
       </div>
     </Modal>
-  );
-
-  return (
-    <div className="w-full">
-      {loading ? <Loader /> : renederModal()} {/* Show Loader while loading */}
-    </div>
   );
 }
 

@@ -12,6 +12,8 @@ import NoDataDashboard from "../Nodata";
 import { use } from "react";
 import Loader from "../Loader"; // Import your Loader component
 import MealModal from "./mealModal";
+import { Toaster, toast } from "sonner";
+
 function Meals({ userId }) {
   const navigate = useNavigate();
 
@@ -50,7 +52,13 @@ function Meals({ userId }) {
           setCurPage(1);
         }
       } catch (err) {
-        console.error("Error fetching meals:", err);
+        toast.error("Error Loading Meals", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+
         setMeals([]);
       } finally {
         setLoading(false);
@@ -73,10 +81,28 @@ function Meals({ userId }) {
           },
         }
       );
-      console.log(response);
       setMeals((prev) => prev.filter((meal) => meal.id !== id));
+      toast.success(" Exercise Deleted Succefully", {
+        style: {
+          background: "white",
+          color: "green",
+        },
+      });
     } catch (err) {
-      console.log(err);
+      if (err.response?.data?.error?.code === "23503")
+        toast.error("Can't Delete Meal Assigned to a Trainee", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+      else
+        toast.error("Can't Delete Meal", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
     }
   };
 
@@ -110,6 +136,8 @@ function Meals({ userId }) {
           closeModal={closeModal}
         />
       )}
+      <Toaster />
+
       <div
         className={`w-full flex flex-col min-h-screen justify-center px-12 pb-3 
          ${isModalOpen ? "opacity-50" : ""} } `}

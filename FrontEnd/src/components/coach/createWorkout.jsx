@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import Nodata from "../Nodata";
+import { Toaster, toast } from "sonner";
 
 import useHttp from "../../hooks/useHTTP";
 
@@ -142,8 +143,23 @@ function CreateWorkout() {
       setCurExerciseInfo({ sets: "", reps: "" });
       setWorkoutError("");
       setIsExerciseListOpen(false);
-      navigate("/profile");
+      toast.success("Workout Created Successfully", {
+        style: {
+          background: "white",
+          color: "green",
+        },
+      });
+
+      setTimeout(() => {
+        navigate("/profile");
+      }, 2000);
     } catch (err) {
+      toast.error("Error Occured Creating Workout", {
+        style: {
+          background: "white",
+          color: "red",
+        },
+      });
       console.log(err);
     }
   };
@@ -165,6 +181,8 @@ function CreateWorkout() {
 
   return exercises && exercises.length ? (
     <>
+      {" "}
+      <Toaster />
       <div
         className="bg-textColor flex min-h-screen justify-center px-12 py-3 relative"
         onClick={handlePageClick}

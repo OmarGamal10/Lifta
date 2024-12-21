@@ -190,6 +190,7 @@ const UserProfile = ({ userId }) => {
     } else {
       switch (activeSection) {
         case "Trainees":
+
           return (
             <PrimeReactProvider value={{ pt: Tailwind }}>
               <TraineesList />
@@ -207,6 +208,7 @@ const UserProfile = ({ userId }) => {
               <AdminsList />
             </PrimeReactProvider>
           );
+
         case "Statistics":
           return <AdminStatistics />;
         case "Add User":

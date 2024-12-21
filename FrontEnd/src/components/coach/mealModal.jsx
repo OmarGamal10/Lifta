@@ -25,7 +25,7 @@ function MealModal({ name, mealId, isModalOpen, closeModal }) {
     loadMeal();
   }, []);
 
-  const renederModal = () => (
+  return (
     <Modal
       isOpen={isModalOpen}
       onRequestClose={closeModal}
@@ -34,7 +34,7 @@ function MealModal({ name, mealId, isModalOpen, closeModal }) {
       ariaHideApp={false}
       appElement={document.getElementById("root")}
     >
-      <div className="relative max-w-3xl p-4 bg-textColor rounded-lg shadow-lg">
+      <div className="relative max-w-3xl max-h-[400px] p-4 bg-textColor rounded-lg shadow-lg">
         <button
           onClick={closeModal}
           className="absolute top-2 right-1 text-gray-500 hover:text-gray-700"
@@ -42,26 +42,24 @@ function MealModal({ name, mealId, isModalOpen, closeModal }) {
           &times;
         </button>
         <h2 className="text-xl pr-2 font-bold">{name}</h2>
-        <div className="p-4 max-h-[350px] overflow-y-auto">
-          {meal?.map(
-            (ingredient) => (
-              console.log(ingredient),
-              (
-                <div key={ingredient.ingredient_id}>
-                  <IngredientListItem ingredient={ingredient} />
-                </div>
+        {loading ? (
+          <Loader />
+        ) : (
+          <div className="p-4 max-h-[350px] overflow-y-auto">
+            {meal?.map(
+              (ingredient) => (
+                console.log(ingredient),
+                (
+                  <div key={ingredient.ingredient_id}>
+                    <IngredientListItem ingredient={ingredient} />
+                  </div>
+                )
               )
-            )
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </Modal>
-  );
-
-  return (
-    <div className="w-full">
-      {loading ? <Loader /> : renederModal()} {/* Show Loader while loading */}
-    </div>
   );
 }
 
