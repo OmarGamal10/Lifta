@@ -5,7 +5,9 @@ import Loader from "../Loader"; // Import your Loader component
 import { Paginator } from "primereact/paginator";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
+
 import photo from "../../assets/user-icon-on-transparent-background-free-png.webp";
+
 const Clients = ({ userId }) => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading
@@ -20,6 +22,7 @@ const Clients = ({ userId }) => {
 
   const { get } = useHttp("http://localhost:3000");
   const { patch } = useHttp("http://localhost:3000");
+
   useEffect(() => {
     const loadClients = async () => {
       setLoading(true); // Show loader when API call starts
@@ -73,14 +76,14 @@ const Clients = ({ userId }) => {
   };
 
   const onPageChange = (event) => {
-    const newPage = event.page + 1; // PrimeReact uses zero-based page indexing
-    setCurrentPage(newPage);
+    setCurrentPage(event.page + 1); // PrimeReact uses zero-based page indexing
   };
 
   const renderClients = () => {
     if (clients.length === 0) {
       return <NoDataDashboard header="Clients Section" />;
     }
+
     const openModal = (clientId, type) => {
       setSelectedClient({
         clientId,
@@ -109,7 +112,6 @@ const Clients = ({ userId }) => {
         state: { clientId: selectedClient.clientId, userId },
       });
       closeModal();
-      closeModal();
     };
 
     return (
@@ -118,10 +120,10 @@ const Clients = ({ userId }) => {
           isOpen={isModalOpen}
           onRequestClose={closeModal}
           className="fixed inset-0 flex items-center justify-center z-50"
-          overlayClassName="fixed inset-0 "
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
           contentLabel="Assign Options"
         >
-          <div className="relative  p-6 rounded-lg shadow-lg w-80 text-center bg-textColor bg-opacity-50">
+          <div className="relative p-6 rounded-lg shadow-lg w-80 text-center bg-textColor bg-opacity-50 ">
             <button
               onClick={closeModal}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
@@ -193,7 +195,9 @@ const Clients = ({ userId }) => {
                   </button>
                   <button
                     onClick={(e) => {
-                      e.stopPropagation();
+
+                      e.stopPropagation(); // Prevents the parent div's onClick from firing
+
                       openModal(client.trainee_id, client.type);
                     }}
                     className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
@@ -204,15 +208,39 @@ const Clients = ({ userId }) => {
               </div>
             ))}
           </div>
-          <div className="">
+          <div className="mt-4">
             <Paginator
-              className="space-x-6"
               first={indexOfFirstClient}
               rows={clientsPerPage}
               totalRecords={clients.length}
               onPageChange={onPageChange}
               template={{
                 layout: "PrevPageLink CurrentPageReport NextPageLink",
+                PrevPageLink: (options) => (
+                  <button
+                    type="button"
+                    className={`p-paginator-prev p-paginator-element p-link ${options.className}`}
+                    onClick={options.onClick}
+                    disabled={options.disabled}
+                  >
+                    <span className="p-paginator-icon pi pi-angle-left"></span>
+                  </button>
+                ),
+                NextPageLink: (options) => (
+                  <button
+                    type="button"
+                    className={`p-paginator-next p-paginator-element p-link ${options.className}`}
+                    onClick={options.onClick}
+                    disabled={options.disabled}
+                  >
+                    <span className="p-paginator-icon pi pi-angle-right"></span>
+                  </button>
+                ),
+                CurrentPageReport: (options) => (
+                  <span className="p-paginator-current">
+                    {options.first} - {options.last} of {options.totalRecords}
+                  </span>
+                ),
               }}
             />
           </div>
