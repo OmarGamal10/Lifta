@@ -145,48 +145,48 @@ const Clients = ({ userId }) => {
           <div className="flex flex-wrap gap-6 justify-center">
             {currentClients.map((client) => (
               <div
-                key={`${client.package_id}_${client.trainee_id}`}
-                onClick={() => viewClient(client.trainee_id)}
-                className="bg-backGroundColor border-2 border-secondary p-6 rounded-lg text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer flex flex-col"
-              >
-                {/* Client Photo */}
-                <img
-                  src={`${
-                    client.photo ? client.photo : photo
-                  }`} // Replace with the actual path to the client's photo if available
-                  alt={client.name}
-                  className="w-24 h-24 rounded-full mx-auto object-cover mb-4"
-                />
-
-                <h3 className="text-2xl font-semibold mb-2">
-                  {client.first_name + " " + client.last_name}
-                </h3>
-                <p className="text-textspan mb-2">{client.name}</p>
-
-                {/* Push buttons to the end */}
-                <div className="flex-grow"></div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-wrap gap-4 mt-4">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevents the parent div's onClick from firing
-                      handleRemove(client.trainee_id, client.package_id);
-                    }}
-                    className="bg-backGroundColor border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
-                  >
-                    Remove
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      openModal(client.trainee_id);
-                    }}
-                    className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
-                  >
-                    Assign
-                  </button>
-                </div>
+              key={`${client.package_id}_${client.trainee_id}`}
+              onClick={() => viewClient(client.trainee_id)} // View client when div is clicked
+              className="bg-backGroundColor border-2 border-secondary p-6 rounded-lg text-center transition-transform duration-300 hover:scale-110 hover:border-primary cursor-pointer flex flex-col"
+            >
+              {/* Client Photo */}
+              <img
+                src={`${client.photo ? client.photo : photo}`} // Replace with the actual path to the client's photo if available
+                alt={client.name}
+                className="w-24 h-24 rounded-full mx-auto object-cover mb-4"
+              />
+            
+              <h3 className="text-2xl font-semibold mb-2">
+                {client.first_name + " " + client.last_name}
+              </h3>
+              <p className="text-textspan mb-2">{client.name}</p>
+            
+              {/* Push buttons to the end */}
+              <div className="flex-grow"></div>
+            
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-4 mt-4">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents the parent div's onClick from firing
+                    handleRemove(client.trainee_id, client.package_id); // Local onClick function for Remove button
+                  }}
+                  className="bg-backGroundColor border border-primary text-textColor py-3 px-4 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+                >
+                  Remove
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevents the parent div's onClick from firing
+                    openModal(client.trainee_id); // Local onClick function for Assign button
+                  }}
+                  className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
+                >
+                  Assign
+                </button>
               </div>
+            </div>
+            
             ))}
           </div>
           <div className="">
