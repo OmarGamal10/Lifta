@@ -30,8 +30,8 @@ import { AdminsList } from "./admin/adminsList";
 import { AdminStatistics } from "./admin/adminStatistics";
 import SignUpForm from "./signUpForm";
 import { CoachReviewDashboard } from "./coach/coachReviewDashboard";
-import {TraineeReviewDashboard} from "./trainee/traineeReviewDashboard"
-import CertificatesDashboard from './coach/Certificatesdashboard'
+import { TraineeReviewDashboard } from "./trainee/traineeReviewDashboard";
+import CertificatesDashboard from "./coach/Certificatesdashboard";
 import NutritionHistory from "./trainee/NutritionHistory";
 import WorkoutHistory from "./trainee/WorkoutHistory";
 import Memberships from "./trainee/Memberships";
@@ -103,6 +103,28 @@ const UserProfile = ({ userId }) => {
     }
   };
 
+  const components = {
+    "My Profile": <MyProfile userId={userId} userProfile={userProfile} />,
+    Clients: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <Clients userId={userId} />
+      </PrimeReactProvider>
+    ),
+    Packages: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <PackageDashboard />
+      </PrimeReactProvider>
+    ),
+    Requests: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <SubReqDashboard user_id={userId} />
+      </PrimeReactProvider>
+    ),
+    Workouts: <TraineeCurrentWrokout userId={userId} />,
+    Nutrition: <TraineeCurrentMeals userId={userId} />,
+    Default: <NoDataDashboard header={activeSection + " Section"} />,
+  };
+
   // Components to render based on the active section
   const renderComponent = () => {
     if (userType == "Trainee") {
@@ -147,11 +169,19 @@ const UserProfile = ({ userId }) => {
           </PrimeReactProvider>
         );
         case "Reviews":
-          return <CoachReviewDashboard userId={userId} isEditable={isEditable}/>;
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <CoachReviewDashboard userId={userId} isEditable={isEditable}/>
+            </PrimeReactProvider>
+          );
         case "Requests":
-          return isEditable?<SubReqDashboard userId={userId} />:<></>;
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              isEditable?<SubReqDashboard userId={userId} />:<></>
+            </PrimeReactProvider>
+          );
         case "Certificates":
-          return <CertificatesDashboard userId={userId} isEditable={isEditable} />;
+          return <CertificatesDashboard userId={userId} isEditable={true} />;
 
 
         default:
@@ -160,20 +190,42 @@ const UserProfile = ({ userId }) => {
     } else {
       switch (activeSection) {
         case "Trainees":
-          return <TraineesList />;
-        case "Coaches": 
-          return <CoachesList />;
-        case "Admins": 
-          return <AdminsList />;
-        case "Statistics": 
+
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <TraineesList />
+            </PrimeReactProvider>
+          );
+        case "Coaches":
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <CoachesList />
+            </PrimeReactProvider>
+          );
+        case "Admins":
+          return (
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <AdminsList />
+            </PrimeReactProvider>
+          );
+
+        case "Statistics":
           return <AdminStatistics />;
-        case "Add User": 
+        case "Add User":
           return <SignUpForm isAdmin={1} />;
         default:
-          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
+          return (
+            <MyProfile
+              userId={userId}
+              userProfile={userProfile}
+              setUserName={setUserName}
+              setUserBio={setUserBio}
+              setUserProfile={setUserProfile}
+            />
+          );
+      }
     }
   };
-}
 
   return (
     <div className="w-full">
@@ -196,9 +248,9 @@ const UserProfile = ({ userId }) => {
             {renderSideBar()}
             <div className="bg-textspan w-[0.5px] h-auto ml-0"></div>
             {/* Vertical Divider */}
-            <div className="w-full">
+            <div className="w-full overflow-scroll">
               {/* Render Active Component */}
-              <div className="flex justify-center items-center mr-4">
+              <div className="flex items-center">
                 {renderComponent()}
               </div>
             </div>

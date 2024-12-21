@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import useHttp from "../../hooks/useHTTP";
 import { TraineeReviewCard } from "./traineeReviewCard";
 import NoDataDashboard from "../Nodata";
+import { jwtDecode } from "jwt-decode";
+import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 
 export function TraineeReviewDashboard(props) {
   const { get, patch, error, data } = useHttp("http://localhost:3000");

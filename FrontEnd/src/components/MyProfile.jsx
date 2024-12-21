@@ -5,6 +5,7 @@ import handleImages from "../freqUsedFuncs/handleImages";
 import { jwtDecode } from "jwt-decode";
 import useHttp from "../hooks/useHTTP";
 import { Loader, Eye, EyeOff } from "lucide-react";
+import { ToastContainer, toast } from 'react-toastify';
 import photo from "../assets/user-icon-on-transparent-background-free-png.webp";
 const MyProfile = ({
   userId,
@@ -197,14 +198,15 @@ const MyProfile = ({
       setUserBio(response.user.bio);
       setUserName(response.user.first_name + " " + response.user.last_name);
       setUserProfile(response.user.photo);
-        setFormData((prev) => ({
-          ...prev,
-          ...response.user,
-        }));
-        setProfileData((prev) => ({
-          ...prev,
-          ...response.user,
-        }));
+      setFormData((prev) => ({
+        ...prev,
+        ...response.user,
+      }));
+      setProfileData((prev) => ({
+        ...prev,
+        ...response.user,
+      }));
+      toast("Information updated successfully");
     } catch (error) {
       console.log("aaaa", error);
       if (error.response.data.message === "Please enter a valid Email") {
@@ -694,6 +696,7 @@ const MyProfile = ({
             onClick={handleSubmit}
           >
             Save
+            <ToastContainer />
           </button>
         </div>
       )}

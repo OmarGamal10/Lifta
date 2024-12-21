@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "primereact/button";
 import useHttp from "../../hooks/useHTTP";
+import { Toaster, toast } from "sonner";
 
 export function SubscriptionRequestCard(probs) {
   const { get, patch, error, data } = useHttp("http://localhost:3000");
@@ -11,8 +12,35 @@ export function SubscriptionRequestCard(probs) {
         status,
       });
       probs.setTrigger(true);
-      console.log(response);
+      if (status)
+        toast.success("Request Accepted", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
+      else
+        toast.success("Request Rejected", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
     } catch (error) {
+      if (status)
+        toast.error("Can't Accept Request", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+      else
+        toast.error("Can't Reject Request", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
       console.error(error);
     }
   };

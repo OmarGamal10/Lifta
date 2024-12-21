@@ -12,6 +12,8 @@ import NoDataDashboard from "../Nodata";
 import { use } from "react";
 import Loader from "../Loader"; // Import your Loader component
 import WorkoutModal from "./workoutModal";
+import { Toaster, toast } from "sonner";
+
 function Workouts({ userId }) {
   const navigate = useNavigate();
 
@@ -49,7 +51,12 @@ function Workouts({ userId }) {
           setCurPage(1);
         }
       } catch (err) {
-        console.error("Error fetching workouts:", err);
+        toast.error("Error Loading Workouts", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
         setWorkouts([]);
       } finally {
         setLoading(false);
@@ -74,8 +81,27 @@ function Workouts({ userId }) {
       );
       console.log(response);
       setWorkouts((prev) => prev.filter((workout) => workout.id !== id));
+      toast.success(" Exercise Deleted Succefully", {
+        style: {
+          background: "white",
+          color: "green",
+        },
+      });
     } catch (err) {
-      console.log(err);
+      if (err.response?.data?.error?.code === "23503")
+        toast.error("Can't Delete Workout Assigned to a Trainee", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+      else
+        toast.error("Can't Delete Workout", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
     }
   };
 
@@ -101,6 +127,8 @@ function Workouts({ userId }) {
   const renderWorkouts = () => {
     return (
       <>
+        <Toaster />
+
         {isModalOpen && (
           <WorkoutModal
             isModalOpen={isModalOpen}

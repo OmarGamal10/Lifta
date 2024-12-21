@@ -10,6 +10,7 @@ import handleImages from "../../freqUsedFuncs/handleImages";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import Nodata from "../Nodata";
 import useHttp from "../../hooks/useHTTP";
+import { Toaster, toast } from "sonner";
 
 function CreateMeal() {
   const navigate = useNavigate();
@@ -207,10 +208,23 @@ function CreateMeal() {
           },
         }
       );
-      console.log(response);
-      navigate("/profile");
+      toast.success("Meal Created Successfully", {
+        style: {
+          background: "white",
+          color: "green",
+        },
+      });
+
+      setTimeout(() => {
+        navigate("/profile");
+      }, 2000);
     } catch (err) {
-      console.log(err);
+      toast.error("Error Occured Creating Meal", {
+        style: {
+          background: "white",
+          color: "red",
+        },
+      });
     }
   };
 
@@ -231,6 +245,8 @@ function CreateMeal() {
 
   return ingredients && ingredients.length ? (
     <>
+      {" "}
+      <Toaster />
       <div
         className="bg-textColor flex min-h-screen justify-center px-12 py-3 relative"
         onClick={handlePageClick}
