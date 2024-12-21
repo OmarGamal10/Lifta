@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import useHttp from "../../hooks/useHTTP";
+import { Toaster, toast } from "sonner";
 function PackageForm({
   userId,
   edit = false,
@@ -136,10 +137,22 @@ function PackageForm({
             is_active: response.data.package.is_active,
           },
         ]);
+        toast.success("Package Added Successfully", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
         setView(false);
       } catch (err) {
-        console.log(err);
-        setErrors({ submit: err.response.data.message });
+        toast.error("Error Adding Package", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+
+        setErrors({ submit: err.response?.data?.message });
       }
     } else {
       try {
@@ -170,11 +183,21 @@ function PackageForm({
               : pkg
           )
         );
-
+        toast.success("Package Updated Successfully", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
         setView(false);
       } catch (err) {
-        console.log(err.response.data.message);
-        setErrors({ submit: err.response.data.message });
+        setErrors({ submit: err.response?.data?.message });
+        toast.error("Error Updating Package", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
       }
     }
   };

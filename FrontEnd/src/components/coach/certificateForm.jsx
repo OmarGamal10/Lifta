@@ -29,7 +29,7 @@ function CertForm({ formData, setFormData, setViewCert }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {};
-    
+
     Object.keys(formData).forEach((key) => {
       if (!formData[key]) {
         newErrors[key] = `${key.replace(/([A-Z])/g, " $1")} is required.`;
@@ -77,7 +77,6 @@ function CertForm({ formData, setFormData, setViewCert }) {
       dateIssued: "",
       description: "",
       photo: "",
-      
     });
     setViewCert(false);
   };
@@ -107,7 +106,7 @@ function CertForm({ formData, setFormData, setViewCert }) {
             className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
             type="text"
             placeholder="Enter certificate title"
-            maxLength="15"
+            maxLength="30"
             onChange={handleChange}
             value={formData.title}
             autoComplete="off"
