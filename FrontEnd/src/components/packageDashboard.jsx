@@ -112,22 +112,28 @@ export function PackageDashboard() {
   return (
     <div className="container mx-auto p-12">
       <div className="grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-16 w-full">
-        {packages.map((pack) => (
-          <PackageCard
-            key={pack.package_id}
-            packageId={pack.package_id}
-            name={pack.name}
-            description={pack.description}
-            price={pack.price}
-            duration={pack.duration}
-            view={who} // hardcoded
-            type={pack.type}
-            hasGymSub={hasGymSub}
-            hasNutSub={hasNutSub}
-            isActive={true} // hardcoded
-            className="h-full" // Ensures cards have equal height
-          />
-        ))}
+        {console.log(packages)}
+        {packages.map((pack) =>
+          
+          pack.is_active || who == 0? (
+            <PackageCard
+              key={pack.package_id}
+              packageId={pack.package_id}
+              name={pack.name}
+              description={pack.description}
+              price={pack.price}
+              duration={pack.duration}
+              view={who} // hardcoded
+              type={pack.type}
+              hasGymSub={hasGymSub}
+              hasNutSub={hasNutSub}
+              isActive={pack.is_active} // hardcoded
+              className="h-full" // Ensures cards have equal height
+            />
+          ) : (
+            <></>
+          )
+        )}
       </div>
       {packages.length === 0 && <NoDataDashboard header="Packages Available" />}
     </div>

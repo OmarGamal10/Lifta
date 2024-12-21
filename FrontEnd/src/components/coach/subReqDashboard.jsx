@@ -6,8 +6,7 @@ import useHttp from "../../hooks/useHTTP";
 import Loader from "../Loader"
 import NoDataDashboard from "../Nodata";
 
-export function SubReqDashboard({user_id}) {
-  const [userId, setUserId] = useState(user_id);
+export function SubReqDashboard({userId}) {
   const [requests, setRequests] = useState([]);
   const [trigger, setTrigger] = useState(false);
   const { get, error } = useHttp("http://localhost:3000");
@@ -17,7 +16,7 @@ export function SubReqDashboard({user_id}) {
     try {
       const response = await get(`/subscriptions/trainer/pending/${userId}`, {
         headers: { "Cache-Control": "no-cache" },
-      }); //70 is the coach id from cookie lmfrod httzbt ba3d man-reach el page de mel profile
+      }); 
       if (response && response.data) {
         setRequests(response.data.subscriptions);
       }
