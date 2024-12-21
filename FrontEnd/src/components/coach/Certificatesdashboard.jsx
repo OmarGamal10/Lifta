@@ -101,7 +101,6 @@ const CertificatesDashboard = ({ userId, isEditable }) => {
       setLoading(true);
       const response = await get(`/users/${userId}/certificates`);
       setCertificates(response.data.certificate);
-      console.log("a7a", response.data.certificate);
       setError("");
     } catch (err) {
       setError("Failed to fetch certificates. Please try again later.");
