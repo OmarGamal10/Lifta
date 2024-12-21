@@ -8,6 +8,7 @@ import Loader from "./components/Loader";
 const BrowseProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [isBanned, setIsBanned] = useState(null);
   const [userType, setUserType] = useState(null);
   const { coach_id } = useParams();
   const navigate = useNavigate();
@@ -20,7 +21,8 @@ const BrowseProtectedRoute = ({ children }) => {
         // Assuming response.body has these values
         setIsAuthenticated(true);
         setUserType(response.userType);
-        setUserId(response.userId)
+        setUserId(response.userId);
+        setIsBanned(response.is_banned);
       } catch (err) {
         console.error(err);
         setIsAuthenticated(false); // Set as unauthenticated on error
@@ -38,6 +40,11 @@ const BrowseProtectedRoute = ({ children }) => {
   if(isAuthenticated === false) 
     return <Navigate to="/log-in" replace />;
 
+    if(isBanned) {
+      return <Navigate to="/banned" />;
+    }
+  
+    
   if(coach_id) {
     console.log("hi", coach_id);
     return React.cloneElement(children, { userId: coach_id });

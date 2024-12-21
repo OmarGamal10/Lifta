@@ -5,6 +5,7 @@ import Loader from "./components/Loader";
 
 const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isBanned, setIsBanned] = useState(null);
   const [userId, setUserId] = useState(null);
   const [userType, setUserType] = useState(null);
 
@@ -18,6 +19,7 @@ const ProtectedRoute = ({ children }) => {
         // Assuming response.body has these values
         setIsAuthenticated(true);
         setUserId(response.userId);
+        setIsBanned(response.is_banned);
       } catch (err) {
         console.error(err);
         setIsAuthenticated(false); // Set as unauthenticated on error
@@ -34,6 +36,10 @@ const ProtectedRoute = ({ children }) => {
 
   if (isAuthenticated === false) {
     return <Navigate to="/log-in" />;
+  }
+
+  if(isBanned) {
+    return <Navigate to="/banned" />;
   }
 
   // If authenticated, render children
