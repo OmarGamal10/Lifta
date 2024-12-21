@@ -3,10 +3,10 @@ import "../output.css";
 import { useState, useEffect } from "react";
 import { SubscriptionRequestCard } from "./subscriptionRequestCard";
 import useHttp from "../../hooks/useHTTP";
-import Loader from "../Loader"
+import Loader from "../Loader";
 import NoDataDashboard from "../Nodata";
 
-export function SubReqDashboard({user_id}) {
+export function SubReqDashboard({ user_id }) {
   const [userId, setUserId] = useState(user_id);
   const [requests, setRequests] = useState([]);
   const [trigger, setTrigger] = useState(false);
@@ -15,6 +15,7 @@ export function SubReqDashboard({user_id}) {
 
   const fetchRequests = async () => {
     try {
+      console.log(userId);
       const response = await get(`/subscriptions/trainer/pending/${userId}`, {
         headers: { "Cache-Control": "no-cache" },
       }); //70 is the coach id from cookie lmfrod httzbt ba3d man-reach el page de mel profile
@@ -59,16 +60,15 @@ export function SubReqDashboard({user_id}) {
                 </div>
               ))}
             </div>
-          ) : <NoDataDashboard header="Subscription Requests" />
-          }
+          ) : (
+            <NoDataDashboard header="Subscription Requests" />
+          )}
         </div>
       </div>
     );
-  }
-  
+  };
+
   return (
-    <div className="w-full">
-    {loading ? <Loader /> : renderComponent()}
-    </div>
-  )
+    <div className="w-full">{loading ? <Loader /> : renderComponent()}</div>
+  );
 }

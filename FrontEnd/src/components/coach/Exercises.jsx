@@ -46,7 +46,12 @@ function Exercises({ userId }) {
           setCurPage(1);
         }
       } catch (err) {
-        console.error("Error fetching exercises:", err);
+        toast.error("Error Loading Exercises", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
         setExercises([]);
       } finally {
         setLoading(false); // Hide loader after API call finishes
@@ -79,7 +84,7 @@ function Exercises({ userId }) {
       });
       // Remove the deleted exercise from the state
     } catch (err) {
-      if (err.response.data.error.code === "23503")
+      if (err.response?.data?.error?.code === "23503")
         toast.error("Can't Delete Exercise Assigned to a Workout", {
           style: {
             background: "white",

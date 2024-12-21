@@ -30,8 +30,8 @@ import { AdminsList } from "./admin/adminsList";
 import { AdminStatistics } from "./admin/adminStatistics";
 import SignUpForm from "./signUpForm";
 import { CoachReviewDashboard } from "./coach/coachReviewDashboard";
-import {TraineeReviewDashboard} from "./trainee/traineeReviewDashboard"
-import CertificatesDashboard from './coach/Certificatesdashboard'
+import { TraineeReviewDashboard } from "./trainee/traineeReviewDashboard";
+import CertificatesDashboard from "./coach/Certificatesdashboard";
 import NutritionHistory from "./trainee/NutritionHistory";
 import WorkoutHistory from "./trainee/WorkoutHistory";
 import Memberships from "./trainee/Memberships";
@@ -96,22 +96,30 @@ const UserProfile = ({ userId }) => {
       switch (activeSection) {
         case "Workouts":
           return <TraineeCurrentWrokout userId={userId} />;
-        case "Nutrition": 
+        case "Nutrition":
           return <TraineeCurrentMeals userId={userId} />;
-        case "Memberships": 
+        case "Memberships":
           return <Memberships userId={userId} />;
-        case "Workout history": 
+        case "Workout history":
           return <WorkoutHistory userId={userId} />;
-        case "Nutrition History": 
+        case "Nutrition History":
           return <NutritionHistory userId={userId} />;
-        case "Reviews": 
+        case "Reviews":
           return (
-            <PrimeReactProvider value={{pt: Tailwind}}>
-          <TraineeReviewDashboard userId={userId} />
-          </PrimeReactProvider>
-          )
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <TraineeReviewDashboard userId={userId} />
+            </PrimeReactProvider>
+          );
         default:
-          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
+          return (
+            <MyProfile
+              userId={userId}
+              userProfile={userProfile}
+              setUserName={setUserName}
+              setUserBio={setUserBio}
+              setUserProfile={setUserProfile}
+            />
+          );
       }
     } else if (userType == "Trainer") {
       switch (activeSection) {
@@ -127,10 +135,10 @@ const UserProfile = ({ userId }) => {
           return <Clients userId={userId} />;
         case "Packages":
           return (
-          <PrimeReactProvider value={{ pt: Tailwind }}>
-            <Packages userId={userId} />
-          </PrimeReactProvider>
-        );
+            <PrimeReactProvider value={{ pt: Tailwind }}>
+              <Packages userId={userId} />
+            </PrimeReactProvider>
+          );
         case "Reviews":
           return <CoachReviewDashboard userId={userId} />;
         case "Requests":
@@ -138,27 +146,42 @@ const UserProfile = ({ userId }) => {
         case "Certificates":
           return <CertificatesDashboard userId={userId} isEditable={true} />;
 
-
         default:
-          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
+          return (
+            <MyProfile
+              userId={userId}
+              userProfile={userProfile}
+              setUserName={setUserName}
+              setUserBio={setUserBio}
+              setUserProfile={setUserProfile}
+            />
+          );
       }
     } else {
       switch (activeSection) {
         case "Trainees":
           return <TraineesList />;
-        case "Coaches": 
+        case "Coaches":
           return <CoachesList />;
-        case "Admins": 
+        case "Admins":
           return <AdminsList />;
-        case "Statistics": 
+        case "Statistics":
           return <AdminStatistics />;
-        case "Add User": 
+        case "Add User":
           return <SignUpForm isAdmin={1} />;
         default:
-          return <MyProfile userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
+          return (
+            <MyProfile
+              userId={userId}
+              userProfile={userProfile}
+              setUserName={setUserName}
+              setUserBio={setUserBio}
+              setUserProfile={setUserProfile}
+            />
+          );
+      }
     }
   };
-}
 
   return (
     <div className="w-full">

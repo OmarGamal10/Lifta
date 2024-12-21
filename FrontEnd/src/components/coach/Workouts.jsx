@@ -51,7 +51,12 @@ function Workouts({ userId }) {
           setCurPage(1);
         }
       } catch (err) {
-        console.error("Error fetching workouts:", err);
+        toast.error("Error Loading Workouts", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
         setWorkouts([]);
       } finally {
         setLoading(false);
@@ -83,7 +88,7 @@ function Workouts({ userId }) {
         },
       });
     } catch (err) {
-      if (err.response.data.error.code === "23503")
+      if (err.response?.data?.error?.code === "23503")
         toast.error("Can't Delete Workout Assigned to a Trainee", {
           style: {
             background: "white",
