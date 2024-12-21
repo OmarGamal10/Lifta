@@ -24,13 +24,19 @@ function Workout({ id, name, note, view, handleDelete }) {
         <div className="flex flex-row justify-center gap-16">
           <button
             className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               handleDelete(id);
             }}
           >
             <FaRegTrashAlt size={20} />
           </button>
-          <button className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor">
+          <button
+            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor "
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
             <CiEdit size={20} />
           </button>
         </div>

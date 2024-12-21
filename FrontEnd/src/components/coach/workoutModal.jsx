@@ -72,7 +72,9 @@ const ExerciseListItem = ({ exercise }) => {
   return (
     <div className="rounded-lg bg-white p-4 shadow-md hover:shadow-lg transition-shadow mb-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-800">{exercise.name}</h3>
+        <h3 className="text-lg font-semibold pr-10 text-gray-800">
+          {exercise.name}
+        </h3>
         <div className="flex gap-4">
           <div className="flex items-center">
             <span className="text-sm font-medium text-gray-600">Sets:</span>
