@@ -76,3 +76,7 @@
     --toastify-color-progress-warning: var(--toastify-color-warning);
     --toastify-color-progress-error: var(--toastify-color-error);
   }
+
+  .Toastify__toast-container {
+    z-index: 1050; /* Set higher than your dialog */
+  }

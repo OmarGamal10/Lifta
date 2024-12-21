@@ -13,6 +13,7 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { Rating } from "primereact/rating";
+import { ToastContainer, toast } from "react-toastify";
 
 export function ReviewModalForm(probs) {
   const ref = useRef();
@@ -59,7 +60,7 @@ export function ReviewModalForm(probs) {
     const content = formData.content;
 
     if (probs.isEdit) {
-      const reviewId = probs.reviewId;
+      // const reviewId = probs.reviewId;
       try {
         const response = await patch(
           `/reviews/${probs.reviewId}`,
@@ -73,12 +74,21 @@ export function ReviewModalForm(probs) {
             },
           }
         );
-        console.log(response);
+        console.log("response");
+        toast.success("Rating updated successfully", {
+          theme: "dark",
+          position: "bottom-right",
+          autoClose: 2500,
+          hideProgressBar: true,
+          draggable: true,
+        });
       } catch (err) {
         console.log(err);
+        toast.error(err, {
+          theme: "dark",
+        });
       }
-    }
-    else {
+    } else {
       const trainerId = probs.trainerId;
       const traineeId = userId;
       try {
@@ -97,8 +107,18 @@ export function ReviewModalForm(probs) {
           }
         );
         console.log(response);
+        toast.success("Thanks for your review!", {
+          theme: "dark",
+          position: "bottom-right",
+          autoClose: 2500,
+          hideProgressBar: true,
+          draggable: true,
+        });
       } catch (err) {
         console.log(err);
+        toast.error(err, {
+          theme: "dark",
+        });
       }
     }
     setFormData({ content: "" });
@@ -109,57 +129,56 @@ export function ReviewModalForm(probs) {
   useEffect(() => {
     if (probs.isEdit) {
       setFormData({ content: probs.content });
-      setStars(probs.stars);      
+      setStars(probs.stars);
     }
   }, [probs]);
 
   return (
-    
-      <div className="p-6 rounded-lg w-full max-w-md bg-textColor text-backGroundColor">
-        <form
-          // onSubmit={handleSubmit}
-          className=" py-6 px-10 w-full"
-          autoComplete="off" // Disable autocomplete globally
-        >
-          <div className="mb-4">
-            <h6 className="text-xs text-left text-backGroundColor mb-2">
-              Content
-            </h6>
-            <textarea
-              id="content"
-              name="content"
-              className="border px-4 w-full h-32 rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left resize-none"
-              placeholder="Give your review"
-              maxLength="250"
-              onChange={handleChange}
-              value={formData.content}
-              autoComplete="off"
-            ></textarea>
-            {errors.content && <ErrorMessage error={errors.content} />}
-          </div>
-          <div className="">
-            <Rating
-              value={stars}
-              onChange={(e) => setStars(e.value)}
-              className="text-secondary"
-              pt={{
-                item: { style: { color: "#e6bd09", fontSize: "32px" } }, // Applies to each star
-                cancelIcon: { style: { color: "gray" } }, // Applies to the cancel icon, if enabled
-                onIcon: { style: { color: "#e6bd09" } }, // Applies to selected stars
-                offIcon: { style: { color: "gray" } }, // Applies to unselected stars
-              }}
-            />
-          </div>
-        <div className="w-1/2 mt-10">      
-            <button
-              type="submit"
-              className=" border-secondary w-full text-secondary text-sm rounded-xl py-4 border-2 hover:bg-secondary hover:text-textColor font-medium  active:ring active:ring-secondary/50"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
+    <div className="p-6 rounded-lg w-full max-w-md bg-textColor text-backGroundColor">
+      <form
+        // onSubmit={handleSubmit}
+        className=" py-6 px-10 w-full"
+        autoComplete="off" // Disable autocomplete globally
+      >
+        <div className="mb-4">
+          <h6 className="text-xs text-left text-backGroundColor mb-2">
+            Content
+          </h6>
+          <textarea
+            id="content"
+            name="content"
+            className="border px-4 w-full h-32 rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left resize-none"
+            placeholder="Give your review"
+            maxLength="250"
+            onChange={handleChange}
+            value={formData.content}
+            autoComplete="off"
+          ></textarea>
+          {errors.content && <ErrorMessage error={errors.content} />}
+        </div>
+        <div className="">
+          <Rating
+            value={stars}
+            onChange={(e) => setStars(e.value)}
+            className="text-secondary"
+            pt={{
+              item: { style: { color: "#e6bd09", fontSize: "32px" } }, // Applies to each star
+              cancelIcon: { style: { color: "gray" } }, // Applies to the cancel icon, if enabled
+              onIcon: { style: { color: "#e6bd09" } }, // Applies to selected stars
+              offIcon: { style: { color: "gray" } }, // Applies to unselected stars
+            }}
+          />
+        </div>
+        <div className="w-1/2 mt-10">
+          <button
+            type="submit"
+            className=" border-secondary w-full text-secondary text-sm rounded-xl py-4 border-2 hover:bg-secondary hover:text-textColor font-medium  active:ring active:ring-secondary/50"
+            onClick={handleSubmit}
+          >
+            {probs.isEdit ? "Save" : "Submit"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
