@@ -1,7 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const exerciseModel = require("../models/exerciseModel");
-
+const validator = require("validator");
 const getExercisesCoach = async (req, res, next) => {
   const { coachId } = req.params;
   if (!coachId || isNaN(coachId)) {
@@ -48,27 +48,127 @@ const getExercisesWorkout = async (req, res, next) => {
 const createExercise = async (req, res, next) => {
   const { name, muscle_group, gif, description, trainer_id } = req.body;
 
-  const exercise = await exerciseModel.createExercise(
-    trainer_id,
-    name,
-    muscle_group,
-    description,
-    gif
-  );
-  res.status(201).json({
-    status: "success",
-    data: {
-      exercise,
-    },
-  });
-};
+  if (
+    !name ||
+    name.trim().length < 3 ||
+    name.trim().length > 30 ||
+    !validator.isAlpha(name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Exercise name should contain only letters and be 3-30 characters",
+        400
+      )
+    );
+  }
 
+  if (
+    !muscle_group ||
+    muscle_group.trim().length < 3 ||
+    muscle_group.trim().length > 15 ||
+    !validator.isAlpha(muscle_group.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Muscle Group should contain only letters and be 3-15 characters",
+        400
+      )
+    );
+  }
+
+  if (
+    !description ||
+    description.trim().length < 10 ||
+    description.trim().length > 250
+  ) {
+    return next(
+      new AppError("Description must be between 10 and 250 characters", 400)
+    );
+  }
+
+  if (gif && !validator.isURL(gif)) {
+    return next(new AppError("Please provide a valid GIF", 400));
+  }
+
+  if (!trainer_id) {
+    return next(new AppError("Trainer ID is required", 400));
+  }
+
+  try {
+    const exercise = await exerciseModel.createExercise(
+      trainer_id,
+      name,
+      muscle_group,
+      description,
+      gif
+    );
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        exercise,
+      },
+    });
+  } catch (err) {
+    return next(new AppError("Error creating exercise", 500));
+  }
+};
 const updateExercise = async (req, res, next) => {
   const { exId } = req.params;
   const { name, muscle_group, description } = req.body;
-
+  if (
+    !name ||
+    name.trim().length < 3 ||
+    name.trim().length > 30 ||
+    !validator.isAlpha(name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Exercise name should contain only letters and be 3-30 characters",
+        400
+      )
+    );
+  }
   if (!exId || isNaN(exId)) {
     return next(new AppError("Please provide a exercise id", 400));
+  }
+
+  if (
+    !name ||
+    name.trim().length < 3 ||
+    name.trim().length > 30 ||
+    !validator.isAlpha(name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Exercise name should contain only letters and be 3-30 characters",
+        400
+      )
+    );
+  }
+
+  if (
+    !muscle_group ||
+    muscle_group.trim().length < 3 ||
+    muscle_group.trim().length > 15 ||
+    !validator.isAlpha(muscle_group.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Muscle Group should contain only letters and be 3-15 characters",
+        400
+      )
+    );
+  }
+
+  if (
+    !description ||
+    description.trim().length < 10 ||
+    description.trim().length > 250
+  ) {
+    return next(
+      new AppError("Description must be between 10 and 250 characters", 400)
+    );
   }
 
   const exercise = await exerciseModel.updateExercise(

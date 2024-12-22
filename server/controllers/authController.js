@@ -6,7 +6,7 @@ const createToken = require("../utils/createToken");
 const userModel = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
-
+const moment = require("moment");
 const getUserById = async (req, res) => {
   const userId = req.params.userId;
 
@@ -141,18 +141,51 @@ const signup = async (req, res, next) => {
   } = req.body;
 
   // Name validation
-  if (!validator.isAlpha(first_name.replace(/\s/g, ""))) {
-    return next(new AppError("First name should contain only letters", 400));
+  if (
+    !first_name ||
+    first_name.trim().length < 3 ||
+    first_name.trim().length > 30 ||
+    !validator.isAlpha(first_name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "First name should contain only letters and be 3-30 characters",
+        400
+      )
+    );
   }
 
-  if (!validator.isAlpha(last_name.replace(/\s/g, ""))) {
-    return next(new AppError("Last name should contain only letters", 400));
+  if (
+    !last_name ||
+    last_name.trim().length < 3 ||
+    last_name.trim().length > 30 ||
+    !validator.isAlpha(last_name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Last name should contain only letters and be 3-30 characters",
+        400
+      )
+    );
   }
 
   // Phone number validation
-  const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+
+  const phoneRegex = /^01\d{9}$/;
+
   if (!phoneRegex.test(phone_number)) {
-    return next(new AppError("Please enter a valid phone number", 400));
+    return next(
+      new AppError(
+        "Phone number should be exactly 11 digits and start with '01'",
+        400
+      )
+    );
+  }
+
+  const age = moment().diff(moment(birth_date, "YYYY-MM-DD"), "years");
+
+  if (age < 18) {
+    return next(new AppError("You must be at least 18 years old", 400));
   }
 
   let food_allergies,
@@ -169,6 +202,20 @@ const signup = async (req, res, next) => {
 
   if (type === "Trainee") {
     ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
+    if (isNaN(weight) || weight <= 30 || weight > 300) {
+      return next(
+        new AppError("Weight must be a valid number between 30 and 300", 400)
+      );
+    }
+
+    if (isNaN(height) || height <= 100 || height > 220) {
+      return next(
+        new AppError(
+          "Height must be a valid number between 100 and 220 cm",
+          400
+        )
+      );
+    }
   } else {
     ({
       experience_years,
@@ -179,13 +226,46 @@ const signup = async (req, res, next) => {
       date_issued,
     } = req.body);
 
-    // Title validation for trainers
-    if (title && !validator.isAlpha(title.replace(/\s/g, ""))) {
+
+    if (
+      isNaN(experience_years) ||
+      experience_years < 0 ||
+      experience_years > 30
+    ) {
       return next(
-        new AppError("Certificate Title name should contain only letters", 400)
+        new AppError(
+          "Experience years must be a valid number between 0 and 30",
+          400
+        )
+
+      );
+    }
+
+
+    // Validate client_limit
+    if (isNaN(client_limit) || client_limit < 1 || client_limit > 99) {
+      return next(
+        new AppError(
+          "Client limit must be a valid number between 1 and 99",
+          400
+        )
+      );
+    }
+    if (
+      title &&
+      (title.trim().length < 3 ||
+        title.trim().length > 30 ||
+        !validator.isAlpha(title.trim().replace(/\s/g, "")))
+    ) {
+      return next(
+        new AppError(
+          "Certificate Title name should contain only letters and be 3-30 characters",
+          400
+        )
       );
     }
   }
+
 
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));

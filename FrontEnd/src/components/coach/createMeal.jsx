@@ -219,12 +219,15 @@ function CreateMeal() {
         navigate("/profile");
       }, 2000);
     } catch (err) {
-      toast.error("Error Occured Creating Meal", {
-        style: {
-          background: "white",
-          color: "red",
-        },
-      });
+      if (err.response?.data?.message)
+        setMealError(err.response?.data?.message);
+      else
+        toast.error("Can't Create meal", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
     }
   };
 
@@ -435,7 +438,7 @@ function CreateMeal() {
               className="bg-textColor border pl-4 rounded-xl border-secondary py-3 text-sm text-backGroundColor placeholder-gray-500 text-left"
               type="text"
               placeholder="Enter name"
-              maxLength="25"
+              maxLength="50"
               onChange={(e) => {
                 updateMealName(e.target.value);
                 setMealError("");

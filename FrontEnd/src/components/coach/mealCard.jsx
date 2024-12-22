@@ -59,12 +59,6 @@ function Meal({ id, name, photo, facts, view, handleDelete }) {
           >
             <FaRegTrashAlt size={20} />
           </button>
-          <button
-            className="border text-secondary border-secondary rounded-xl p-3 hover:bg-secondary hover:text-backGroundColor transform transition-transform duration-300 hover:scale-110"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <CiEdit size={20} />
-          </button>
         </div>
       )}
     </div>

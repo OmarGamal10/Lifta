@@ -1,7 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const ingredientModel = require("../models/ingredientModel");
-
+const validator = require("validator");
 const getIngredientsCoach = async (req, res, next) => {
   const { coachId } = req.params;
   if (!coachId || isNaN(coachId)) {
@@ -46,7 +46,11 @@ const getIngredientsMeal = async (req, res, next) => {
 
 const createIngredient = async (req, res, next) => {
   const { name, protein, carb, trainer_id, fat, calories } = req.body;
-
+  if (!name || !validator.isAlpha(name.replace(/\s/g, ""))) {
+    return next(
+      new AppError("Ingredient name should contain only letters", 400)
+    );
+  }
   if (isNaN(Number(protein)) || Number(protein) < 0) {
     return next(new AppError("Please provide a valid protien", 400));
   }
@@ -80,7 +84,11 @@ const updateIngredient = async (req, res, next) => {
     return next(new AppError("Please provide a ingredient id", 400));
   }
   const { name, protein, carb, fat, calories } = req.body;
-
+  if (!name || !validator.isAlpha(name.replace(/\s/g, ""))) {
+    return next(
+      new AppError("Ingredient name should contain only letters", 400)
+    );
+  }
   if (isNaN(Number(protein)) || Number(protein) < 0) {
     return next(new AppError("Please provide a valid protien", 400));
   }

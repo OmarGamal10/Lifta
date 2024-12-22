@@ -53,6 +53,7 @@ function ExerciseForm({
     }
   }, []);
   const handleChange = (e) => {
+    setErrors({ ...errors, submit: "" });
     const { name, value } = e.target;
     if (name == "gif") {
       const file = e.target.files[0];
@@ -141,13 +142,16 @@ function ExerciseForm({
         });
         setView(false);
       } catch (err) {
-        toast.error("Error adding exercise", {
-          style: {
-            background: "white",
-            color: "red",
-          },
-        });
-        console.log(err);
+        if (err.response?.data?.message) {
+          setErrors({ ...errors, submit: err.response.data.message });
+        } else {
+          toast.error("Something went wrong", {
+            style: {
+              background: "white",
+              color: "red",
+            },
+          });
+        }
       }
     } else {
       try {
@@ -186,14 +190,16 @@ function ExerciseForm({
         });
         setView(false);
       } catch (err) {
-        if (err)
-          toast.error("Error updating exercise", {
+        if (err.response?.data?.message) {
+          setErrors({ ...errors, submit: err.response.data.message });
+        } else {
+          toast.error("Something went wrong", {
             style: {
               background: "white",
               color: "red",
             },
           });
-        console.log(err.data);
+        }
       }
     }
   };
@@ -236,7 +242,7 @@ function ExerciseForm({
               className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
               type="text"
               placeholder="Enter Name"
-              maxLength="15"
+              maxLength="30"
               onChange={handleChange}
               value={formData.name}
               autoComplete="off"
@@ -315,6 +321,7 @@ function ExerciseForm({
             </div>
           </div>
         </form>
+        {errors.submit && <ErrorMessage error={errors.submit} />}
       </div>
     </div>
   );

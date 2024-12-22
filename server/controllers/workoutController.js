@@ -1,9 +1,23 @@
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const workoutModel = require("../models/workoutModel");
-
+const validator = require("validator");
 const createWorkout = async (req, res, next) => {
   const { name, note, trainer_id, exercises } = req.body;
+
+  if (
+    !name ||
+    name.trim().length < 3 ||
+    name.trim().length > 50 ||
+    !validator.isAlpha(name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Workout name should contain only letters and be 3-50 characters",
+        400
+      )
+    );
+  }
 
   const workout = await workoutModel.createWorkout(
     trainer_id,

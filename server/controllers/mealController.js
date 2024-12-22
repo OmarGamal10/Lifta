@@ -2,9 +2,27 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const mealModel = require("../models/mealModel");
 const { raw } = require("express");
-
+const validator = require("validator");
 const createMeal = async (req, res, next) => {
   const { name, nutritionist_id, ingredients, picture } = req.body;
+
+  if (
+    !name ||
+    name.trim().length < 3 ||
+    name.trim().length > 50 ||
+    !validator.isAlpha(name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Meal name should contain only letters and be 3-50 characters",
+        400
+      )
+    );
+  }
+
+  if (picture && !validator.isURL(picture)) {
+    return next(new AppError("Please provide a valid picture", 400));
+  }
 
   const meal = await mealModel.createMeal(
     nutritionist_id,
@@ -59,12 +77,21 @@ const assignMealTrainee = async (req, res, next) => {
     return next(new AppError("Please provide a meal id", 400));
   }
 
+  const newMeal = {
+    new: true,
+  };
   const meal = await mealModel.assignMealToTrainee(
     trainee_id,
     meal_id,
     day,
-    type
+    type,
+    newMeal
   );
+  if (newMeal.new) {
+    meal.new = true;
+  } else {
+    meal.new = false;
+  }
   res.status(201).json({
     status: "success",
     data: {
