@@ -171,12 +171,12 @@ const signup = async (req, res, next) => {
 
   // Phone number validation
 
-  const phoneRegex = /^010\d{8}$/;
+  const phoneRegex = /^01\d{9}$/;
 
   if (!phoneRegex.test(phone_number)) {
     return next(
       new AppError(
-        "Phone number should be exactly 11 digits and start with '010'",
+        "Phone number should be exactly 11 digits and start with '01'",
         400
       )
     );
