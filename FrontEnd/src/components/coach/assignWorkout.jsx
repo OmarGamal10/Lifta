@@ -10,7 +10,7 @@ import { jwtDecode } from "jwt-decode";
 import useHttp from "../../hooks/useHTTP";
 import { useLocation } from "react-router-dom";
 import Loader from "../Loader"; // Import your Loader component
-
+import { Toaster, toast } from "sonner";
 function AssignWorkout() {
   const { get, post, error, data } = useHttp("http://localhost:3000");
   const location = useLocation();
@@ -26,10 +26,6 @@ function AssignWorkout() {
   const [workouts, setworkouts] = useState([]);
 
   const [loading, setLoading] = useState(true); // State to track loading
-
-  const [newWorkout, setNewWorkout] = useState(null);
-  const [lastSelectdDay, setLastSelectedDay] = useState(null);
-
 
   const days = [
     "Sunday",
@@ -71,7 +67,12 @@ function AssignWorkout() {
           setCurrentPage(1);
         }
       } catch (err) {
-        console.error("Error fetching workouts:", err);
+        toast.error("Error fetching workouts", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
         setworkouts([]);
       } finally {
         setLoading(false);
@@ -139,19 +140,37 @@ function AssignWorkout() {
           },
         }
       );
-      setLastSelectedDay(formData.day);
+
       console.log(response.data.workout);
-      setNewWorkout(response.data.workout.new);
+      response.data.workout.new;
       setSelectedWorkout(null);
+
+      setErrors({});
+      if (response.data.workout.new)
+        toast.success(`New Workout assigned successfully on ${formData.day}`, {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
+      else
+        toast.success(`Workout updated successfully on ${formData.day}`, {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
       setFormData({
         workoutId: "",
         day: "Sunday",
       });
-      setErrors({});
-      console.log(response);
     } catch (err) {
-      console.log(err.response.data.message);
-      errors.workoutId = err.response.data.message;
+      toast.error("Error assigning workout", {
+        style: {
+          background: "white",
+          color: "red",
+        },
+      });
     }
   };
 
@@ -177,6 +196,7 @@ function AssignWorkout() {
   const renderForm = () => {
     return (
       <div className="p-4 max-w-4xl mx-auto">
+        <Toaster />
         <h2 className="text-2xl text-textColor font-bold mb-4">
           Assign Workout
         </h2>
@@ -245,44 +265,30 @@ function AssignWorkout() {
 
             {errors.workoutId && <ErrorMessage error={errors.workoutId} />}
 
-
-             <div className="flex justify-end space-x-4">
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSubmit(true)}
-              className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
-            >
-              Assign Workout
-            </button>
+            <div className="flex justify-end space-x-4">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSubmit(true)}
+                className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
+              >
+                Assign Workout
+              </button>
+            </div>
           </div>
-          <div className="mt-4">
-            {newWorkout !== null && (
-              <div className="mt-2 text-center">
-                <span className={`text-sm font-semibold text-accent`}>
-                  {newWorkout
-                    ? "New Workout assigned for this trainee on " +
-                      lastSelectdDay
-                    : `Updated Workout for this trainee on ${lastSelectdDay}`}
-                </span>
-              </div>
-            )}
-          </div>
-        </div>
-      ) : (
-        <Nodata header="No Workouts Available" />
-      )}
-    </div>
-  );
+        ) : (
+          <Nodata header="No Workouts Available" />
+        )}
+      </div>
+    );
   };
   return <div className="w-full">{loading ? <Loader /> : renderForm()}</div>;
-
 }
 
 export default AssignWorkout;

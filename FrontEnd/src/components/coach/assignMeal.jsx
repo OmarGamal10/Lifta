@@ -11,7 +11,7 @@ import useHttp from "../../hooks/useHTTP";
 import { useLocation } from "react-router-dom";
 import { use } from "react";
 import Loader from "../Loader"; // Import your Loader component
-
+import { Toaster, toast } from "sonner";
 function AssignMeal() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -186,6 +186,7 @@ function AssignMeal() {
   const renderForm = () => {
     return (
       <div className="p-4 max-w-4xl mx-auto">
+        <Toaster />
         <h2 className="text-2xl text-textColor font-bold mb-4">Assign Meal</h2>
 
         {meals.length > 0 ? (
