@@ -40,7 +40,6 @@ function CertForm({
           setFormData(response.data.certificate);
           console.log(response);
         } catch (err) {
-          console.log(err);
           toast.error("Error loading certificate", {
             style: {
               background: "white",
@@ -159,13 +158,16 @@ function CertForm({
         });
         setView(false);
       } catch (err) {
-        toast.error("Error adding certificate", {
-          style: {
-            background: "white",
-            color: "red",
-          },
-        });
-        console.log(err);
+        if (err.response?.data?.message) {
+          setErrors({ ...errors, submit: err.response.data.message });
+        } else {
+          toast.error("Something went wrong", {
+            style: {
+              background: "white",
+              color: "red",
+            },
+          });
+        }
       }
     } else {
       try {
@@ -203,13 +205,16 @@ function CertForm({
         });
         setView(false);
       } catch (err) {
-        toast.error("Error updating certificate", {
-          style: {
-            background: "white",
-            color: "red",
-          },
-        });
-        console.log(err);
+        if (err.response?.data?.message) {
+          setErrors({ ...errors, submit: err.response.data.message });
+        } else {
+          toast.error("Something went wrong", {
+            style: {
+              background: "white",
+              color: "red",
+            },
+          });
+        }
       }
     }
   };
@@ -251,7 +256,7 @@ function CertForm({
             className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
             type="text"
             placeholder="Enter certificate title"
-            maxLength="30"
+            maxLength="25"
             onChange={handleChange}
             value={formData.title}
             autoComplete="off"
@@ -327,6 +332,7 @@ function CertForm({
           </div>
         </div>
       </form>
+      {errors.submit && <ErrorMessage error={errors.submit} />}
     </div>
   );
 }
