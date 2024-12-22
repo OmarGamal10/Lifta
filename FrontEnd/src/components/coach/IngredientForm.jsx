@@ -168,13 +168,16 @@ function Ingredient({
         });
         setView(false);
       } catch (err) {
-        console.log(err);
-        toast.error("Error updating ingredient", {
-          style: {
-            background: "white",
-            color: "red",
-          },
-        });
+        if (err.response?.data?.message) {
+          setErrors({ ...errors, submit: err.response.data.message });
+        } else {
+          toast.error("Something went wrong", {
+            style: {
+              background: "white",
+              color: "red",
+            },
+          });
+        }
       }
     }
   };

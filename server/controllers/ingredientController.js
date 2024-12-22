@@ -84,7 +84,11 @@ const updateIngredient = async (req, res, next) => {
     return next(new AppError("Please provide a ingredient id", 400));
   }
   const { name, protein, carb, fat, calories } = req.body;
-
+  if (!name || !validator.isAlpha(name.replace(/\s/g, ""))) {
+    return next(
+      new AppError("Ingredient name should contain only letters", 400)
+    );
+  }
   if (isNaN(Number(protein)) || Number(protein) < 0) {
     return next(new AppError("Please provide a valid protien", 400));
   }
