@@ -160,7 +160,7 @@ function Form({ formData, setFormData, toNext, type }) {
               className="bg-backGroundColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left"
               type="text"
               placeholder="Enter first name"
-              maxLength="15"
+              maxLength="30"
               onChange={handleChange}
               value={formData.firstName}
               autoComplete="off"
@@ -177,7 +177,7 @@ function Form({ formData, setFormData, toNext, type }) {
               className="bg-backGroundColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-textColor placeholder-gray-500 text-left"
               type="text"
               placeholder="Enter last name"
-              maxLength="15"
+              maxLength="30"
               onChange={handleChange}
               value={formData.lastName}
               autoComplete="off"
@@ -354,7 +354,7 @@ function Form({ formData, setFormData, toNext, type }) {
               className="bg-secondary border w-5/12 rounded-lg border-secondary py-4 text-sm text-backGroundColor hover:border-primary hover:text-primary"
               onClick={handleSubmit}
             >
-              {(type == "Admin") ? "Create Account" : "Next"}
+              {type == "Admin" ? "Create Account" : "Next"}
             </button>
           </div>
         </form>

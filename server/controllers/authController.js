@@ -141,12 +141,32 @@ const signup = async (req, res, next) => {
   } = req.body;
 
   // Name validation
-  if (!validator.isAlpha(first_name.replace(/\s/g, ""))) {
-    return next(new AppError("First name should contain only letters", 400));
+  if (
+    !first_name ||
+    first_name.trim().length < 3 ||
+    first_name.trim().length > 30 ||
+    !validator.isAlpha(first_name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "First name should contain only letters and be 3-30 characters",
+        400
+      )
+    );
   }
 
-  if (!validator.isAlpha(last_name.replace(/\s/g, ""))) {
-    return next(new AppError("Last name should contain only letters", 400));
+  if (
+    !last_name ||
+    last_name.trim().length < 3 ||
+    last_name.trim().length > 30 ||
+    !validator.isAlpha(last_name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Last name should contain only letters and be 3-30 characters",
+        400
+      )
+    );
   }
 
   // Phone number validation
@@ -169,6 +189,20 @@ const signup = async (req, res, next) => {
 
   if (type === "Trainee") {
     ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
+    if (isNaN(weight) || weight <= 30 || weight > 300) {
+      return next(
+        new AppError("Weight must be a valid number between 30 and 300", 400)
+      );
+    }
+
+    if (isNaN(height) || height <= 100 || height > 220) {
+      return next(
+        new AppError(
+          "Height must be a valid number between 100 and 220 cm",
+          400
+        )
+      );
+    }
   } else {
     ({
       experience_years,
@@ -179,9 +213,17 @@ const signup = async (req, res, next) => {
       date_issued,
     } = req.body);
 
-    if (title && !validator.isAlpha(title.replace(/\s/g, ""))) {
+    if (
+      title &&
+      (title.trim().length < 3 ||
+        title.trim().length > 30 ||
+        !validator.isAlpha(title.trim().replace(/\s/g, "")))
+    ) {
       return next(
-        new AppError("Certificate Title name should contain only letters", 400)
+        new AppError(
+          "Certificate Title name should contain only letters and be 3-30 characters",
+          400
+        )
       );
     }
   }
