@@ -155,7 +155,6 @@ function CreateWorkout() {
         navigate("/profile");
       }, 2000);
     } catch (err) {
-      console.log(err);
       if (err.response?.data?.message)
         setWorkoutError(err.response?.data?.message);
       else

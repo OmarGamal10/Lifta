@@ -2,9 +2,16 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const mealModel = require("../models/mealModel");
 const { raw } = require("express");
-
+const validator = require("validator");
 const createMeal = async (req, res, next) => {
   const { name, nutritionist_id, ingredients, picture } = req.body;
+
+  if (!name || !validator.isAlpha(name.replace(/\s/g, ""))) {
+    return next(new AppError("Meal name should contain only letters", 400));
+  }
+  if (picture && !validator.isURL(picture)) {
+    return next(new AppError("Please provide a valid picture", 400));
+  }
 
   const meal = await mealModel.createMeal(
     nutritionist_id,

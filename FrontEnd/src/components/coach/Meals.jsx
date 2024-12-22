@@ -82,7 +82,7 @@ function Meals({ userId }) {
         }
       );
       setMeals((prev) => prev.filter((meal) => meal.id !== id));
-      toast.success(" Exercise Deleted Succefully", {
+      toast.success("Meal Deleted Succefully", {
         style: {
           background: "white",
           color: "green",

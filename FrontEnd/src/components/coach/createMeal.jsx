@@ -219,12 +219,15 @@ function CreateMeal() {
         navigate("/profile");
       }, 2000);
     } catch (err) {
-      toast.error("Error Occured Creating Meal", {
-        style: {
-          background: "white",
-          color: "red",
-        },
-      });
+      if (err.response?.data?.message)
+        setMealError(err.response?.data?.message);
+      else
+        toast.error("Can't Create meal", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
     }
   };
 
