@@ -31,6 +31,7 @@ function Ingredient({
   });
   const [errors, setErrors] = useState({});
   const handleChange = (e) => {
+    setErrors({ ...errors, submit: "" });
     const { name, value } = e.target;
     if (
       (name == "protein" || name == "carb" || name == "fat") &&
@@ -120,13 +121,16 @@ function Ingredient({
         });
         setView(false);
       } catch (err) {
-        console.log(err);
-        toast.error("Error adding exercise", {
-          style: {
-            background: "white",
-            color: "red",
-          },
-        });
+        if (err.response?.data?.message) {
+          setErrors({ ...errors, submit: err.response.data.message });
+        } else {
+          toast.error("Something went wrong", {
+            style: {
+              background: "white",
+              color: "red",
+            },
+          });
+        }
       }
     } else {
       try {
@@ -300,6 +304,7 @@ function Ingredient({
           </div>
         </div>
       </form>
+      {errors.submit && <ErrorMessage error={errors.submit} />}
     </div>
   );
 }
