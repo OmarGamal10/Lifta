@@ -39,10 +39,19 @@ exports.toggleActiveState = async (pkgId, state) => {
 };
 
 exports.deletePackage = async (packageId) => {
-  const query = "DELETE FROM lifta_schema.package WHERE package_id = $1 ";
-  return (await db.query(query, [packageId])).rows;
+  //check first if the package has active subscriptions
+  const query1 =
+    "SELECT * FROM lifta_schema.subscription WHERE package_id = $1 AND status = 'Active'";
+  const result = (await db.query(query1, [packageId])).rows;
+  if (result.length > 0) {
+    throw new AppError(
+      "You cannot delete a package with active subscriptions",
+      400
+    );
+  }
+  const query2 = "DELETE FROM lifta_schema.package WHERE package_id = $1 ";
+  return (await db.query(query2, [packageId])).rows;
 };
-
 
 exports.getTopFivePackages = async () => {
   const query = `SELECT p.package_id,p.name,p.type,p.trainer_id, COUNT(s.subscription_id) as subscriptions

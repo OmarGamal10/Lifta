@@ -28,13 +28,22 @@ const missedWorkoutsCronJob = cron.schedule("59 23 * * *", async () => {
 const missedMealsCronJob = cron.schedule("59 23 * * *", async () => {
   //same as above but for meals
   try {
-    const query = `SELECT * FROM lifta_schema.meals_diet WHERE day = $1 AND meal_id NOT IN (SELECT meal_id FROM lifta_schema.meal_log WHERE date = current_date)`;
+    const query = `
+  SELECT * FROM lifta_schema.meals_diet 
+  WHERE day = $1 
+  AND (meal_id, type) NOT IN (
+    SELECT meal_id, type 
+    FROM lifta_schema.meal_log 
+    WHERE date = current_date
+  )
+`;
 
     const result = await db.query(query, [currentDay]); //these should be put in the log with isDone = false
+    console.log(result.rows);
     for (let i = 0; i < result.rows.length; i++) {
       const meal = result.rows[i];
-      const query = `INSERT INTO lifta_schema.meal_log VALUES ($1, $2, current_date, false);`;
-      await db.query(query, [meal.trainee_id, meal.meal_id]);
+      const query = `INSERT INTO lifta_schema.meal_log VALUES ($1, $2, current_date, false, $3);`;
+      await db.query(query, [meal.trainee_id, meal.meal_id, meal.type]);
     }
     console.log("Cron job ran successfully");
   } catch (err) {
@@ -46,3 +55,4 @@ const missedMealsCronJob = cron.schedule("59 23 * * *", async () => {
 missedWorkoutsCronJob.start();
 missedMealsCronJob.start();
 module.exports = missedWorkoutsCronJob;
+module.exports = missedMealsCronJob;

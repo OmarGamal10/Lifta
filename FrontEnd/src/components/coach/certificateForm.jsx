@@ -29,7 +29,7 @@ function CertForm({ formData, setFormData, setViewCert }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {};
-    
+
     Object.keys(formData).forEach((key) => {
       if (!formData[key]) {
         newErrors[key] = `${key.replace(/([A-Z])/g, " $1")} is required.`;
@@ -51,22 +51,23 @@ function CertForm({ formData, setFormData, setViewCert }) {
         const photoUrl = await handlesImage(file);
         setFormData((prevData) => ({
           ...prevData,
-          photo: photoUrl, // Store the URL instead of the file
+          certificatePhoto: photoUrl, // Store the URL instead of the file
         }));
 
         setErrors((prev) => {
-          const { photo, ...rest } = prev;
+          const { certificatePhoto, ...rest } = prev;
           return rest;
         });
       } else {
         setFormData((prevData) => {
-          const { photo, ...rest } = prevData;
+          const { certificatePhoto, ...rest } = prevData;
           return rest;
         });
 
         setErrors((prevErrors) => ({
           ...prevErrors,
-          photo: "Please select a valid photo file (jpeg, jpg, png).",
+          certificatePhoto:
+            "Please select a valid photo file (jpeg, jpg, png).",
         }));
       }
     }
@@ -76,8 +77,7 @@ function CertForm({ formData, setFormData, setViewCert }) {
       title: "",
       dateIssued: "",
       description: "",
-      photo: "",
-      
+      certificatePhoto: "",
     });
     setViewCert(false);
   };
@@ -107,7 +107,7 @@ function CertForm({ formData, setFormData, setViewCert }) {
             className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
             type="text"
             placeholder="Enter certificate title"
-            maxLength="15"
+            maxLength="30"
             onChange={handleChange}
             value={formData.title}
             autoComplete="off"
@@ -157,12 +157,15 @@ function CertForm({ formData, setFormData, setViewCert }) {
           </button>
           <input
             type="file"
-            name="photo"
+            name="certificatePhoto"
             accept="image/jpeg, image/png, image/jpg"
             ref={fileInputRef}
             style={{ display: "none" }}
             onChange={handlePhotoChange}
           />
+          {errors.certificatePhoto && (
+            <ErrorMessage error={errors.certificatePhoto} />
+          )}
         </div>
         <div className="flex justify-center w-full mt-10">
           <button
