@@ -6,7 +6,7 @@ import Loader from "../Loader";
 import { Toaster, toast } from "sonner";
 import CertificateForm from "./certificateForm_profile";
 
-function Certificates({ userId }) {
+function Certificates({ userId, isEditable }) {
   const { get, post, del, error, data } = useHttp("http://localhost:3000");
   const [curPage, setCurPage] = useState(1);
   const [certificates, setCertificates] = useState([]);
@@ -15,7 +15,7 @@ function Certificates({ userId }) {
   const [editCertificateView, setEditCertificateView] = useState(false);
   const [idToEdit, setIdToEdit] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  console.log(isEditable);
   useEffect(() => {
     const fetchCertificates = async () => {
       setLoading(true);
@@ -138,20 +138,24 @@ function Certificates({ userId }) {
                   dateIssued={certificate.date_issued}
                   setEditView={setEditCertificateView}
                   setIdToEdit={setIdToEdit}
-                  isEditable={true}
+                  isEditable={isEditable}
                   handleDelete={handleDelete}
                   view="edit"
                 />
               </div>
             ))}
-          <div className="flex items-center justify-center min-w-64 max-w-64 min-h-64 h-[400px]">
-            <button
-              onClick={() => setAddCertificateView(true)}
-              className="text-primary hover:text-secondary transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-lg transform"
-            >
-              <IoIosAddCircleOutline size={100} />
-            </button>
-          </div>
+          {isEditable ? (
+            <div className="flex items-center justify-center min-w-64 max-w-64 min-h-64 h-[400px]">
+              <button
+                onClick={() => setAddCertificateView(true)}
+                className="text-primary hover:text-secondary transition-all duration-300 ease-in-out hover:scale-110 hover:shadow-lg transform"
+              >
+                <IoIosAddCircleOutline size={100} />
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
 
         {certificates.length > 0 && (
