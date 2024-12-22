@@ -1,7 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const certificateModel = require("../models/certificateModel");
-
+const validator = require("validator");
 const getCertificatesCoach = async (req, res, next) => {
   const { coachId } = req.params;
   if (!coachId || isNaN(coachId)) {
@@ -30,25 +30,70 @@ const getCertificateById = async (req, res, next) => {
 };
 const createCertificate = async (req, res, next) => {
   const { trainer_id, title, photo, description, date_issued } = req.body;
-  console.log(trainer_id, title, photo, description, date_issued);
-  const certificate = await certificateModel.createCertificate(
-    trainer_id,
-    title,
-    description,
-    date_issued,
-    photo
-  );
-  res.status(201).json({
-    status: "success",
-    data: {
-      certificate,
-    },
-  });
+
+  // Title validation
+  if (!title || !validator.isAlpha(title.replace(/\s/g, ""))) {
+    return next(
+      new AppError("Certificate title should contain only letters", 400)
+    );
+  }
+
+  if (title.trim().length < 3 || title.trim().length > 50) {
+    return next(new AppError("Title must be between 3 and 50 characters", 400));
+  }
+
+  // Description validation
+  if (
+    !description ||
+    description.trim().length < 10 ||
+    description.trim().length > 250
+  ) {
+    return next(
+      new AppError("Description must be between 10 and 250 characters", 400)
+    );
+  }
+
+  if (photo && !validator.isURL(photo)) {
+    return next(new AppError("Please provide a valid photo URL", 400));
+  }
+
+  try {
+    const certificate = await certificateModel.createCertificate(
+      trainer_id,
+      title.trim(),
+      description.trim(),
+      date_issued,
+      photo
+    );
+
+    res.status(201).json({
+      status: "success",
+      data: { certificate },
+    });
+  } catch (err) {
+    return next(new AppError("Error creating certificate", 500));
+  }
 };
 
 const editCertificate = async (req, res, next) => {
   const { certificate_id } = req.params;
   const { trainer_id, title, photo, description, date_issued } = req.body;
+
+  if (!title || !validator.isAlpha(title.replace(/\s/g, ""))) {
+    return next(
+      new AppError("Certificate title should contain only letters", 400)
+    );
+  }
+
+  if (
+    !description ||
+    description.trim().length < 10 ||
+    description.trim().length > 250
+  ) {
+    return next(
+      new AppError("Description must be between 10 and 250 characters", 400)
+    );
+  }
 
   const certificate = await certificateModel.editCertificate(
     certificate_id,

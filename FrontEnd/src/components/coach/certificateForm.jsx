@@ -107,7 +107,7 @@ function CertForm({ formData, setFormData, setViewCert }) {
             className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
             type="text"
             placeholder="Enter certificate title"
-            maxLength="30"
+            maxLength="25"
             onChange={handleChange}
             value={formData.title}
             autoComplete="off"
