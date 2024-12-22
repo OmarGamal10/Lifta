@@ -13,7 +13,7 @@ import {
   AccordionBody,
 } from "@material-tailwind/react";
 import { Card, Typography } from "@material-tailwind/react";
-import { ToastContainer, toast } from "react-toastify";
+import { Toaster, toast } from "sonner";
 import 'react-toastify/dist/ReactToastify.css';
 
 const tableHead = ["Ingredient", "Quantity"];
@@ -79,14 +79,19 @@ export function TraineeMealCard(probs) {
         });
         console.log(response);
         toast.success(response.message, {
-          theme: "dark",
-          position: "bottom-right",
-          autoClose: 2500,
-          hideProgressBar: true,
-          draggable: true,
+          style: {
+            background: "black",
+            color: "#B076A9",
+          },
         });
       } catch (err) {
         console.error(err);
+        toast.error("Oops, couldn't mark meal as done", {
+          style: {
+            background: "black",
+            color: "red",
+          },
+        });
       }
     } else {
       // setIsDone(false);
@@ -98,15 +103,20 @@ export function TraineeMealCard(probs) {
           }
         );
         toast.success(response.message, {
-          theme: "dark",
-          position: "bottom-right",
-          autoClose: 2500,
-          hideProgressBar: true,
-          draggable: true,
+          style: {
+            background: "black",
+            color: "#B076A9",
+          },
         });
         console.log(response);
       } catch (err) {
         console.error(err);
+        toast.error("Oops, couldn't undo meal", {
+          style: {
+            background: "black",
+            color: "red",
+          },
+        });
       }
     }
     probs.fetchParentData();
@@ -221,7 +231,7 @@ export function TraineeMealCard(probs) {
             ) : (
               <></>
             )}
-            <ToastContainer />
+            <Toaster />
           </AccordionBody>
         </Accordion>
       </div>
