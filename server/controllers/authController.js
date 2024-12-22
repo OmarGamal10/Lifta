@@ -271,8 +271,10 @@ const updateUser = async (req, res, next) => {
     }
   }
   const phoneRegex = /^01\d{9}$/; // Matches "01" followed by 9 digits (11 total)
-  if (!phoneRegex.test(phone_number)) {
-    return next(new AppError("Please enter a valid Number", 400));
+
+  if(!phoneRegex.test(phone_number)) {
+    return next(new AppError("Numbers from 0 to 9 and start by '01'", 400));
+
   }
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
