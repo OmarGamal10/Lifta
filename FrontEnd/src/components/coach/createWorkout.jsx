@@ -155,13 +155,16 @@ function CreateWorkout() {
         navigate("/profile");
       }, 2000);
     } catch (err) {
-      toast.error("Error Occured Creating Workout", {
-        style: {
-          background: "white",
-          color: "red",
-        },
-      });
       console.log(err);
+      if (err.response?.data?.message)
+        setWorkoutError(err.response?.data?.message);
+      else
+        toast.error("Can't Create workout", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
     }
   };
 
