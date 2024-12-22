@@ -220,7 +220,7 @@ function PackageForm({
   return (
     <div
       name="pkgForm"
-      className={` border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center px-8 py-5  ${
+      className={` border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center px-8 py-5    ${
         edit ? "max-w-sm" : "max-w-lg"
       } rounded-3xl relative`}
     >

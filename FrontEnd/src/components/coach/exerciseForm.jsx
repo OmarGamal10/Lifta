@@ -242,7 +242,7 @@ function ExerciseForm({
               className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
               type="text"
               placeholder="Enter Name"
-              maxLength="15"
+              maxLength="30"
               onChange={handleChange}
               value={formData.name}
               autoComplete="off"

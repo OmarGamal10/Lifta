@@ -6,9 +6,20 @@ const validator = require("validator");
 const createMeal = async (req, res, next) => {
   const { name, nutritionist_id, ingredients, picture } = req.body;
 
-  if (!name || !validator.isAlpha(name.replace(/\s/g, ""))) {
-    return next(new AppError("Meal name should contain only letters", 400));
+  if (
+    !name ||
+    name.trim().length < 3 ||
+    name.trim().length > 50 ||
+    !validator.isAlpha(name.trim().replace(/\s/g, ""))
+  ) {
+    return next(
+      new AppError(
+        "Meal name should contain only letters and be 3-50 characters",
+        400
+      )
+    );
   }
+
   if (picture && !validator.isURL(picture)) {
     return next(new AppError("Please provide a valid picture", 400));
   }

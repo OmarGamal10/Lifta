@@ -46,7 +46,7 @@ const createPackage = async (req, res, next) => {
   if (!name || !duration || !price || !trainer_id || !type) {
     return next(new AppError("Please provide all required fields", 400));
   }
-  if (!name || !validator.isAlpha(name.replace(/\s/g, ""))) {
+  if (!name || !validator.isAlpha(name.trim().replace(/\s/g, ""))) {
     return next(new AppError("Package name should contain only letters", 400));
   }
 

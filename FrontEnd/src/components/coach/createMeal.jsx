@@ -438,7 +438,7 @@ function CreateMeal() {
               className="bg-textColor border pl-4 rounded-xl border-secondary py-3 text-sm text-backGroundColor placeholder-gray-500 text-left"
               type="text"
               placeholder="Enter name"
-              maxLength="25"
+              maxLength="50"
               onChange={(e) => {
                 updateMealName(e.target.value);
                 setMealError("");
