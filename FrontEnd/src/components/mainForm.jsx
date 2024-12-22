@@ -49,7 +49,7 @@ function Form({ formData, setFormData, toNext, type }) {
     if (type === "Admin") {
       try {
         const response = await post(
-          "/users/signup",
+          "/users/createAccount",
           {
             ...formData,
           },
