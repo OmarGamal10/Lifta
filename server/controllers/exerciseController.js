@@ -101,6 +101,24 @@ const updateExercise = async (req, res, next) => {
     return next(new AppError("Please provide a exercise id", 400));
   }
 
+  if (!name || !validator.isAlpha(name.replace(/\s/g, ""))) {
+    return next(new AppError("Exercise name should contain only letters", 400));
+  }
+
+  if (!muscle_group || !validator.isAlpha(muscle_group.replace(/\s/g, ""))) {
+    return next(new AppError("Muscle Group should contain only letters", 400));
+  }
+
+  if (
+    !description ||
+    description.trim().length < 10 ||
+    description.trim().length > 500
+  ) {
+    return next(
+      new AppError("Description must be between 10 and 500 characters", 400)
+    );
+  }
+
   const exercise = await exerciseModel.updateExercise(
     name,
     muscle_group,

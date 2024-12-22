@@ -142,7 +142,6 @@ function ExerciseForm({
         });
         setView(false);
       } catch (err) {
-        console.log(err);
         if (err.response?.data?.message) {
           setErrors({ ...errors, submit: err.response.data.message });
         } else {
@@ -191,14 +190,16 @@ function ExerciseForm({
         });
         setView(false);
       } catch (err) {
-        if (err)
-          toast.error("Error updating exercise", {
+        if (err.response?.data?.message) {
+          setErrors({ ...errors, submit: err.response.data.message });
+        } else {
+          toast.error("Something went wrong", {
             style: {
               background: "white",
               color: "red",
             },
           });
-        console.log(err.data);
+        }
       }
     }
   };
