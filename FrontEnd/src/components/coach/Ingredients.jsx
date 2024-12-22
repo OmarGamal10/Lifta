@@ -12,6 +12,7 @@ import NoDataDashboard from "../Nodata";
 import Ingredient from "./ingredientCard";
 import { use } from "react";
 import Loader from "../Loader"; // Import your Loader component
+import { Toaster, toast } from "sonner";
 
 function Ingredients({ userId }) {
   const { get, post, del, error, data } = useHttp("http://localhost:3000");
@@ -45,7 +46,12 @@ function Ingredients({ userId }) {
           setCurPage(1);
         }
       } catch (err) {
-        console.error("Error fetching ingredients:", err);
+        toast.error("Error Loading Ingredients", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
         setIngredients([]);
       } finally {
         setLoading(false); // Hide loader after API call finishes
@@ -73,8 +79,27 @@ function Ingredients({ userId }) {
       setIngredients((prev) =>
         prev.filter((ingredient) => ingredient.id !== id)
       );
+      toast.success(" Ingredient Deleted Succefully", {
+        style: {
+          background: "white",
+          color: "green",
+        },
+      });
     } catch (err) {
-      console.log(err);
+      if (err.response?.data?.error?.code === "23503")
+        toast.error("Can't Delete Ingredient Assigned to a Meal", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+      else
+        toast.error("Can't Delete Ingredient", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
     }
   };
 
@@ -112,6 +137,8 @@ function Ingredients({ userId }) {
             addIngredientsView || editIngredientsView ? "opacity-50" : ""
           } `}
         >
+          {" "}
+          <Toaster />
           <h2 className="py-8 text-3xl self-start lg:text-4xl font-bold text-textColor">
             Ingredients
           </h2>
@@ -142,7 +169,6 @@ function Ingredients({ userId }) {
               </button>
             </div>
           </div>
-
           {ingredients.length && (
             <div className=" flex justify-center items-center py-2 space-x-4">
               <button

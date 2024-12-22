@@ -14,6 +14,7 @@ router.get("/", (req, res, next) => {
 
 router.get("/topFive", packageController.getTopFivePackages);
 router.get("/averagePrice", packageController.getAvgPrice);
+router.get("/packagesDetails", packageController.getPackagesDetails);
 
 router.get("/:pkgId", packageController.getPackage);
 router.patch(

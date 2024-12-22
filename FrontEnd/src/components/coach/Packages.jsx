@@ -12,6 +12,7 @@ import useHttp from "../../hooks/useHTTP";
 import NoDataDashboard from "../Nodata";
 import { use } from "react";
 import Loader from "../Loader"; // Import your Loader component
+import { Toaster, toast } from "sonner";
 
 function Packages({ userId }) {
   const { get, patch, post, del, error, data } = useHttp(
@@ -70,10 +71,29 @@ function Packages({ userId }) {
           },
         }
       );
-      console.log(response);
+      toast.success(" Package Deleted Succefully", {
+        style: {
+          background: "white",
+          color: "green",
+        },
+      });
       setPackages((prev) => prev.filter((pkg) => pkg.package_id !== id));
     } catch (err) {
-      console.log(err);
+      if (err.response?.data?.error?.code === "23503")
+        toast.error("Can't Delete Package Subscriped by a Trainee", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+      else
+
+        toast.error(`${err.response.data.message}`, {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
     }
   };
   const handleToggleActive = async (id) => {
@@ -98,7 +118,40 @@ function Packages({ userId }) {
           return pkg;
         })
       );
+      const cur = packages.find((pkg) => pkg.package_id === id).is_active;
+      if (!cur) {
+        toast.success(" Package Activated Succefully", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
+      } else {
+        toast.success(" Package Deactivated Succefully", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
+      }
     } catch (err) {
+      const cur = packages.find((pkg) => pkg.package_id === id).is_active;
+
+      if (!cur) {
+        toast.error("Can't Activate Package", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+      } else {
+        toast.error(" Can't Deactivated Package", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
+      }
       console.log(err);
     }
   };
@@ -112,6 +165,7 @@ function Packages({ userId }) {
 
   const renderPackages = () => (
     <>
+      <Toaster />
       {editPackageView && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <PackageForm

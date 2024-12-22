@@ -3,12 +3,12 @@ const AppError = require("../utils/AppError");
 const workoutModel = require("../models/workoutModel");
 
 const createWorkout = async (req, res, next) => {
-  const { name, _note, trainer_id, exercises } = req.body;
+  const { name, note, trainer_id, exercises } = req.body;
 
   const workout = await workoutModel.createWorkout(
     trainer_id,
     name,
-    _note,
+    note,
     exercises
   );
   res.status(201).json({

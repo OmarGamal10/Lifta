@@ -39,10 +39,19 @@ exports.toggleActiveState = async (pkgId, state) => {
 };
 
 exports.deletePackage = async (packageId) => {
-  const query = "DELETE FROM lifta_schema.package WHERE package_id = $1 ";
-  return (await db.query(query, [packageId])).rows;
+  //check first if the package has active subscriptions
+  const query1 =
+    "SELECT * FROM lifta_schema.subscription WHERE package_id = $1 AND status = 'Active'";
+  const result = (await db.query(query1, [packageId])).rows;
+  if (result.length > 0) {
+    throw new AppError(
+      "You cannot delete a package with active subscriptions",
+      400
+    );
+  }
+  const query2 = "DELETE FROM lifta_schema.package WHERE package_id = $1 ";
+  return (await db.query(query2, [packageId])).rows;
 };
-
 
 exports.getTopFivePackages = async () => {
   const query = `SELECT p.package_id,p.name,p.type,p.trainer_id, COUNT(s.subscription_id) as subscriptions
@@ -57,5 +66,31 @@ LIMIT 5;`;
 
 exports.getAvgPrice = async () => {
   const query = `SELECT ROUND(AVG(price)::numeric, 3) AS averagePrice FROM lifta_schema.package;`;
+  return (await db.query(query)).rows;
+};
+
+exports.getPackagesDetails = async () => {
+  const query = `
+SELECT 
+    p.package_id, 
+    p.name, 
+    p.price, 
+    p.type,
+    (SELECT COUNT(s.subscription_id)
+     FROM lifta_schema."subscription" s 
+     WHERE s.package_id = p.package_id 
+     AND s.status = 'Active') as active_subscriptions,
+	 (SELECT COUNT(s.subscription_id)
+     FROM lifta_schema."subscription" s 
+     WHERE s.package_id = p.package_id 
+     AND s.status = 'Pending') as pending_subscriptions,
+	 (SELECT COUNT(s.subscription_id)
+     FROM lifta_schema."subscription" s 
+     WHERE s.package_id = p.package_id 
+     AND s.status = 'Active') as rejected_subscriptions,
+	 u.first_name,u.last_name
+	 FROM lifta_schema."package" p
+	 JOIN lifta_schema.users u
+	 ON p.trainer_id = u.user_id;`;
   return (await db.query(query)).rows;
 };

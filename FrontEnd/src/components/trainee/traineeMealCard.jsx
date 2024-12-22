@@ -14,6 +14,7 @@ import {
 } from "@material-tailwind/react";
 import { Card, Typography } from "@material-tailwind/react";
 import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const tableHead = ["Ingredient", "Quantity"];
 
@@ -208,14 +209,18 @@ export function TraineeMealCard(probs) {
               <strong>Fats: </strong>
               {probs.fats} gm
             </div>
-            <button
-              className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
+            {probs.isEditable ? (
+              <button
+                className={`px-4 py-2 border border-accent rounded-full w-fit flex gap-2 items-center
             justify-around hover:bg-accent hover:text-backGroundColor`}
-              onClick={handleMarkAsDone}
-            >
-              <span>{probs.isDone ? "Mark as undone" : "Mark as done"}</span>
-              {!probs.isDone ? <span className="pi pi-check"></span> : <></>}
-            </button>
+                onClick={handleMarkAsDone}
+              >
+                <span>{probs.isDone ? "Mark as undone" : "Mark as done"}</span>
+                {!probs.isDone ? <span className="pi pi-check"></span> : <></>}
+              </button>
+            ) : (
+              <></>
+            )}
             <ToastContainer />
           </AccordionBody>
         </Accordion>

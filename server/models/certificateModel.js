@@ -21,7 +21,10 @@ exports.createCertificate = async (...values) => {
     throw err;
   }
 };
-
+exports.getCertificateById = async (certId) => {
+  const query = `SELECT * FROM lifta_schema.certificate WHERE certificate_id = $1;`;
+  return (await db.query(query, [certId])).rows[0];
+};
 exports.editCertificate = async (...values) => {
   console.log(values);
   try {

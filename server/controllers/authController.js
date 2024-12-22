@@ -40,7 +40,7 @@ const checkAuth = async (req, res) => {
   try {
     // Verify the token
     const decoded = jwt.verify(token, process.env.SECRETKEY);
-
+    const is_banned = await userModel.isBanned(decoded.user_id);
     // Extract userId and userType from the token payload
     const { user_id, type } = decoded;
 
@@ -49,6 +49,7 @@ const checkAuth = async (req, res) => {
       isAuthenticated: true,
       userId: user_id,
       userType: type,
+      is_banned: is_banned,
     });
   } catch (err) {
     // Handle invalid or expired tokens
@@ -76,17 +77,17 @@ const login = async (req, res, next) => {
   if (!(await validatePassword(password, user["password"])))
     return next(new AppError("Incorrect password", 401));
 
-  if(user.type === "Admin") {
+  if (user.type === "Admin") {
     //jwt token by cookie
     const payload = {
       user_id: user.user_id,
       email: user.email,
       type: user.type,
     };
-  
+
     const token = createToken(payload);
     res.cookie("jwt", token);
-  
+
     res.status(200).json({
       status: "success",
       data: {
@@ -125,7 +126,6 @@ const login = async (req, res, next) => {
 };
 
 // Sign-Up
-
 const signup = async (req, res, next) => {
   const {
     email,
@@ -140,6 +140,21 @@ const signup = async (req, res, next) => {
     birth_date,
   } = req.body;
 
+  // Name validation
+  if (!validator.isAlpha(first_name.replace(/\s/g, ""))) {
+    return next(new AppError("First name should contain only letters", 400));
+  }
+
+  if (!validator.isAlpha(last_name.replace(/\s/g, ""))) {
+    return next(new AppError("Last name should contain only letters", 400));
+  }
+
+  // Phone number validation
+  const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+  if (!phoneRegex.test(phone_number)) {
+    return next(new AppError("Please enter a valid phone number", 400));
+  }
+
   let food_allergies,
     workout_preferences,
     weight,
@@ -151,6 +166,7 @@ const signup = async (req, res, next) => {
     certificate_photo,
     description,
     date_issued;
+
   if (type === "Trainee") {
     ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
   } else {
@@ -162,6 +178,19 @@ const signup = async (req, res, next) => {
       description,
       date_issued,
     } = req.body);
+
+    // Title validation for trainers
+    if (!title || title.trim().length < 2 || title.trim().length > 50) {
+      return next(
+        new AppError("Title must be between 2 and 50 characters", 400)
+      );
+    }
+  }
+
+  if (title && !validator.isAlpha(title.replace(/\s/g, ""))) {
+    return next(
+      new AppError("Certificate Title name should contain only letters", 400)
+    );
   }
 
   if (!validator.isEmail(email))
@@ -234,10 +263,17 @@ const updateUser = async (req, res, next) => {
     client_limit;
   if (type === "Trainee") {
     ({ food_allergies, workout_preferences, weight, height, goal } = req.body);
-  } else if(type === "Trainer") {
+  } else if (type === "Trainer") {
     ({ experience_years, client_limit } = req.body);
+    if (experience_years === "") experience_years = 0;
+    if (client_limit === "" || client_limit <= 0) {
+      return next(new AppError("Please enter a positive Number", 400));
+    }
   }
-
+  const phoneRegex = /^01\d{9}$/; // Matches "01" followed by 9 digits (11 total)
+  if (!phoneRegex.test(phone_number)) {
+    return next(new AppError("Please enter a valid Number", 400));
+  }
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
 
@@ -260,7 +296,9 @@ const updateUser = async (req, res, next) => {
   ];
   type === "Trainee"
     ? values.push(food_allergies, weight, height, goal, workout_preferences)
-    : type === "Trainer"? values.push(experience_years, client_limit): values;
+    : type === "Trainer"
+      ? values.push(experience_years, client_limit)
+      : values;
 
   const user = await userModel.updateUser(values);
 

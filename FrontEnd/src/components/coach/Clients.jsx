@@ -5,23 +5,31 @@ import Loader from "../Loader"; // Import your Loader component
 import { Paginator } from "primereact/paginator";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
+
+import photo from "../../assets/user-icon-on-transparent-background-free-png.webp";
+
 const Clients = ({ userId }) => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState(null);
+  const [selectedClient, setSelectedClient] = useState({
+    clientId: null,
+    type: null,
+  });
   const navigate = useNavigate();
   const clientsPerPage = 4;
 
   const { get } = useHttp("http://localhost:3000");
   const { patch } = useHttp("http://localhost:3000");
+
   useEffect(() => {
     const loadClients = async () => {
       setLoading(true); // Show loader when API call starts
       try {
         const response = await get(`/users/${userId}/clients`);
         setClients(response.data.clients);
+        console.log("clients:", response.data.clients);
       } catch (err) {
         console.error(err);
       } finally {
@@ -64,40 +72,45 @@ const Clients = ({ userId }) => {
   };
 
   const viewClient = (trainee_id) => {
-    // Placeholder function
+    navigate(`/${trainee_id}/profile`);
   };
 
   const onPageChange = (event) => {
-    const newPage = event.page + 1; // PrimeReact uses zero-based page indexing
-    setCurrentPage(newPage);
+    setCurrentPage(event.page + 1); // PrimeReact uses zero-based page indexing
   };
 
   const renderClients = () => {
     if (clients.length === 0) {
       return <NoDataDashboard header="Clients Section" />;
     }
-    const openModal = (clientId) => {
-      setSelectedClient(clientId);
+
+    const openModal = (clientId, type) => {
+      setSelectedClient({
+        clientId,
+        type,
+      });
       setIsModalOpen(true);
     };
 
     const closeModal = () => {
       setIsModalOpen(false);
-      setSelectedClient(null);
+      setSelectedClient({
+        clientId: null,
+        type: null,
+      });
     };
 
     const handleAssignWorkout = () => {
       navigate("/coach/workouts", {
-        state: { clientId: selectedClient, userId },
+        state: { clientId: selectedClient.clientId, userId },
       });
       closeModal();
     };
 
     const handleAssignMeal = () => {
       navigate("/coach/meals", {
-        state: { clientId: selectedClient, userId },
+        state: { clientId: selectedClient.clientId, userId },
       });
-      closeModal();
       closeModal();
     };
 
@@ -107,29 +120,36 @@ const Clients = ({ userId }) => {
           isOpen={isModalOpen}
           onRequestClose={closeModal}
           className="fixed inset-0 flex items-center justify-center z-50"
-          overlayClassName="fixed inset-0 "
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
           contentLabel="Assign Options"
         >
-          <div className="relative  p-6 rounded-lg shadow-lg w-80 text-center bg-textColor bg-opacity-50">
+          <div className="relative p-6 rounded-lg shadow-lg w-80 text-center bg-textColor bg-opacity-50 ">
             <button
               onClick={closeModal}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
             >
               &times;
             </button>
+
             <h2 className="text-xl font-bold mb-4">Assign</h2>
-            <button
-              onClick={handleAssignWorkout}
-              className="bg-primary text-white py-2 px-4 rounded m-2 w-full hover:bg-secondary duration-300"
-            >
-              Workout
-            </button>
-            <button
-              onClick={handleAssignMeal}
-              className="bg-primary text-white py-2 px-4 rounded m-2 w-full hover:bg-secondary duration-300"
-            >
-              Meal
-            </button>
+            {(selectedClient.type === "Gym" ||
+              selectedClient.type === "Both") && (
+              <button
+                onClick={handleAssignWorkout}
+                className="bg-primary text-white py-2 px-4 rounded m-2 w-full hover:bg-secondary duration-300"
+              >
+                Workout
+              </button>
+            )}
+            {(selectedClient.type === "Nutrition" ||
+              selectedClient.type === "Both") && (
+              <button
+                onClick={handleAssignMeal}
+                className="bg-primary text-white py-2 px-4 rounded m-2 w-full hover:bg-secondary duration-300"
+              >
+                Meal
+              </button>
+            )}
           </div>
         </Modal>
         <div
@@ -149,7 +169,7 @@ const Clients = ({ userId }) => {
               >
                 {/* Client Photo */}
                 <img
-                  src="src/assets/landingGym.svg" // Replace with the actual path to the client's photo if available
+                  src={`${client.photo ? client.photo : photo}`} // Replace with the actual path to the client's photo if available
                   alt={client.name}
                   className="w-24 h-24 rounded-full mx-auto object-cover mb-4"
                 />
@@ -175,7 +195,10 @@ const Clients = ({ userId }) => {
                   </button>
                   <button
                     onClick={(e) => {
-                      openModal(client.trainee_id);
+
+                      e.stopPropagation(); // Prevents the parent div's onClick from firing
+
+                      openModal(client.trainee_id, client.type);
                     }}
                     className="bg-backGroundColor border border-primary text-textColor py-3 px-6 rounded-lg transition-transform duration-300 hover:bg-primary hover:border-none hover:text-backGroundColor hover:scale-110"
                   >
@@ -185,15 +208,39 @@ const Clients = ({ userId }) => {
               </div>
             ))}
           </div>
-          <div className="">
+          <div className="mt-4">
             <Paginator
-              className="space-x-6"
               first={indexOfFirstClient}
               rows={clientsPerPage}
               totalRecords={clients.length}
               onPageChange={onPageChange}
               template={{
                 layout: "PrevPageLink CurrentPageReport NextPageLink",
+                PrevPageLink: (options) => (
+                  <button
+                    type="button"
+                    className={`p-paginator-prev p-paginator-element p-link ${options.className}`}
+                    onClick={options.onClick}
+                    disabled={options.disabled}
+                  >
+                    <span className="p-paginator-icon pi pi-angle-left"></span>
+                  </button>
+                ),
+                NextPageLink: (options) => (
+                  <button
+                    type="button"
+                    className={`p-paginator-next p-paginator-element p-link ${options.className}`}
+                    onClick={options.onClick}
+                    disabled={options.disabled}
+                  >
+                    <span className="p-paginator-icon pi pi-angle-right"></span>
+                  </button>
+                ),
+                CurrentPageReport: (options) => (
+                  <span className="p-paginator-current">
+                    {options.first} - {options.last} of {options.totalRecords}
+                  </span>
+                ),
               }}
             />
           </div>

@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import useHttp from "./hooks/useHTTP";
 import Loader from "./components/Loader";
+import Banned from "./pages/Banned";
 
 
 
 const BrowseProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [isBanned, setIsBanned] = useState(null);
   const [userType, setUserType] = useState(null);
-
+  const { coach_id } = useParams();
   const navigate = useNavigate();
   const { get } = useHttp("http://localhost:3000");
 
@@ -20,7 +22,8 @@ const BrowseProtectedRoute = ({ children }) => {
         // Assuming response.body has these values
         setIsAuthenticated(true);
         setUserType(response.userType);
-        setUserId(response.userId)
+        setUserId(response.userId);
+        setIsBanned(response.is_banned);
       } catch (err) {
         console.error(err);
         setIsAuthenticated(false); // Set as unauthenticated on error
@@ -36,8 +39,17 @@ const BrowseProtectedRoute = ({ children }) => {
   }
 
   if(isAuthenticated === false) 
-    return <Navigate to="/" replace />;
+    return <Navigate to="/log-in" replace />;
 
+    if(isBanned) {
+      return <Banned/>;
+    }
+  
+
+  if(coach_id) {
+    console.log("hi", coach_id);
+    return React.cloneElement(children, { userId: coach_id });
+  }
   if (userType === "Trainer") {
     return <Navigate to="/profile" replace />;
   }

@@ -101,7 +101,7 @@ export function AdminStatistics() {
         <div className="mb-6">
           <h1 className="text-2xl font-medium">
             Package Price Average:{" "}
-            <span className="text-accent">{averagePrice} $</span>
+            <span className="text-accent">{averagePrice}$</span>
           </h1>
         </div>
         <div className="text-textColor">

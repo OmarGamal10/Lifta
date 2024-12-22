@@ -10,11 +10,13 @@ import useHttp from "../../hooks/useHTTP";
 
 import { useLocation } from "react-router-dom";
 import { use } from "react";
+import Loader from "../Loader"; // Import your Loader component
+
 function AssignMeal() {
   const navigate = useNavigate();
   const location = useLocation();
   const { clientId, userId } = location.state || {};
-  const { get, post, loading, error, data } = useHttp("http://localhost:3000");
+  const { get, post, error, data } = useHttp("http://localhost:3000");
   const [formData, setFormData] = useState({
     mealId: "",
     day: "Sunday",
@@ -24,6 +26,7 @@ function AssignMeal() {
   const [selectedMeal, setSelectedMeal] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [meals, setMeals] = useState([]);
+  const [loading, setLoading] = useState(true); // State to track loading
 
   const days = [
     "Sunday",
@@ -42,6 +45,8 @@ function AssignMeal() {
   ////////////////////////
   useEffect(() => {
     const fetchMeals = async () => {
+      setLoading(true);
+
       if (!userId) {
         console.error("User ID not found in token.");
         return;
@@ -67,6 +72,8 @@ function AssignMeal() {
       } catch (err) {
         console.error("Error fetching meals:", err);
         setMeals([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -176,123 +183,126 @@ function AssignMeal() {
     setCurrentPage(newPage);
   };
 
-  return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <h2 className="text-2xl text-textColor font-bold mb-4">Assign Meal</h2>
+  const renderForm = () => {
+    return (
+      <div className="p-4 max-w-4xl mx-auto">
+        <h2 className="text-2xl text-textColor font-bold mb-4">Assign Meal</h2>
 
-      {meals.length > 0 ? (
-        <div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-5 mb-4">
-            {paginatedMeals.map((meal) => (
-              <div
-                key={meal.id}
-                onClick={() => handleMealSelect(meal)}
-                className={`cursor-pointer ${
-                  selectedMeal?.id === meal.id
-                    ? "border-4 border-primary rounded-2xl"
-                    : ""
-                }`}
-              >
-                <Meal
-                  name={meal.name}
-                  photo={meal.picture}
-                  facts={{
-                    carb: meal.carb,
-                    protein: meal.protein,
-                    fat: meal.fat,
-                    calories: meal.calories,
-                  }}
-                  view={"display"}
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-center items-center space-x-4 mb-2">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-4 py-2 bg-secondary rounded disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <span className="text-textColor">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-4 py-2 bg-secondary rounded disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
-
-          {selectedMeal && (
-            <div className="mb-4 flex gap-4">
-              <div className="flex-1">
-                <label className="block mb-2 font-medium text-textColor">
-                  Select Day for {selectedMeal.name}
-                </label>
-                <select
-                  name="day"
-                  value={formData.day}
-                  onChange={handleDayChange}
-                  className="w-full p-2 border rounded"
+        {meals.length > 0 ? (
+          <div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-5 mb-4">
+              {paginatedMeals.map((meal) => (
+                <div
+                  key={meal.id}
+                  onClick={() => handleMealSelect(meal)}
+                  className={`cursor-pointer ${
+                    selectedMeal?.id === meal.id
+                      ? "border-4 border-primary rounded-2xl"
+                      : ""
+                  }`}
                 >
-                  {days.map((day) => (
-                    <option key={day} value={day}>
-                      {day}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex-1">
-                <label className="block mb-2 font-medium text-textColor">
-                  Select Meal Type
-                </label>
-                <select
-                  name="mealType"
-                  value={formData.mealType}
-                  onChange={handleMealTypeChange}
-                  className="w-full p-2 border rounded"
-                >
-                  {mealTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <Meal
+                    name={meal.name}
+                    photo={meal.picture}
+                    facts={{
+                      carb: meal.carb,
+                      protein: meal.protein,
+                      fat: meal.fat,
+                      calories: meal.calories,
+                    }}
+                    view={"display"}
+                  />
+                </div>
+              ))}
             </div>
-          )}
 
-          {errors.mealId && <ErrorMessage error={errors.mealId} />}
+            <div className="flex justify-center items-center space-x-4 mb-2">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-secondary rounded disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span className="text-textColor">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-secondary rounded disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
 
-          <div className="flex justify-end space-x-4">
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
-            >
-              Cancel
-            </button>
+            {selectedMeal && (
+              <div className="mb-4 flex gap-4">
+                <div className="flex-1">
+                  <label className="block mb-2 font-medium text-textColor">
+                    Select Day for {selectedMeal.name}
+                  </label>
+                  <select
+                    name="day"
+                    value={formData.day}
+                    onChange={handleDayChange}
+                    className="w-full p-2 border rounded"
+                  >
+                    {days.map((day) => (
+                      <option key={day} value={day}>
+                        {day}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            <button
-              type="button"
-              onClick={() => handleSubmit(true)}
-              className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
-            >
-              Assign Meal
-            </button>
+                <div className="flex-1">
+                  <label className="block mb-2 font-medium text-textColor">
+                    Select Meal Type
+                  </label>
+                  <select
+                    name="mealType"
+                    value={formData.mealType}
+                    onChange={handleMealTypeChange}
+                    className="w-full p-2 border rounded"
+                  >
+                    {mealTypes.map((type) => (
+                      <option key={type} value={type}>
+                        {type}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {errors.mealId && <ErrorMessage error={errors.mealId} />}
+
+            <div className="flex justify-end space-x-4">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSubmit(true)}
+                className="px-4 py-2 bg-secondary text-textColor rounded hover:bg-primary hover:text-backGroundColor"
+              >
+                Assign Meal
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        <Nodata header="No Meals Available" />
-      )}
-    </div>
-  );
+        ) : (
+          <Nodata header="No Meals Available" />
+        )}
+      </div>
+    );
+  };
+  return <div className="w-full">{loading ? <Loader /> : renderForm()}</div>;
 }
 
 export default AssignMeal;

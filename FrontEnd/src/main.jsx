@@ -51,6 +51,8 @@ import AdminUserTypeForm from "./components/admin/adminUserTypeForm.jsx";
 import { AdminsList } from "./components/admin/adminsList.jsx";
 import Exercises from "./components/coach/Exercises.jsx";
 
+import { PackagesList } from "./components/admin/packagesList.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -111,6 +113,20 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "browse/:coach_id/packages",
+    element: (
+      <PrimeReactProvider value={{ pt: Tailwind }}>
+        <BrowseProtectedRoute>
+          <div>
+            <NavBar pref="Trainee" />
+            <PackageDashboard />
+            <Footer />
+          </div>
+        </BrowseProtectedRoute>
+      </PrimeReactProvider>
+    ),
+  },
+  {
     path: "/coach/workouts",
     element: (
       <ProtectedRoute>
@@ -126,25 +142,20 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  
   {
-    path: "browse/:coach_id/packages",
+    path: ":coach_id/profile",
     element: (
-      <PrimeReactProvider value={{ pt: Tailwind }}>
         <BrowseProtectedRoute>
-          <div>
-            <NavBar pref="NotDefault" />
-            <PackageDashboard />
-            <Footer />
-          </div>
+          <UserProfile />
         </BrowseProtectedRoute>
-      </PrimeReactProvider>
     ),
   },
   {
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <TraineesList />
+        <PackagesList />
       </PrimeReactProvider>
     ),
   },

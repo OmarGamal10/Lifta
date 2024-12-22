@@ -30,6 +30,7 @@
     "react-toastify": "^11.0.2",
     "rollup": "^4.29.0",
     "socket.io-client": "^4.8.1",
+    "sonner": "^1.7.1",
     "tailwind-scrollbar": "^3.1.0"
   },
   "devDependencies": {

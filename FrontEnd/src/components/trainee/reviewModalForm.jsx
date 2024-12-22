@@ -13,7 +13,8 @@ import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { Rating } from "primereact/rating";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify"; // Ensure correct import
+import "react-toastify/dist/ReactToastify.css";
 
 export function ReviewModalForm(probs) {
   const ref = useRef();
@@ -74,19 +75,12 @@ export function ReviewModalForm(probs) {
             },
           }
         );
-        console.log("response");
-        toast.success("Rating updated successfully", {
-          theme: "dark",
-          position: "bottom-right",
-          autoClose: 2500,
-          hideProgressBar: true,
-          draggable: true,
-        });
+        console.log(response);
+        console.log("Review updated successfully");
+        toast.success("Review updated successfully");
       } catch (err) {
         console.log(err);
-        toast.error(err, {
-          theme: "dark",
-        });
+        toast.error("An error occurred");
       }
     } else {
       const trainerId = probs.trainerId;
@@ -107,18 +101,11 @@ export function ReviewModalForm(probs) {
           }
         );
         console.log(response);
-        toast.success("Thanks for your review!", {
-          theme: "dark",
-          position: "bottom-right",
-          autoClose: 2500,
-          hideProgressBar: true,
-          draggable: true,
-        });
+
+        toast.success("Review added successfully");
       } catch (err) {
         console.log(err);
-        toast.error(err, {
-          theme: "dark",
-        });
+        toast.error("An error occurred");
       }
     }
     setFormData({ content: "" });

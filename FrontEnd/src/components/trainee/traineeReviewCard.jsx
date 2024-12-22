@@ -101,6 +101,7 @@ export function TraineeReviewCard(probs) {
             value={probs.content}
           ></textarea>
         </div>
+        {probs.isEditable?
         <div className="flex justify-between mt-4 ">
           <Button
             label="Delete"
@@ -120,6 +121,7 @@ export function TraineeReviewCard(probs) {
               }, // OR { className: 'text-white text-2xl' }
             }}
           />
+          
           <Button
             label="Edit"
             icon="pi pi-pen-to-square"
@@ -140,6 +142,7 @@ export function TraineeReviewCard(probs) {
           />
           <ToastContainer />
         </div>
+        :<></>}
       </div>
 
       <dialog

@@ -4,6 +4,7 @@ import ErrorMessage from "../errorMsg"; // Import the ErrorMessage component
 import { jwtDecode } from "jwt-decode";
 import { BsUpload } from "react-icons/bs";
 import { BsX } from "react-icons/bs";
+import { Toaster, toast } from "sonner";
 
 import getTokenFromCookies from "../../freqUsedFuncs/getToken";
 import { useNavigate } from "react-router-dom";
@@ -111,9 +112,21 @@ function Ingredient({
             name: response.data.ingredient.name,
           },
         ]);
+        toast.success("Ingredient Added Successfully", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
         setView(false);
       } catch (err) {
         console.log(err);
+        toast.error("Error adding exercise", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
       }
     } else {
       try {
@@ -143,10 +156,21 @@ function Ingredient({
               : ingredient
           )
         );
-
+        toast.success("Ingredient Updated Successfully", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
         setView(false);
       } catch (err) {
-        console.log(err.response.data.message);
+        console.log(err);
+        toast.error("Error updating ingredient", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
       }
     }
   };

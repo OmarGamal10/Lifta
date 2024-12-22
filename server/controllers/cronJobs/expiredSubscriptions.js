@@ -15,6 +15,24 @@ const expiredSubscriptionsCronJob = cron.schedule("59 23 * * *", async () => {
 
     const query3 = `DELETE FROM lifta_schema.meals_diet WHERE trainee_id IN (SELECT trainee_id FROM lifta_schema.subscription WHERE status = 'Expired')`;
     await db.query(query3);
+
+    //also remove either coach id or nutritionist id from trainee, depending on the package type
+    const query4 = `
+    UPDATE lifta_schema.trainee t
+    SET coach_id = CASE 
+      WHEN p.type = 'Gym' OR p.type = 'Both' THEN NULL 
+      ELSE t.coach_id 
+    END,
+    nutritionist_id = CASE 
+      WHEN p.type = 'Nutrition' OR p.type = 'Both' THEN NULL 
+      ELSE t.nutritionist_id 
+    END
+    FROM lifta_schema.subscription s
+    JOIN lifta_schema.package p ON s.package_id = p.package_id
+    WHERE t.trainee_id = s.trainee_id AND s.status = 'Expired';
+`;
+    await db.query(query4);
+
     console.log("Cron job ran successfully");
   } catch (err) {
     console.error(err);
