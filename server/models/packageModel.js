@@ -68,3 +68,29 @@ exports.getAvgPrice = async () => {
   const query = `SELECT ROUND(AVG(price)::numeric, 3) AS averagePrice FROM lifta_schema.package;`;
   return (await db.query(query)).rows;
 };
+
+exports.getPackagesDetails = async () => {
+  const query = `
+SELECT 
+    p.package_id, 
+    p.name, 
+    p.price, 
+    p.type,
+    (SELECT COUNT(s.subscription_id)
+     FROM lifta_schema."subscription" s 
+     WHERE s.package_id = p.package_id 
+     AND s.status = 'Active') as active_subscriptions,
+	 (SELECT COUNT(s.subscription_id)
+     FROM lifta_schema."subscription" s 
+     WHERE s.package_id = p.package_id 
+     AND s.status = 'Pending') as pending_subscriptions,
+	 (SELECT COUNT(s.subscription_id)
+     FROM lifta_schema."subscription" s 
+     WHERE s.package_id = p.package_id 
+     AND s.status = 'Active') as rejected_subscriptions,
+	 u.first_name,u.last_name
+	 FROM lifta_schema."package" p
+	 JOIN lifta_schema.users u
+	 ON p.trainer_id = u.user_id;`;
+  return (await db.query(query)).rows;
+};

@@ -61,7 +61,7 @@ export function ReviewModalForm(probs) {
     const content = formData.content;
 
     if (probs.isEdit) {
-      const reviewId = probs.reviewId;
+      // const reviewId = probs.reviewId;
       try {
         const response = await patch(
           `/reviews/${probs.reviewId}`,
@@ -101,6 +101,7 @@ export function ReviewModalForm(probs) {
           }
         );
         console.log(response);
+
         toast.success("Review added successfully");
       } catch (err) {
         console.log(err);
@@ -161,7 +162,7 @@ export function ReviewModalForm(probs) {
             className=" border-secondary w-full text-secondary text-sm rounded-xl py-4 border-2 hover:bg-secondary hover:text-textColor font-medium  active:ring active:ring-secondary/50"
             onClick={handleSubmit}
           >
-            Submit
+            {probs.isEdit ? "Save" : "Submit"}
           </button>
         </div>
       </form>

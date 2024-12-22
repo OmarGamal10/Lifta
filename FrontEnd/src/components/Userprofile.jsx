@@ -38,6 +38,7 @@ import Memberships from "./trainee/Memberships";
 import getTokenFromCookies from "../freqUsedFuncs/getToken";
 import { jwtDecode } from "jwt-decode";
 import { Navigate, useNavigate } from "react-router-dom";
+import { PackagesList } from "./admin/packagesList";
 
 const UserProfile = ({ userId }) => {
   // State to track the selected section
@@ -148,10 +149,6 @@ const UserProfile = ({ userId }) => {
         default:
           return <MyProfile isEditable={isEditable} userId={userId} userProfile={userProfile} setUserName={setUserName} setUserBio={setUserBio} setUserProfile={setUserProfile}/>;
       }
-      if (activeSection == "Reviews") {
-        console.log("Reviews");
-        return <traineeReviewDashboard userId={userId} />;
-      }
     } else if (userType == "Trainer") {
       switch (activeSection) {
         case "Exercises":
@@ -212,7 +209,12 @@ const UserProfile = ({ userId }) => {
               <AdminsList />
             </PrimeReactProvider>
           );
-
+          case "Packages":
+            return (
+              <PrimeReactProvider value={{ pt: Tailwind }}>
+                <PackagesList />
+              </PrimeReactProvider>
+            );
         case "Statistics":
           return <AdminStatistics />;
         case "Add User":

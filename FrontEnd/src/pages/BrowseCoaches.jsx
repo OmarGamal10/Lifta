@@ -22,7 +22,7 @@ const BrowseCoaches = () => {
   const { get } = useHttp("http://localhost:3000");
 
   const [selectedTrainerId, setSelectedTrainerId] = useState(null);
-  const [reviewId, setReviewId] = useState(null);
+  const [currentReviewId, setCurrentReviewId] = useState(null);
   const [traineeId, setTraineeId] = useState(null);
   const [content, setContent] = useState("");
   const [stars, setStars] = useState(0);
@@ -59,8 +59,9 @@ const BrowseCoaches = () => {
   };
 
   const handleRate = async (trainerId, reviewId) => {
+    console.log(reviewId);
     if (reviewId) {
-      setReviewId(reviewId);
+      setCurrentReviewId(reviewId);
       try {
         const response = await get(`/reviews/reviewData/${reviewId}`);
         setContent(response.data.review[0].content);
@@ -80,7 +81,7 @@ const BrowseCoaches = () => {
       dialogRef.current.close();
     }
     setSelectedTrainerId(null);
-    setReviewId(null);
+    setCurrentReviewId(null);
     setContent("");
     setStars(0);
     getAllCoaches();
@@ -146,11 +147,12 @@ const BrowseCoaches = () => {
           <dialog
             ref={dialogRef}
             className="p-6 rounded-lg w-full max-w-md bg-textColor text-backGroundColor"
+            onCancel={handleCloseModal}
           >
-            {reviewId != null ? (
+            {currentReviewId != null ? (
               <ReviewModalForm
                 isEdit={1}
-                reviewId={reviewId}
+                reviewId={currentReviewId}
                 content={content}
                 stars={stars}
                 handleCloseModal={handleCloseModal}

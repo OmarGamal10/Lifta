@@ -51,6 +51,8 @@ import AdminUserTypeForm from "./components/admin/adminUserTypeForm.jsx";
 import { AdminsList } from "./components/admin/adminsList.jsx";
 import Exercises from "./components/coach/Exercises.jsx";
 
+import { PackagesList } from "./components/admin/packagesList.jsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -153,7 +155,7 @@ const router = createBrowserRouter([
     path: "test",
     element: (
       <PrimeReactProvider value={{ pt: Tailwind }}>
-        <TraineesList />
+        <PackagesList />
       </PrimeReactProvider>
     ),
   },

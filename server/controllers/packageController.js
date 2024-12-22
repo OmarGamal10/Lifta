@@ -131,6 +131,16 @@ const getAvgPrice = async (req, res, next) => {
   });
 };
 
+const getPackagesDetails = async (req, res, next) => {
+  const packages = await packageModel.getPackagesDetails();
+  res.status(200).json({
+    status: "success",
+    data: {
+      packages,
+    },
+  });
+};
+
 module.exports = {
   getAllPackages: catchAsync(getAllPackages),
   getPackagesCoach: catchAsync(getPackagesCoach),
@@ -141,6 +151,7 @@ module.exports = {
   getTopFivePackages: catchAsync(getTopFivePackages),
   getAvgPrice: catchAsync(getAvgPrice),
   toggleActiveState: catchAsync(toggleActiveState),
+  getPackagesDetails: catchAsync(getPackagesDetails),
 };
 
 // /packages

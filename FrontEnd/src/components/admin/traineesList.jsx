@@ -187,7 +187,7 @@ export function TraineesList() {
           filter
           filterMenuClassName="bg-secondary text-textColor"
           filterPlaceholder="Search"
-          style={{ minWidth: "140px" }}
+          style={{ minWidth: "240px" }}
         />
         <Column
           field="height"

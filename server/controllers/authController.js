@@ -180,17 +180,11 @@ const signup = async (req, res, next) => {
     } = req.body);
 
     // Title validation for trainers
-    if (!title || title.trim().length < 2 || title.trim().length > 50) {
+    if (title && !validator.isAlpha(title.replace(/\s/g, ""))) {
       return next(
-        new AppError("Title must be between 2 and 50 characters", 400)
+        new AppError("Certificate Title name should contain only letters", 400)
       );
     }
-  }
-
-  if (title && !validator.isAlpha(title.replace(/\s/g, ""))) {
-    return next(
-      new AppError("Certificate Title name should contain only letters", 400)
-    );
   }
 
   if (!validator.isEmail(email))
@@ -326,6 +320,20 @@ const createAccount = async (req, res, next) => {
     birth_date,
   } = req.body;
 
+  if (!validator.isAlpha(first_name.replace(/\s/g, ""))) {
+    return next(new AppError("First name should contain only letters", 400));
+  }
+
+  if (!validator.isAlpha(last_name.replace(/\s/g, ""))) {
+    return next(new AppError("Last name should contain only letters", 400));
+  }
+
+  // Phone number validation
+  const phoneRegex = /^01\d{9}$/;
+  if(!phoneRegex.test(phone_number)) {
+    return next(new AppError("Numbers from 0 to 9 and start by '01'", 400));
+  }
+
   let food_allergies,
     workout_preferences,
     weight,
@@ -348,17 +356,23 @@ const createAccount = async (req, res, next) => {
       description,
       date_issued,
     } = req.body);
+
+    if (title && !validator.isAlpha(title.replace(/\s/g, ""))) {
+      return next(
+        new AppError("Certificate Title name should contain only letters", 400)
+      );
+    }
   }
 
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
+
   const passwordHashed = await hashPassword(password);
   const values = [
     email,
     first_name,
     last_name,
     passwordHashed,
-
     gender,
     bio,
     phone_number,
