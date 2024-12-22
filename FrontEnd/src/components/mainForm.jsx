@@ -5,6 +5,7 @@ import ErrorMessage from "./errorMsg"; // Import the ErrorMessage component
 import handleImages from "../freqUsedFuncs/handleImages";
 import { useNavigate } from "react-router-dom";
 import useHttp from "../hooks/useHTTP";
+import { Toaster, toast } from "sonner";
 
 function Form({ formData, setFormData, toNext, type }) {
   const navigate = useNavigate();
@@ -47,7 +48,6 @@ function Form({ formData, setFormData, toNext, type }) {
 
     if (type === "Admin") {
       try {
-        console.log(formData);
         const response = await post(
           "/users/signup",
           {
@@ -59,8 +59,21 @@ function Form({ formData, setFormData, toNext, type }) {
             },
           }
         );
+        console.log(response);
+        toast.success("Account Created Successfully", {
+          style: {
+            background: "white",
+            color: "green",
+          },
+        });
       } catch (err) {
         console.log(err);
+        toast.error("Can't create account", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
       }
     } else {
       toNext(2);
@@ -121,6 +134,7 @@ function Form({ formData, setFormData, toNext, type }) {
   };
   return (
     <div className="flex flex-row w-full min-h-screen justify-center items-center bg-backGroundColor p-16">
+      <Toaster/>
       <div className="container border-2 border-solid bg-backGroundColor border-secondary flex flex-col items-center justify-center p-8 max-w-2xl rounded-3xl relative">
         <div
           className="absolute top-[-65px] left-1/2 transform -translate-x-1/2 cursor-pointer"

@@ -180,17 +180,11 @@ const signup = async (req, res, next) => {
     } = req.body);
 
     // Title validation for trainers
-    if (!title || title.trim().length < 2 || title.trim().length > 50) {
+    if (title && !validator.isAlpha(title.replace(/\s/g, ""))) {
       return next(
-        new AppError("Title must be between 2 and 50 characters", 400)
+        new AppError("Certificate Title name should contain only letters", 400)
       );
     }
-  }
-
-  if (title && !validator.isAlpha(title.replace(/\s/g, ""))) {
-    return next(
-      new AppError("Certificate Title name should contain only letters", 400)
-    );
   }
 
   if (!validator.isEmail(email))
@@ -356,7 +350,6 @@ const createAccount = async (req, res, next) => {
     first_name,
     last_name,
     passwordHashed,
-
     gender,
     bio,
     phone_number,
