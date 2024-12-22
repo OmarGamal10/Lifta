@@ -95,21 +95,43 @@ exports.addDoneMeal = async (trainee_id, meal_id, type) => {
   }
 };
 
-exports.assignMealToTrainee = async (trainee_id, meal_id, day, type) => {
+exports.assignMealToTrainee = async (
+  trainee_id,
+  meal_id,
+  day,
+  type,
+  newMeal
+) => {
   try {
-    const query = `INSERT INTO lifta_schema.meals_diet (trainee_id,meal_id,day,type) VALUES ($1,$2,$3,$4) RETURNING * `;
-    return (await db.query(query, [trainee_id, meal_id, day, type])).rows;
+    // Check if a meal already exists for the given trainee, day, and type
+    const existingMeal = await db.query(
+      `SELECT * FROM lifta_schema.meals_diet WHERE trainee_id = $1 AND day = $2 AND type = $3`,
+      [trainee_id, day, type]
+    );
+
+    let query;
+
+    if (existingMeal.rows.length > 0) {
+      // Update the existing meal
+      query = `UPDATE lifta_schema.meals_diet SET meal_id = $1 WHERE trainee_id = $2 AND day = $3 AND type = $4 RETURNING *`;
+      console.log("Updating an existing meal for the day and type");
+      newMeal.new = false;
+    } else {
+      // Insert a new meal
+      query = `INSERT INTO lifta_schema.meals_diet (meal_id, trainee_id, day, type) VALUES ($1, $2, $3, $4) RETURNING *`;
+      console.log("Inserting a new meal for the day and type");
+      newMeal.new = true;
+    }
+
+    // Execute the query and return the result
+    return (await db.query(query, [meal_id, trainee_id, day, type])).rows[0];
   } catch (err) {
     if (err.code === "23505") {
-      throw new AppError(
-        `Trainee already have a ${type} meal on this day`,
-        400
-      );
+      throw new AppError(`Trainee already has a ${type} meal on this day`, 400);
     }
     throw err;
   }
 };
-
 // exports.getCurrentMealStatusByType = async (trainee_id, type) => {
 //   const query = `SELECT "isDone" FROM lifta_schema.meal_log
 //     WHERE trainee_id = $1 AND type = $2 AND date = current_date;`;

@@ -77,12 +77,21 @@ const assignMealTrainee = async (req, res, next) => {
     return next(new AppError("Please provide a meal id", 400));
   }
 
+  const newMeal = {
+    new: true,
+  };
   const meal = await mealModel.assignMealToTrainee(
     trainee_id,
     meal_id,
     day,
-    type
+    type,
+    newMeal
   );
+  if (newMeal.new) {
+    meal.new = true;
+  } else {
+    meal.new = false;
+  }
   res.status(201).json({
     status: "success",
     data: {

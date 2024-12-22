@@ -70,7 +70,12 @@ function AssignMeal() {
           setCurrentPage(1);
         }
       } catch (err) {
-        console.error("Error fetching meals:", err);
+        toast.error("Error fetching meals", {
+          style: {
+            background: "white",
+            color: "red",
+          },
+        });
         setMeals([]);
       } finally {
         setLoading(false);
@@ -146,7 +151,48 @@ function AssignMeal() {
           },
         }
       );
-      console.log(response);
+      console.log("response:", response);
+      setSelectedMeal(null);
+
+      setErrors({});
+      if (response.data.meal.new)
+        toast.success(
+          `New Meal assigned successfully on ${formData.day} ${formData.mealType}`,
+          {
+            style: {
+              background: "white",
+              color: "green",
+            },
+          }
+        );
+      else
+        toast.success(
+          `Meal updated successfully on ${formData.day} ${formData.mealType}`,
+          {
+            style: {
+              background: "white",
+              color: "green",
+            },
+          }
+        );
+
+      setFormData({
+        mealId: "",
+        day: "Sunday",
+        mealType: "Breakfast",
+      });
+    } catch (err) {
+      toast.error("Error assigning meal", {
+        style: {
+          background: "white",
+          color: "red",
+        },
+      });
+    }
+  };
+
+  const handleCancel = () => {
+    if (selectedMeal) {
       setSelectedMeal(null);
       setFormData({
         mealId: "",
@@ -154,22 +200,9 @@ function AssignMeal() {
         mealType: "Breakfast",
       });
       setErrors({});
+    } else {
       navigate("/profile");
-    } catch (err) {
-      console.log(err.response.data.message);
-      errors.mealId = err.response.data.message;
     }
-  };
-
-  const handleCancel = () => {
-    setSelectedMeal(null);
-    setFormData({
-      mealId: "",
-      day: "Sunday",
-      mealType: "Breakfast",
-    });
-    setErrors({});
-    navigate("/profile");
   };
 
   const paginatedMeals = useMemo(() => {

@@ -141,8 +141,6 @@ function AssignWorkout() {
         }
       );
 
-      console.log(response.data.workout);
-      response.data.workout.new;
       setSelectedWorkout(null);
 
       setErrors({});
@@ -175,12 +173,16 @@ function AssignWorkout() {
   };
 
   const handleCancel = () => {
-    setSelectedWorkout(null);
-    setFormData({
-      workoutId: "",
-      day: "Sunday",
-    });
-    setErrors({});
+    if (selectedWorkout) {
+      setSelectedWorkout(null);
+      setFormData({
+        workoutId: "",
+        day: "Sunday",
+      });
+      setErrors({});
+    } else {
+      navigate("/profile");
+    }
   };
 
   const paginatedWorkouts = useMemo(() => {
