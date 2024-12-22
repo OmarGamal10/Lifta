@@ -1,7 +1,7 @@
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/AppError");
 const packageModel = require("../models/packageModel");
-
+const validator = require("validator");
 const getAllPackages = async (req, res, next) => {
   const packages = await packageModel.getAllPackages();
   res.status(200).json({
@@ -42,16 +42,32 @@ const getPackagesCoach = async (req, res, next) => {
 
 const createPackage = async (req, res, next) => {
   const { name, description, price, trainer_id, duration, type } = req.body;
+
   if (!name || !duration || !price || !trainer_id || !type) {
     return next(new AppError("Please provide all required fields", 400));
   }
-  if (isNaN(Number(duration)) || Number(duration) <= 0) {
-    return next(new AppError("Please provide a valid duration", 400));
+  if (!name || !validator.isAlpha(name.replace(/\s/g, ""))) {
+    return next(new AppError("Package name should contain only letters", 400));
   }
 
   if (isNaN(Number(price)) || Number(price) <= 0) {
     return next(new AppError("Please provide a valid price", 400));
   }
+
+  if (isNaN(Number(duration)) || Number(duration) <= 0) {
+    return next(new AppError("Please provide a valid duration", 400));
+  }
+
+  if (
+    !description ||
+    description.trim().length < 10 ||
+    description.trim().length > 250
+  ) {
+    return next(
+      new AppError("Description must be at least 10 characters", 400)
+    );
+  }
+
   const package = await packageModel.createPackage(
     name,
     price,

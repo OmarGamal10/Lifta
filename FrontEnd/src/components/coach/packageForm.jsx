@@ -145,14 +145,16 @@ function PackageForm({
         });
         setView(false);
       } catch (err) {
-        toast.error("Error Adding Package", {
-          style: {
-            background: "white",
-            color: "red",
-          },
-        });
-
-        setErrors({ submit: err.response?.data?.message });
+        if (err.response?.data?.message) {
+          setErrors({ ...errors, submit: err.response.data.message });
+        } else {
+          toast.error("Something went wrong", {
+            style: {
+              background: "white",
+              color: "red",
+            },
+          });
+        }
       }
     } else {
       try {
@@ -191,13 +193,16 @@ function PackageForm({
         });
         setView(false);
       } catch (err) {
-        setErrors({ submit: err.response?.data?.message });
-        toast.error("Error Updating Package", {
-          style: {
-            background: "white",
-            color: "red",
-          },
-        });
+        if (err.response?.data?.message) {
+          setErrors({ ...errors, submit: err.response.data.message });
+        } else {
+          toast.error("Something went wrong", {
+            style: {
+              background: "white",
+              color: "red",
+            },
+          });
+        }
       }
     }
   };
@@ -215,7 +220,7 @@ function PackageForm({
   return (
     <div
       name="pkgForm"
-      className={` border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center p-8  ${
+      className={` border-2 border-solid bg-textColor border-secondary flex flex-col items-center justify-center px-8 py-5  ${
         edit ? "max-w-sm" : "max-w-lg"
       } rounded-3xl relative`}
     >
@@ -242,7 +247,7 @@ function PackageForm({
               className="bg-textColor border pl-4 w-full rounded-xl border-secondary py-4 text-sm text-backGroundColor placeholder-gray-500 text-left"
               type="text"
               placeholder="Enter Name"
-              maxLength="40"
+              maxLength="50"
               onChange={handleChange}
               value={formData.name}
               autoComplete="off"
