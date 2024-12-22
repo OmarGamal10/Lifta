@@ -226,6 +226,7 @@ const signup = async (req, res, next) => {
       date_issued,
     } = req.body);
 
+
     if (
       isNaN(experience_years) ||
       experience_years < 0 ||
@@ -236,8 +237,10 @@ const signup = async (req, res, next) => {
           "Experience years must be a valid number between 0 and 30",
           400
         )
+
       );
     }
+
 
     // Validate client_limit
     if (isNaN(client_limit) || client_limit < 1 || client_limit > 99) {
@@ -262,6 +265,7 @@ const signup = async (req, res, next) => {
       );
     }
   }
+
 
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
@@ -341,8 +345,10 @@ const updateUser = async (req, res, next) => {
     }
   }
   const phoneRegex = /^01\d{9}$/; // Matches "01" followed by 9 digits (11 total)
-  if (!phoneRegex.test(phone_number)) {
-    return next(new AppError("Please enter a valid Number", 400));
+
+  if(!phoneRegex.test(phone_number)) {
+    return next(new AppError("Numbers from 0 to 9 and start by '01'", 400));
+
   }
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
@@ -394,6 +400,20 @@ const createAccount = async (req, res, next) => {
     birth_date,
   } = req.body;
 
+  if (!validator.isAlpha(first_name.replace(/\s/g, ""))) {
+    return next(new AppError("First name should contain only letters", 400));
+  }
+
+  if (!validator.isAlpha(last_name.replace(/\s/g, ""))) {
+    return next(new AppError("Last name should contain only letters", 400));
+  }
+
+  // Phone number validation
+  const phoneRegex = /^01\d{9}$/;
+  if(!phoneRegex.test(phone_number)) {
+    return next(new AppError("Numbers from 0 to 9 and start by '01'", 400));
+  }
+
   let food_allergies,
     workout_preferences,
     weight,
@@ -416,17 +436,23 @@ const createAccount = async (req, res, next) => {
       description,
       date_issued,
     } = req.body);
+
+    if (title && !validator.isAlpha(title.replace(/\s/g, ""))) {
+      return next(
+        new AppError("Certificate Title name should contain only letters", 400)
+      );
+    }
   }
 
   if (!validator.isEmail(email))
     return next(new AppError("Please enter a valid Email", 400));
+
   const passwordHashed = await hashPassword(password);
   const values = [
     email,
     first_name,
     last_name,
     passwordHashed,
-
     gender,
     bio,
     phone_number,

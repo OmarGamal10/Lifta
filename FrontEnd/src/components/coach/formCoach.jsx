@@ -148,7 +148,7 @@ function FormCoach({
   return (
     <>
       <Toaster />
-      <div className="flex flex-row min-h-screen justify-center items-center bg-backGroundColor p-16">
+      <div className="flex flex-row min-h-screen w-full justify-center items-center bg-backGroundColor p-16">
         {viewCertForm && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <CertForm

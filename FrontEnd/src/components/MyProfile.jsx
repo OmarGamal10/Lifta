@@ -112,12 +112,16 @@ const MyProfile = ({
       return rest;
     });
 
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // Clear the file input value
+    }
+
     console.log("test remove", formData);
   };
 
   const handlePhotoChange = async (e) => {
     if (!isEditable) return;
-
+    
     const file = e.target.files[0];
     if (file) {
       // Check if the file is a valid photo type (jpeg, png, jpg)
@@ -211,7 +215,7 @@ const MyProfile = ({
       console.log("aaaa", error);
       if (error.response.data.message === "Please enter a valid Email") {
         setErrors({ email: "Please enter a valid Email" });
-      } else if(error.response.data.message === "Please enter a valid Number")
+      } else if(error.response.data.message === "Numbers from 0 to 9 and start by '01'")
         {
           setErrors({ phone_number: "Numbers from 0 to 9 and start by '01'" });
         }
@@ -683,6 +687,9 @@ const MyProfile = ({
               setFormData((prev) => ({
                 ...profileData,  // Keep other profile data
               }));
+              if (fileInputRef.current) {
+                fileInputRef.current.value = ''; // Clear the file input value
+              }
               setErrors({}); // Clear errors
             }}
             

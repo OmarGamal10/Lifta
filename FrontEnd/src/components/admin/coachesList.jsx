@@ -184,6 +184,7 @@ export function CoachesList() {
           header="Experience Years"
           sortable
           headerClassName="bg-secondary"
+          style={{ minWidth: "240px" }}
         />
         <Column
           field="rating"
