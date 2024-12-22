@@ -6,7 +6,7 @@ const createToken = require("../utils/createToken");
 const userModel = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 const jwt = require("jsonwebtoken");
-
+const moment = require("moment");
 const getUserById = async (req, res) => {
   const userId = req.params.userId;
 
@@ -170,9 +170,22 @@ const signup = async (req, res, next) => {
   }
 
   // Phone number validation
-  const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+
+  const phoneRegex = /^010\d{8}$/;
+
   if (!phoneRegex.test(phone_number)) {
-    return next(new AppError("Please enter a valid phone number", 400));
+    return next(
+      new AppError(
+        "Phone number should be exactly 11 digits and start with '010'",
+        400
+      )
+    );
+  }
+
+  const age = moment().diff(moment(birth_date, "YYYY-MM-DD"), "years");
+
+  if (age < 18) {
+    return next(new AppError("You must be at least 18 years old", 400));
   }
 
   let food_allergies,
@@ -213,6 +226,28 @@ const signup = async (req, res, next) => {
       date_issued,
     } = req.body);
 
+    if (
+      isNaN(experience_years) ||
+      experience_years < 0 ||
+      experience_years > 30
+    ) {
+      return next(
+        new AppError(
+          "Experience years must be a valid number between 0 and 30",
+          400
+        )
+      );
+    }
+
+    // Validate client_limit
+    if (isNaN(client_limit) || client_limit < 1 || client_limit > 99) {
+      return next(
+        new AppError(
+          "Client limit must be a valid number between 1 and 99",
+          400
+        )
+      );
+    }
     if (
       title &&
       (title.trim().length < 3 ||
