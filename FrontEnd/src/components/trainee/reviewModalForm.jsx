@@ -121,7 +121,13 @@ export function ReviewModalForm(probs) {
   }, [probs]);
 
   return (
-    <div className="p-6 rounded-lg w-full max-w-md bg-textColor text-backGroundColor">
+    <div className="p-6 rounded-lg w-full max-w-md bg-textColor text-backGroundColor relative">
+      <button
+        className="absolute top-2 right-2"
+        onClick={probs.handleCloseModal}
+      >
+        X
+      </button>
       <form
         // onSubmit={handleSubmit}
         className=" py-6 px-10 w-full"
