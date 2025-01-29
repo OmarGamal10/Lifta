@@ -17,8 +17,8 @@ import { Toaster, toast } from "sonner";
 function Ingredients({ userId }) {
   const { get, post, del, error, data } = useHttp("http://localhost:3000");
   const [curPage, setCurPage] = useState(1);
-  const [ingredients, setIngredients] = useState([]);
   const totalPages = Math.ceil(ingredients.length / 5);
+  const [ingredients, setIngredients] = useState([]);
   const [addIngredientsView, setAddIngredientsView] = useState(false);
   const [editIngredientsView, setEditIngredientsView] = useState(false);
   const [idToEdit, setIdToEdit] = useState(null);
