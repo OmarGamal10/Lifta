@@ -2,13 +2,9 @@
 
 Welcome to LIFTA! Your go-to spot for personalized fitness and nutrition, connecting you with awesome coaches.
 
----
-
 ## What is Lifta? <img src="https://i.imgur.com/Fb9YxRg.png" width="28" />
 
 Lifta is a website designed for online gym and nutrition coaching. It allows coaches to share content like meals and exercises, create personalized plans for clients, and deliver customized diets and workout routines. Clients can browse a library of gym coaches and nutrition coaches, know each coach's rating, and subscribe to their preferred coach. By sharing their preferences, goals, and medical details, clients enable coaches to craft tailored programs that meet their specific needs.
-
----
 
 ## Who Should Care? <img src="https://i.imgur.com/1GAn0Ir.png" width="28" />
 
@@ -17,8 +13,6 @@ Lifta is a website designed for online gym and nutrition coaching. It allows coa
 - *Nutrition Coaches*: Interested in delivering customized diet plans, managing client preferences, and offering nutrition guidance.
 
 - *Clients*: Seeking personalized fitness and nutrition plans, the ability to choose coaches based on ratings, and an easy way to track their goals.
-
----
 
 ## Key Features <img src="https://i.imgur.com/yzknnL8.png" width="28" />
 
@@ -61,22 +55,16 @@ Lifta is a website designed for online gym and nutrition coaching. It allows coa
 - Ban users for violating platform policies.
 - Display key statistics (e.g., top subscription packages, most popular package types, active subscriptions count).
 
----
-
 ## Tech Stack <img src="https://i.imgur.com/e1DBlTk.png" width="28" />
 
 - *Frontend:* <img src="https://i.imgur.com/ZAdKucE.png" width="14" /> React, <img src="https://i.imgur.com/pGFocao.png" width="16" /> Tailwind and <img src="https://i.imgur.com/hj45tsb.png" width="14" /> Figma
 - *Backend:* <img src="https://i.imgur.com/RebLs7F.png" width="20" /> Node.js and Express.js
 - *Database:* <img src="https://i.imgur.com/fwgXa3k.png" width="16" /> PostgreSQL
 
----
-
 ## Design <img src="https://i.imgur.com/e7qaSLT.png" width="28" />
 
 - *ER Diagram and Schema*: Check Documents Folder!
 - *[Figma Design](https://www.figma.com/design/OCdcViHf5ZI6HYikgwRjaJ/Lifta?node-id=4424-16994&t=6JjsNFCTxEgSsOXS-1)*
-
----
 
 ## Setup Instructions <img src="https://i.imgur.com/DRfWA84.png" width="28" />
 
@@ -130,15 +118,11 @@ Lifta is a website designed for online gym and nutrition coaching. It allows coa
     
 8. Access the application at http://localhost:5173.
 
----
-
 ## Future Features <img src="https://i.imgur.com/8i5qWJE.png" width="28" />
 
 - Notifications and reminders for users.
 - Integration of real payment methods.
 - Option for coaches to create organizations consisting of multiple coaches with shared packages.
-
----
 
 ## Contributors <img src="https://i.imgur.com/SfBB4jV.png" width="28" />
 
